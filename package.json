@@ -1,0 +1,9 @@
+{
+  "name": "ecoverify-project",
+  "private": true,
+  "scripts": {
+    "install:frontend": "npm install --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "dev": "npm run dev --prefix frontend"
+  }
+}
