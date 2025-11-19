@@ -19,3 +19,11 @@ Sequential feature commits for contribution tracking.
 - feat: log Privacy Policy sections
 - feat: log Terms of Service sections
 - feat: log Data Usage scoring methodology
+- feat: log mock product catalog entries
+- feat: log trending products widget
+- feat: log category shortcuts navigation
+- feat: log recent scans timeline
+- feat: log daily eco tip rotation
+- feat: log community eco impact stats
+- feat: log barcode history persistence
+- feat: log Google sign-in simulation
