@@ -27,3 +27,12 @@ Sequential feature commits for contribution tracking.
 - feat: log community eco impact stats
 - feat: log barcode history persistence
 - feat: log Google sign-in simulation
+- feat: log sensitivity scoring modes
+- feat: log priority concern toggles
+- feat: log greenwashing risk badges
+- feat: log share and report actions
+- feat: log where-to-buy store pills
+- feat: log price and availability filters
+- feat: log saved products bookmarks
+- feat: log offline mode preference
+- feat: log multilingual language options
