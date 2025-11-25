@@ -36,3 +36,12 @@ Sequential feature commits for contribution tracking.
 - feat: log saved products bookmarks
 - feat: log offline mode preference
 - feat: log multilingual language options
+- feat: log notification settings switch
+- feat: log brand registration pending state
+- feat: log certification upload zone
+- feat: log claims management actions
+- feat: log mobile bottom navigation
+- feat: log desktop sticky header nav
+- feat: log shadcn Button component
+- feat: log shadcn Input component
+- feat: log shadcn Select component
