@@ -53,3 +53,12 @@ Sequential feature commits for contribution tracking.
 - feat: log Tailwind emerald theme tokens
 - feat: log Vite path alias configuration
 - feat: log Vercel SPA rewrite rules
+- feat: log OpenAI vision scan integration
+- feat: log eco-rating rubric scoring
+- feat: log barcode format detection
+- feat: log product match algorithm
+- feat: log AuthContext preferences store
+- feat: log BarcodeHistory entity schema
+- docs: log frontend README setup steps
+- docs: log demo credentials and product IDs
+- deploy: log production Vercel alias
