@@ -45,3 +45,11 @@ Sequential feature commits for contribution tracking.
 - feat: log shadcn Button component
 - feat: log shadcn Input component
 - feat: log shadcn Select component
+- feat: log shadcn Switch component
+- feat: log shadcn Slider component
+- feat: log shadcn Tabs component
+- feat: log shadcn Table component
+- feat: log shadcn Badge component
+- feat: log Tailwind emerald theme tokens
+- feat: log Vite path alias configuration
+- feat: log Vercel SPA rewrite rules
