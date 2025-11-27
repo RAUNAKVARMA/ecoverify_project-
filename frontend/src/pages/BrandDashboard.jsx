@@ -25,7 +25,7 @@ export default function BrandDashboard() {
   if (brand.status === 'pending') {
     return (
       <div className="space-y-4 max-w-6xl mx-auto">
-        <PageHeader icon={Building2} title="BRAND DASHBOARD" gradient="from-purple-500 to-violet-500" />
+        <PageHeader icon={Building2} title="Brand dashboard" gradient="from-teal-600 to-emerald-600" />
         <SectionCard accentColor="border-amber-400">
           <div className="text-center py-6">
             <Clock className="h-12 w-12 text-amber-500 mx-auto animate-pulse" />
@@ -46,19 +46,19 @@ export default function BrandDashboard() {
     <div className="space-y-4 max-w-6xl mx-auto">
       <PageHeader
         icon={Building2}
-        title="BRAND DASHBOARD"
+        title="Brand dashboard"
         badges={['Verified']}
         description="Manage products, claims, and analytics."
-        gradient="from-purple-500 to-violet-500"
+        gradient="from-teal-600 to-emerald-600"
       />
 
-      <div className="rounded-xl bg-gradient-to-r from-purple-500 to-violet-500 p-4 md:p-6 text-white">
+      <div className="rounded-2xl bg-gradient-to-r from-teal-700 to-emerald-600 p-4 text-white md:p-6">
         <p className="text-sm text-white/80">Welcome back</p>
-        <h2 className="text-xl font-bold">{brand.companyName}</h2>
-        <p className="text-sm text-white/90 mt-1">Verified brand · {brand.email}</p>
+        <h2 className="font-display text-xl font-semibold">{brand.companyName}</h2>
+        <p className="mt-1 text-sm text-white/90">Verified brand · {brand.email}</p>
       </div>
 
-      <SectionCard icon={Building2} title="My Products" accentColor="border-purple-400">
+      <SectionCard icon={Building2} title="My products" accentColor="border-teal-500">
         <Table>
           <TableHeader>
             <TableRow>
@@ -103,9 +103,9 @@ export default function BrandDashboard() {
             })}
           </TableBody>
         </Table>
-        <label className="mt-4 flex flex-col items-center gap-2 rounded-xl border-2 border-dashed border-purple-200 p-6 cursor-pointer hover:bg-purple-50/50">
-          <Upload className="h-6 w-6 text-purple-600" />
-          <span className="text-sm text-purple-800">Upload certification documents (PDF/images)</span>
+        <label className="mt-4 flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-teal-200 p-6 hover:bg-teal-50/50">
+          <Upload className="h-6 w-6 text-teal-600" />
+          <span className="text-sm text-teal-800">Upload certification documents (PDF/images)</span>
           <input type="file" accept=".pdf,image/*" className="hidden" onChange={() => alert('Document uploaded (demo)')} />
         </label>
       </SectionCard>
@@ -137,7 +137,7 @@ export default function BrandDashboard() {
         <p className="text-sm text-gray-600 mb-3">
           brands@ecoverify.com · +91 1800-ECO-VERIFY
         </p>
-        <Button className="bg-purple-600 hover:bg-purple-700">Contact Support Team</Button>
+        <Button className="bg-teal-700 hover:bg-teal-800">Contact Support Team</Button>
       </SectionCard>
 
       <div className="text-center">
@@ -209,13 +209,12 @@ function BrandAuth({ onLogin, onRegister }) {
     <div className="space-y-4 max-w-6xl mx-auto">
       <PageHeader
         icon={Building2}
-        title="BRAND DASHBOARD"
-        badges={['Partners']}
+        title="Brand dashboard"
         description="Sign in or register your verified business."
-        gradient="from-purple-500 to-violet-500"
+        gradient="from-teal-600 to-emerald-600"
       />
 
-      <SectionCard title="Brand Authentication" accentColor="border-purple-400">
+      <SectionCard title="Brand sign-in" accentColor="border-teal-500">
         <Tabs defaultValue="signin">
           <TabsList className="w-full grid grid-cols-2">
             <TabsTrigger value="signin">Sign In</TabsTrigger>
@@ -270,7 +269,7 @@ function BrandAuth({ onLogin, onRegister }) {
       <SectionCard title="Security Info" accentColor="border-blue-400">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Info icon={Shield} color="text-blue-600" title="Secure Authentication" text="Encrypted brand sessions" />
-          <Info icon={Building2} color="text-purple-600" title="Business Verification" text="CIN/GST reviewed by our team" />
+          <Info icon={Building2} color="text-teal-600" title="Business Verification" text="CIN/GST reviewed by our team" />
           <Info icon={Check} color="text-green-600" title="Trusted Platform" text="Join 500+ verified brands" />
         </div>
       </SectionCard>

@@ -9,10 +9,10 @@ import { mockScanHistory } from '@/components/data/productData'
 import { useAuth } from '@/context/AuthContext'
 
 const PRIORITIES = [
-  { id: 'Climate', label: 'Climate 🌍' },
-  { id: 'Plastic Reduction', label: 'Plastic ♻️' },
-  { id: 'Fair Trade', label: 'Fair Trade 🤝' },
-  { id: 'Animal Welfare', label: 'Animal Welfare 🐾' },
+  { id: 'Climate', label: 'Climate' },
+  { id: 'Plastic Reduction', label: 'Plastic reduction' },
+  { id: 'Fair Trade', label: 'Fair trade' },
+  { id: 'Animal Welfare', label: 'Animal welfare' },
 ]
 
 export default function Profile() {
@@ -33,8 +33,7 @@ export default function Profile() {
     <div className="space-y-4">
       <PageHeader
         icon={User}
-        title="PROFILE & SETTINGS"
-        badges={['Account']}
+        title="Profile"
         description="Preferences, stats, and support."
         gradient="from-emerald-500 to-teal-500"
       />
@@ -69,7 +68,7 @@ export default function Profile() {
           <Stat label="Products Scanned" value={totalScans} color="bg-blue-50 text-blue-800" />
           <Stat label="Greenwashing Avoided" value={greenwashingAvoided} color="bg-red-50 text-red-800" />
           <Stat label="Eco Impact Score" value={ecoImpact} color="bg-amber-50 text-amber-800" />
-          <Stat label="Monthly Insights" value="+12%" color="bg-purple-50 text-purple-800" />
+          <Stat label="Monthly Insights" value="+12%" color="bg-teal-50 text-teal-800" />
         </div>
       </SectionCard>
 

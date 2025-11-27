@@ -10,8 +10,8 @@ export default function TrendingProducts() {
     .slice(0, 4)
 
   return (
-    <SectionCard icon={TrendingUp} title="Trending Products" description="Top-rated eco picks" accentColor="border-amber-400">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <SectionCard icon={TrendingUp} title="Trending" description="Top-rated eco picks" accentColor="border-amber-400">
+      <div className="grid grid-cols-2 gap-3">
         {trending.map((p) => {
           const trust = getTrustLabel(p.trust_score)
           return (

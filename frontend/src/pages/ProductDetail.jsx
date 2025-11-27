@@ -44,7 +44,7 @@ export default function ProductDetail() {
   if (!product) {
     return (
       <div className="space-y-4">
-        <PageHeader icon={FileText} title="PRODUCT DETAIL" gradient="from-amber-400 to-amber-500" />
+        <PageHeader icon={FileText} title="Product detail" gradient="from-amber-400 to-amber-500" />
         <p className="text-sm text-gray-600">Product not found. Try scanning again from Home.</p>
       </div>
     )
@@ -85,12 +85,12 @@ export default function ProductDetail() {
     <div className="space-y-4">
       <PageHeader
         icon={FileText}
-        title="PRODUCT DETAIL"
+        title="Product detail"
         badges={[sensitivityBadge]}
-        description="Full sustainability analysis with adjustable scoring sensitivity."
+        description="Sustainability analysis with adjustable scoring sensitivity."
         gradient="from-amber-400 to-amber-500"
         action={
-          <Button variant="outline" size="sm" className="border-white/40 bg-white/10 text-white hover:bg-white/20" onClick={() => setShowSettings((v) => !v)}>
+          <Button variant="outline" size="sm" onClick={() => setShowSettings((v) => !v)}>
             <Settings className="h-4 w-4" />
             Settings
           </Button>

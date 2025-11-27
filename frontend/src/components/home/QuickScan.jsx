@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Camera, Barcode, Search, Loader2, Info } from 'lucide-react'
+import { Camera, Barcode, Search, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import SectionCard from '@/components/SectionCard'
@@ -14,7 +14,7 @@ import {
 import { useAuth } from '@/context/AuthContext'
 import { createBarcodeHistory } from '@/lib/barcodeHistory'
 
-export default function QuickScan() {
+export default function QuickScan({ embedded = false }) {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [barcode, setBarcode] = useState('')
@@ -107,40 +107,24 @@ export default function QuickScan() {
     navigate(`/ProductDetail?id=${results[0].id}`)
   }
 
-  return (
-    <SectionCard
-      icon={Camera}
-      title="Quick Scan"
-      description="Photo upload, barcode entry, or text search"
-      accentColor="border-emerald-500"
-    >
-      <div className="space-y-4">
-        {!loading && (
-          <div className="flex gap-2 rounded-lg bg-blue-50 border border-blue-100 p-3 text-sm text-blue-800">
-            <Info className="h-4 w-4 shrink-0 mt-0.5" />
-            <p>
-              Dual-model AI pipeline: vision classification identifies the product, then eco-rating analysis scores certifications,
-              materials, lifecycle, supply chain, and packaging — with greenwashing detection.
-            </p>
-          </div>
-        )}
-
+  const body = (
+      <div className="space-y-5">
         {loading && (
-          <div className="flex items-start gap-2 rounded-lg bg-emerald-50 border border-emerald-100 p-3 text-sm text-emerald-800">
-            <Loader2 className="h-4 w-4 shrink-0 mt-0.5 animate-spin" />
+          <div className="flex items-start gap-2 rounded-xl border border-emerald-100 bg-emerald-50 p-3 text-sm text-emerald-800">
+            <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin" />
             <div>
-              <p className="font-medium">Scanning in progress…</p>
+              <p className="font-medium">Scanning…</p>
               <p className="text-emerald-700">{stage || 'Working…'}</p>
             </div>
           </div>
         )}
 
         <div>
-          <p className="text-sm font-medium text-gray-900 mb-2">A. Photo Upload (AI Dual-Model Pipeline)</p>
-          <label className="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-emerald-300 bg-emerald-50/50 px-4 py-8 cursor-pointer hover:bg-emerald-50 transition-colors">
+          <p className="mb-2 text-sm font-medium text-[#12261c]">Photo</p>
+          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-emerald-300/80 bg-emerald-50/40 px-4 py-10 transition-colors hover:bg-emerald-50">
             <Camera className="h-8 w-8 text-emerald-600" />
-            <span className="text-sm font-medium text-emerald-800">Tap to upload product photo</span>
-            <span className="text-xs text-gray-500">JPG, PNG — AI vision + eco-rating</span>
+            <span className="text-sm font-semibold text-emerald-900">Upload a product photo</span>
+            <span className="text-xs text-[#5a6f63]">JPG or PNG</span>
             <input
               type="file"
               accept="image/*"
@@ -152,14 +136,14 @@ export default function QuickScan() {
         </div>
 
         <form onSubmit={runBarcodeScan} className="space-y-2">
-          <p className="text-sm font-medium text-gray-900">B. Barcode Entry</p>
+          <p className="text-sm font-medium text-[#12261c]">Barcode</p>
           <div className="flex gap-2">
             <div className="relative flex-1">
-              <Barcode className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Barcode className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
               <Input
                 value={barcode}
                 onChange={(e) => setBarcode(e.target.value)}
-                placeholder="Enter barcode (or product ID 1–12)"
+                placeholder="Enter barcode (or try ID 1–12)"
                 className="pl-9"
                 disabled={loading}
               />
@@ -171,12 +155,12 @@ export default function QuickScan() {
         </form>
 
         <form onSubmit={runSearch} className="space-y-2">
-          <p className="text-sm font-medium text-gray-900">C. Search Bar</p>
+          <p className="text-sm font-medium text-[#12261c]">Search</p>
           <div className="flex gap-2">
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by name, brand, or category"
+              placeholder="Name, brand, or category"
               disabled={loading}
             />
             <Button type="submit" variant="secondary" disabled={loading}>
@@ -188,6 +172,18 @@ export default function QuickScan() {
 
         {error && <p className="text-sm text-red-600">{error}</p>}
       </div>
+  )
+
+  if (embedded) return body
+
+  return (
+    <SectionCard
+      icon={Camera}
+      title="Scan a product"
+      description="Photo, barcode, or search — get a Trust Score in seconds"
+      accentColor="border-emerald-500"
+    >
+      {body}
     </SectionCard>
   )
 }

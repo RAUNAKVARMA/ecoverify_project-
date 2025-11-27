@@ -1,24 +1,32 @@
 import SectionCard from '@/components/SectionCard'
-import { Leaf } from 'lucide-react'
+import { Leaf, TrendingUp, Award, Users } from 'lucide-react'
 
 const STATS = [
-  { emoji: '🌿', label: 'Products Scanned', value: '47K', color: 'text-green-700 bg-green-50' },
-  { emoji: '📈', label: 'Greenwashing Flagged', value: '2.3K', color: 'text-blue-700 bg-blue-50' },
-  { emoji: '🏆', label: 'Eco Champions', value: '890', color: 'text-amber-700 bg-amber-50' },
-  { emoji: '👥', label: 'Active Users', value: '12K+', color: 'text-purple-700 bg-purple-50' },
+  { icon: Leaf, label: 'Products scanned', value: '47K', tone: 'text-emerald-800 bg-emerald-50' },
+  { icon: TrendingUp, label: 'Greenwashing flagged', value: '2.3K', tone: 'text-sky-800 bg-sky-50' },
+  { icon: Award, label: 'Eco champions', value: '890', tone: 'text-amber-800 bg-amber-50' },
+  { icon: Users, label: 'Active users', value: '12K+', tone: 'text-teal-800 bg-teal-50' },
 ]
 
 export default function EcoImpactWidget() {
   return (
-    <SectionCard icon={Leaf} title="Community Eco Impact" description="Live community stats" accentColor="border-emerald-500">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 -ml-8 pl-0 md:pl-0">
-        {STATS.map((s) => (
-          <div key={s.label} className={`rounded-xl p-3 text-center ${s.color}`}>
-            <div className="text-lg">{s.emoji}</div>
-            <div className="text-lg font-bold">{s.value}</div>
-            <div className="text-xs opacity-80">{s.label}</div>
-          </div>
-        ))}
+    <SectionCard
+      icon={Leaf}
+      title="Community impact"
+      description="Shared progress across EcoVerify"
+      accentColor="border-emerald-500"
+    >
+      <div className="grid grid-cols-2 gap-3">
+        {STATS.map((s) => {
+          const Icon = s.icon
+          return (
+            <div key={s.label} className={`rounded-xl p-3 text-center ${s.tone}`}>
+              <Icon className="mx-auto h-5 w-5 opacity-80" />
+              <div className="mt-1.5 font-display text-xl font-semibold">{s.value}</div>
+              <div className="text-xs opacity-80">{s.label}</div>
+            </div>
+          )
+        })}
       </div>
     </SectionCard>
   )

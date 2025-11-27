@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id                        String   @id
+  barcode                   String   @unique
+  name                      String
+  brand                     String
+  category                  String
+  price                     Int
+  image                     String
+  trustScore                Int      @map("trust_score")
+  greenwashingRisk          String   @map("greenwashing_risk")
+  certifications            String[]
+  materialsAnalysis         String   @map("materials_analysis")
+  supplyChainTransparency   String   @map("supply_chain_transparency")
+  packagingAssessment       String   @map("packaging_assessment")
+  carbonFootprint           String   @map("carbon_footprint")
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
+
+  scans                     Scan[]
+  barcodeHistory            BarcodeHistory[]
+
+  @@map("products")
+}
+
+model Scan {
+  id             String   @id @default(cuid())
+  productId      String?  @map("product_id")
+  userEmail      String?  @map("user_email")
+  source         String
+  trustScore     Int?     @map("trust_score")
+  classification Json?
+  ecoRating      Json?
+  saved          Boolean  @default(false)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  product        Product? @relation(fields: [productId], references: [id])
+
+  @@index([userEmail])
+  @@map("scans")
+}
+
+model BarcodeHistory {
+  id                    String   @id @default(cuid())
+  userEmail             String   @map("user_email")
+  barcode               String
+  barcodeFormat         String?  @map("barcode_format")
+  productId             String?  @map("product_id")
+  productName           String?  @map("product_name")
+  trustScore            Int?     @map("trust_score")
+  validationConfidence  Int?     @map("validation_confidence")
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  product               Product? @relation(fields: [productId], references: [id])
+
+  @@index([userEmail])
+  @@map("barcode_history")
+}
+
+model AiProviderStatus {
+  id          String   @id @default("default")
+  active      String   @default("mock")
+  ollamaModel String?  @map("ollama_model")
+  openaiModel String?  @map("openai_model")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("ai_provider_status")
+}

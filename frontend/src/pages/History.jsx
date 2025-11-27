@@ -42,8 +42,7 @@ export default function History() {
     <div className="space-y-4">
       <PageHeader
         icon={BarChart3}
-        title="HISTORY"
-        badges={['Timeline']}
+        title="History"
         description="Past scans with filters and saved products."
         gradient="from-teal-500 to-cyan-500"
       />

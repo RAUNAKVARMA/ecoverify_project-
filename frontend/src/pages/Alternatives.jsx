@@ -58,9 +58,8 @@ export default function Alternatives() {
     <div className="space-y-4">
       <PageHeader
         icon={Star}
-        title="ALTERNATIVES"
-        badges={['Better Picks']}
-        description="Higher-trust alternatives ranked by sustainability score."
+        title="Alternatives"
+        description="Higher-trust options ranked by sustainability score."
         gradient="from-sky-400 to-sky-500"
       />
 
@@ -164,7 +163,7 @@ export default function Alternatives() {
       </SectionCard>
 
       {topAlt && original && (
-        <SectionCard icon={HelpCircle} title="Why This Alternative?" accentColor="border-purple-400">
+        <SectionCard icon={HelpCircle} title="Why this alternative?" accentColor="border-teal-500">
           <p className="text-sm text-gray-700">
             {topAlt.name} scores {topAlt.trust_score - original.trust_score} points higher because of: better certifications,
             superior packaging, lower greenwashing risk.
