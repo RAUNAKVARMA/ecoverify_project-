@@ -62,3 +62,11 @@ Sequential feature commits for contribution tracking.
 - docs: log frontend README setup steps
 - docs: log demo credentials and product IDs
 - deploy: log production Vercel alias
+- deploy: log GitHub repo connection
+- chore: log cleanup of legacy CRA pages
+- chore: log cleanup of legacy API routes
+- chore: log removal of obsolete docs
+- fix: log Layout max-width containers
+- style: log rounded-xl card system
+- style: log left-border accent colors
+- test: log Home to ProductDetail scan flow
