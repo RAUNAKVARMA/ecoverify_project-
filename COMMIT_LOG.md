@@ -70,3 +70,12 @@ Sequential feature commits for contribution tracking.
 - style: log rounded-xl card system
 - style: log left-border accent colors
 - test: log Home to ProductDetail scan flow
+- test: log Alternatives category query params
+- test: log Brand demo login path
+- test: log History filter combinations
+- refactor: log utils cn helper extraction
+- refactor: log page routing consolidation
+- perf: log Vite production build output
+- security: log client-side preference storage
+- docs: log live app URL in README
+- chore: finalize main-branch commit sequence
