@@ -25,3 +25,12 @@ const P = {
   herbs: u('photo-1416879595882-3373a0480b5b', 600),
   tomatoes: u('photo-1518977956812-cd3dbadaaf31', 600),
   moss: u('photo-1469474968028-56623f02e42e', 600),
+  leaves: u('photo-1518531933037-91b2f5f229cc', 700),
+  field: u('photo-1500382017468-9049fed747ef', 800),
+  beach: u('photo-1507525428034-b723cf961d3e', 1000),
+  lemon: u('photo-1590502593747-42a996133562', 600),
+  bread: u('photo-1509440159596-0249088772ff', 600),
+  tea: products[2].image.replace('w=200', 'w=600'),
+}
+
+/** Earth plate for the continuous open peak (green hills — not beach) */
