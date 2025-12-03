@@ -43,3 +43,11 @@ const WORDMARKS = [
 ]
 
 /**
+ * Option A — one continuous collage.
+ * Wave 1 (seed): plants + goods land → earth opens
+ * Wave 2: rest of wreath fills in → phones
+ */
+const SEED_CLS = new Set(['pc-palms', 'pc-leaves', 'pc-sun', 'pc-bottle', 'pc-honey', 'pc-bamboo'])
+
+const RAW_PIECES = [
+  { src: P.palms, shape: 'tall', cls: 'pc-palms', rot: -8, from: 'bottomleft', z: 8 },
