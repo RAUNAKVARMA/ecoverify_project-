@@ -34,3 +34,12 @@ const P = {
 }
 
 /** Earth plate for the continuous open peak (green hills — not beach) */
+const EARTH = u('photo-1501854140801-50d01698950b', 1200)
+
+const WORDMARKS = [
+  { id: 'script', className: 'wm-script', label: 'EcoVerify' },
+  { id: 'bold', className: 'wm-bold', label: 'EcoVerify' },
+  { id: 'outline', className: 'wm-outline', label: 'EcoVerify' },
+]
+
+/**
