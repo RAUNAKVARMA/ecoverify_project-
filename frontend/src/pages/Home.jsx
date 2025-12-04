@@ -68,3 +68,12 @@ const RAW_PIECES = [
   { src: P.herbs, shape: 'squircle', cls: 'pc-herbs', rot: -9, from: 'left', z: 11 },
   { src: P.coconut, shape: 'round', cls: 'pc-coco', rot: -12, from: 'right', z: 13 },
   { src: P.milk, shape: 'squircle', cls: 'pc-milk', rot: 7, from: 'bottom', z: 12 },
+  { src: P.tomatoes, shape: 'round', cls: 'pc-tomato', rot: 15, from: 'bottomleft', z: 15 },
+  { src: P.lemon, shape: 'round', cls: 'pc-avo', rot: -13, from: 'left', z: 15 },
+  { src: P.bread, shape: 'squircle', cls: 'pc-bread', rot: 9, from: 'right', z: 10 },
+  { src: P.tea, shape: 'round', cls: 'pc-tea', rot: -7, from: 'topleft', z: 14 },
+].filter((p) => !p.isSky)
+
+const seedList = RAW_PIECES.filter((p) => SEED_CLS.has(p.cls))
+const restList = RAW_PIECES.filter((p) => !SEED_CLS.has(p.cls))
+
