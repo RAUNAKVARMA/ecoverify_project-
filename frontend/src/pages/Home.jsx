@@ -51,3 +51,12 @@ const SEED_CLS = new Set(['pc-palms', 'pc-leaves', 'pc-sun', 'pc-bottle', 'pc-ho
 
 const RAW_PIECES = [
   { src: P.palms, shape: 'tall', cls: 'pc-palms', rot: -8, from: 'bottomleft', z: 8 },
+  { src: P.leaves, shape: 'tall', cls: 'pc-leaves', rot: 7, from: 'topright', z: 7 },
+  { src: P.beach, shape: 'torn', cls: 'pc-beach', rot: 0, from: 'bottom', z: 6 },
+  { src: P.sky, shape: 'sky', cls: 'pc-sky-sync', rot: 0, from: 'top', z: 2, isSky: true },
+  { src: P.field, shape: 'torn', cls: 'pc-field', rot: -6, from: 'left', z: 5 },
+  { src: P.forest, shape: 'torn', cls: 'pc-forest', rot: 8, from: 'right', z: 5 },
+  { src: P.sunflower, shape: 'round', cls: 'pc-sun', rot: 12, from: 'top', z: 14 },
+  { src: P.hands, shape: 'polaroid', cls: 'pc-hands', rot: -10, from: 'bottomleft', z: 16, caption: 'real dirt.' },
+  { src: P.market, shape: 'polaroid', cls: 'pc-market', rot: 8, from: 'topright', z: 15, caption: 'shop wise' },
+  { src: P.bottle, shape: 'round', cls: 'pc-bottle', rot: -16, from: 'topleft', z: 17 },
