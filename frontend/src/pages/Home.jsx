@@ -94,3 +94,12 @@ const NOTES = [
   { text: 'look closer!', cls: 'sc-1', rot: -8, from: 'left' },
   { text: 'Look up \u2191', cls: 'sc-3', rot: -4, from: 'bottomleft' },
   { text: 'FRIENDS of earth!', cls: 'sc-2', rot: 6, from: 'right' },
+  { text: 'is it truly green?', cls: 'sc-4', rot: 5, from: 'topright' },
+  { text: 'trace it.', cls: 'sc-5', rot: -6, from: 'bottom' },
+].map((item, i) => ({
+  ...item,
+  delay: 1.35 + i * 0.08,
+  spin: (i % 2 === 0 ? -1 : 1) * 18,
+}))
+
+const STICKERS = [
