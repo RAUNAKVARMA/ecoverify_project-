@@ -77,3 +77,12 @@ const RAW_PIECES = [
 const seedList = RAW_PIECES.filter((p) => SEED_CLS.has(p.cls))
 const restList = RAW_PIECES.filter((p) => !SEED_CLS.has(p.cls))
 
+const PIECES = [
+  ...seedList.map((item, i) => ({
+    ...item,
+    delay: 0.06 + i * 0.09,
+    spin: (i % 2 === 0 ? 1 : -1) * (28 + (i % 4) * 8),
+  })),
+  ...restList.map((item, i) => ({
+    ...item,
+    delay: 0.85 + i * 0.07,
