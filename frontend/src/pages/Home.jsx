@@ -86,3 +86,11 @@ const PIECES = [
   ...restList.map((item, i) => ({
     ...item,
     delay: 0.85 + i * 0.07,
+    spin: (i % 2 === 0 ? 1 : -1) * (32 + (i % 5) * 10),
+  })),
+]
+
+const NOTES = [
+  { text: 'look closer!', cls: 'sc-1', rot: -8, from: 'left' },
+  { text: 'Look up \u2191', cls: 'sc-3', rot: -4, from: 'bottomleft' },
+  { text: 'FRIENDS of earth!', cls: 'sc-2', rot: 6, from: 'right' },
