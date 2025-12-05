@@ -103,3 +103,11 @@ const NOTES = [
 }))
 
 const STICKERS = [
+  { text: 'Trust 91', cls: 'st-trust', rot: -7, from: 'topleft' },
+  { text: 'SCAN', cls: 'st-scan', rot: 10, from: 'topright' },
+  { text: 'no greenwash', cls: 'st-green', rot: -3, from: 'left' },
+  { text: '72 / 100', cls: 'st-score', rot: 6, from: 'right' },
+  { text: 'verified', cls: 'st-ok', rot: -9, from: 'top' },
+].map((item, i) => ({
+  ...item,
+  delay: 1.45 + i * 0.08,
