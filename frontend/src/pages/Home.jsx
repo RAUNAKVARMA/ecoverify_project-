@@ -111,3 +111,12 @@ const STICKERS = [
 ].map((item, i) => ({
   ...item,
   delay: 1.45 + i * 0.08,
+  spin: (i % 2 === 0 ? 1 : -1) * 24,
+}))
+
+const ASSEMBLE_MS = Math.round((Math.max(
+  PIECES[PIECES.length - 1].delay,
+  NOTES[NOTES.length - 1].delay,
+  STICKERS[STICKERS.length - 1].delay,
+) + 1.05) * 1000)
+
