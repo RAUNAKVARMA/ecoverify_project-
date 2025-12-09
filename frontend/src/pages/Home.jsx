@@ -129,3 +129,11 @@ function SafeImg({ src, className, alt = '' }) {
   if (!ok) return null
   return (
     <img
+      src={src}
+      alt={alt}
+      draggable={false}
+      className={className}
+      loading="eager"
+      decoding="async"
+      onError={() => setOk(false)}
+    />
