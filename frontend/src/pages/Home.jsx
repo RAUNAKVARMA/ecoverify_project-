@@ -120,3 +120,12 @@ const ASSEMBLE_MS = Math.round((Math.max(
   STICKERS[STICKERS.length - 1].delay,
 ) + 1.05) * 1000)
 
+/** Earth opens after seed lands, then soft-fades as wreath completes */
+const EARTH_OPEN_AT = 420
+const EARTH_FADE_AT = 1680
+
+function SafeImg({ src, className, alt = '' }) {
+  const [ok, setOk] = useState(true)
+  if (!ok) return null
+  return (
+    <img
