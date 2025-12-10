@@ -137,3 +137,12 @@ function SafeImg({ src, className, alt = '' }) {
       decoding="async"
       onError={() => setOk(false)}
     />
+  )
+}
+
+function PieceCutout({ item, build }) {
+  const [ok, setOk] = useState(true)
+  if (!ok) return null
+  return (
+    <div
+      className={`piece piece-${item.shape} piece-from-${item.from} ${item.cls} ${build ? 'is-in' : ''}`}
