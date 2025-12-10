@@ -154,3 +154,12 @@ function PieceCutout({ item, build }) {
         '--d': 1 + item.z * 0.03,
         backgroundImage: `url(${item.src})`,
       }}
+    >
+      <img
+        src={item.src}
+        alt=""
+        draggable={false}
+        loading="eager"
+        decoding="async"
+        onError={() => setOk(false)}
+      />
