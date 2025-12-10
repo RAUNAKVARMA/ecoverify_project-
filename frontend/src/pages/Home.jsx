@@ -146,3 +146,11 @@ function PieceCutout({ item, build }) {
   return (
     <div
       className={`piece piece-${item.shape} piece-from-${item.from} ${item.cls} ${build ? 'is-in' : ''}`}
+      style={{
+        '--rot': `${item.rot}deg`,
+        '--spin': `${item.spin || 0}deg`,
+        '--delay': `${item.delay}s`,
+        '--z': item.z,
+        '--d': 1 + item.z * 0.03,
+        backgroundImage: `url(${item.src})`,
+      }}
