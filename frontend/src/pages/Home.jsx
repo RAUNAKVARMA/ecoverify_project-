@@ -163,3 +163,12 @@ function PieceCutout({ item, build }) {
         decoding="async"
         onError={() => setOk(false)}
       />
+      {item.caption && <span className="piece-caption">{item.caption}</span>}
+    </div>
+  )
+}
+
+function LetterWordmark({ text, className, active }) {
+  return (
+    <h1 className={`wm-logo ${className} ${active ? 'is-active' : ''}`} aria-hidden={!active}>
+      {text.split('').map((ch, i) => (
