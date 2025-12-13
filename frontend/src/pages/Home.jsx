@@ -172,3 +172,11 @@ function LetterWordmark({ text, className, active }) {
   return (
     <h1 className={`wm-logo ${className} ${active ? 'is-active' : ''}`} aria-hidden={!active}>
       {text.split('').map((ch, i) => (
+        <span key={`${ch}-${i}`} className="wm-letter" style={{ '--i': i }}>
+          {ch}
+        </span>
+      ))}
+    </h1>
+  )
+}
+
