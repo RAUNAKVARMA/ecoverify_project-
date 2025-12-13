@@ -180,3 +180,12 @@ function LetterWordmark({ text, className, active }) {
   )
 }
 
+function ScanPage({ onBack }) {
+  return (
+    <div className="app-shell animate-fade-up">
+      <button type="button" className="back-collage" onClick={onBack}>
+        <ArrowLeft className="h-4 w-4" />
+        Back
+      </button>
+      <div className="app-home-hero">
+        <p className="text-xs font-medium tracking-[0.2em] text-[var(--color-ink)]/45 uppercase">EcoVerify</p>
