@@ -189,3 +189,11 @@ function ScanPage({ onBack }) {
       </button>
       <div className="app-home-hero">
         <p className="text-xs font-medium tracking-[0.2em] text-[var(--color-ink)]/45 uppercase">EcoVerify</p>
+        <h1 className="mt-1 text-3xl font-bold tracking-tight text-[var(--color-ink)] sm:text-4xl">
+          Know if it&apos;s truly green.
+        </h1>
+        <p className="mt-2 max-w-lg text-sm text-[var(--color-ink)]/60">
+          Scan a product for an instant Trust Score — and catch greenwashing before you buy.
+        </p>
+        <div className="mt-6">
+          <QuickScan />
