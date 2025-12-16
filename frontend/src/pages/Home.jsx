@@ -206,3 +206,12 @@ function ScanPage({ onBack }) {
 export default function Home() {
   const [phase, setPhase] = useState('wordmarks')
   const [wmIndex, setWmIndex] = useState(0)
+  const [build, setBuild] = useState(false)
+  const [earthOpen, setEarthOpen] = useState(false)
+  const [earthFade, setEarthFade] = useState(false)
+  const [phones, setPhones] = useState(false)
+  const stageRef = useRef(null)
+  const timers = useRef([])
+  const mouse = useRef({ x: 0, y: 0, cx: 0, cy: 0 })
+  const raf = useRef(0)
+
