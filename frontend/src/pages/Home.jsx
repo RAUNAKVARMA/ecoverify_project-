@@ -215,3 +215,11 @@ export default function Home() {
   const mouse = useRef({ x: 0, y: 0, cx: 0, cy: 0 })
   const raf = useRef(0)
 
+  const clearTimers = () => {
+    timers.current.forEach((t) => window.clearTimeout(t))
+    timers.current = []
+  }
+
+  /** One continuous collage: seed → earth open → wreath → phones */
+  const startCollage = () => {
+    clearTimers()
