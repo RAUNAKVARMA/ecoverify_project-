@@ -223,3 +223,12 @@ export default function Home() {
   /** One continuous collage: seed → earth open → wreath → phones */
   const startCollage = () => {
     clearTimers()
+    setWmIndex(2)
+    setPhase('assemble')
+    setBuild(true)
+    setEarthOpen(false)
+    setEarthFade(false)
+    setPhones(false)
+
+    timers.current.push(window.setTimeout(() => setEarthOpen(true), EARTH_OPEN_AT))
+    timers.current.push(window.setTimeout(() => setEarthFade(true), EARTH_FADE_AT))
