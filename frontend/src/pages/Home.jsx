@@ -197,3 +197,12 @@ function ScanPage({ onBack }) {
         </p>
         <div className="mt-6">
           <QuickScan />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function Home() {
+  const [phase, setPhase] = useState('wordmarks')
+  const [wmIndex, setWmIndex] = useState(0)
