@@ -232,3 +232,11 @@ export default function Home() {
 
     timers.current.push(window.setTimeout(() => setEarthOpen(true), EARTH_OPEN_AT))
     timers.current.push(window.setTimeout(() => setEarthFade(true), EARTH_FADE_AT))
+    timers.current.push(window.setTimeout(() => {
+      setPhase('collage')
+      setPhones(true)
+      setEarthOpen(false)
+    }, ASSEMBLE_MS))
+  }
+
+  const skipIntro = () => {
