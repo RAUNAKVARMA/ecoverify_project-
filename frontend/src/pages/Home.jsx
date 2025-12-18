@@ -249,3 +249,12 @@ export default function Home() {
     setPhones(true)
   }
 
+  useEffect(() => {
+    ;[...Object.values(P), EARTH, ...PIECES.map((p) => p.src)].forEach((src) => {
+      const i = new Image()
+      i.src = src
+    })
+
+    clearTimers()
+    setWmIndex(0)
+    setBuild(false)
