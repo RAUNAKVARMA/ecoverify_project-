@@ -240,3 +240,12 @@ export default function Home() {
   }
 
   const skipIntro = () => {
+    clearTimers()
+    setWmIndex(2)
+    setPhase('collage')
+    setBuild(true)
+    setEarthOpen(false)
+    setEarthFade(false)
+    setPhones(true)
+  }
+
