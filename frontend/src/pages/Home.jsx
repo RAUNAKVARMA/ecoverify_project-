@@ -258,3 +258,11 @@ export default function Home() {
     clearTimers()
     setWmIndex(0)
     setBuild(false)
+    setEarthOpen(false)
+    setEarthFade(false)
+    setPhones(false)
+    setPhase('wordmarks')
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setPhase('collage')
+      setBuild(true)
