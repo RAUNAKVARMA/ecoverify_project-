@@ -275,3 +275,11 @@ export default function Home() {
     timers.current.push(window.setTimeout(startCollage, 1900))
 
     return clearTimers
+  }, [])
+
+  useEffect(() => {
+    const stage = stageRef.current
+    if (!stage || (phase !== 'assemble' && phase !== 'collage')) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const onMove = (e) => {
