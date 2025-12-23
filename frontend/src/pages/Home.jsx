@@ -292,3 +292,12 @@ export default function Home() {
       mouse.current.cy += (mouse.current.y - mouse.current.cy) * 0.07
       stage.style.setProperty('--mx', `${mouse.current.cx * 28}px`)
       stage.style.setProperty('--my', `${mouse.current.cy * 18}px`)
+      raf.current = requestAnimationFrame(tick)
+    }
+
+    window.addEventListener('pointermove', onMove)
+    raf.current = requestAnimationFrame(tick)
+    return () => {
+      window.removeEventListener('pointermove', onMove)
+      cancelAnimationFrame(raf.current)
+    }
