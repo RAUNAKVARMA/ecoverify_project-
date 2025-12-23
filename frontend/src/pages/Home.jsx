@@ -266,3 +266,12 @@ export default function Home() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setPhase('collage')
       setBuild(true)
+      setPhones(true)
+      return clearTimers
+    }
+
+    timers.current.push(window.setTimeout(() => setWmIndex(1), 700))
+    timers.current.push(window.setTimeout(() => setWmIndex(2), 1400))
+    timers.current.push(window.setTimeout(startCollage, 1900))
+
+    return clearTimers
