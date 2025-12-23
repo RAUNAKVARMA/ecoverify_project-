@@ -283,3 +283,12 @@ export default function Home() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const onMove = (e) => {
+      mouse.current.x = (e.clientX / window.innerWidth - 0.5) * 2
+      mouse.current.y = (e.clientY / window.innerHeight - 0.5) * 2
+    }
+
+    const tick = () => {
+      mouse.current.cx += (mouse.current.x - mouse.current.cx) * 0.07
+      mouse.current.cy += (mouse.current.y - mouse.current.cy) * 0.07
+      stage.style.setProperty('--mx', `${mouse.current.cx * 28}px`)
+      stage.style.setProperty('--my', `${mouse.current.cy * 18}px`)
