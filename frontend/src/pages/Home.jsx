@@ -309,3 +309,12 @@ export default function Home() {
 
   const inCollage = phase === 'assemble' || phase === 'collage'
   const showSkip = phase === 'wordmarks' || phase === 'assemble'
+
+  return (
+    <div
+      ref={stageRef}
+      className={[
+        'amo-stage',
+        phase === 'wordmarks' ? 'is-wordmarks' : '',
+        phase === 'assemble' ? 'is-assemble is-collage is-build' : '',
+        phase === 'collage' ? 'is-collage is-build' : '',
