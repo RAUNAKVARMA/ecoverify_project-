@@ -318,3 +318,11 @@ export default function Home() {
         phase === 'wordmarks' ? 'is-wordmarks' : '',
         phase === 'assemble' ? 'is-assemble is-collage is-build' : '',
         phase === 'collage' ? 'is-collage is-build' : '',
+        build ? 'is-build' : '',
+        earthOpen ? 'is-earth-open' : '',
+        earthFade ? 'is-earth-fade' : '',
+        phones ? 'is-phones' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
