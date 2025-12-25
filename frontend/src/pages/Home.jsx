@@ -301,3 +301,11 @@ export default function Home() {
       window.removeEventListener('pointermove', onMove)
       cancelAnimationFrame(raf.current)
     }
+  }, [phase])
+
+  if (phase === 'scan') {
+    return <ScanPage onBack={() => setPhase('collage')} />
+  }
+
+  const inCollage = phase === 'assemble' || phase === 'collage'
+  const showSkip = phase === 'wordmarks' || phase === 'assemble'
