@@ -326,3 +326,12 @@ export default function Home() {
         .filter(Boolean)
         .join(' ')}
     >
+      <div className="amo-paper" aria-hidden />
+      <div className="amo-dotgrid" aria-hidden />
+
+      {showSkip && (
+        <button type="button" className="skip-intro" onClick={skipIntro}>
+          Skip
+        </button>
+      )}
+
