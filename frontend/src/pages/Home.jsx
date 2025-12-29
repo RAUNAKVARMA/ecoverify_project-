@@ -352,3 +352,12 @@ export default function Home() {
           </div>
         ) : (
           <h1 className="amo-center-title">EcoVerify</h1>
+        )}
+        {phase === 'wordmarks' && <p className="wm-hint">Welcome to EcoVerify</p>}
+      </div>
+
+      {/* Single continuous scene — seed + earth peak + finale wreath */}
+      <div className="amo-scene" aria-hidden={!inCollage}>
+        <div
+          className={[
+            'mc-open',
