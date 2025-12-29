@@ -344,3 +344,11 @@ export default function Home() {
           .filter(Boolean)
           .join(' ')}
       >
+        {phase === 'wordmarks' ? (
+          <div className="wm-stage">
+            {WORDMARKS.map((wm, i) => (
+              <LetterWordmark key={wm.id} text={wm.label} className={wm.className} active={i === wmIndex} />
+            ))}
+          </div>
+        ) : (
+          <h1 className="amo-center-title">EcoVerify</h1>
