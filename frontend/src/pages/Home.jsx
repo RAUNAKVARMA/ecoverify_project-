@@ -335,3 +335,12 @@ export default function Home() {
         </button>
       )}
 
+      <div
+        className={[
+          'amo-center-brand',
+          inCollage ? 'is-settled' : '',
+          phase === 'assemble' ? 'is-assembling' : '',
+        ]
+          .filter(Boolean)
+          .join(' ')}
+      >
