@@ -361,3 +361,12 @@ export default function Home() {
         <div
           className={[
             'mc-open',
+            earthOpen && !earthFade ? 'is-open' : '',
+            earthFade ? 'is-out' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          <SafeImg src={EARTH} />
+        </div>
+
