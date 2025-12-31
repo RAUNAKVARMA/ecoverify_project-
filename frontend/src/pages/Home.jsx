@@ -370,3 +370,11 @@ export default function Home() {
           <SafeImg src={EARTH} />
         </div>
 
+        <div className={`amo-sky-cutout ${build ? 'is-sky-in' : ''}`}>
+          <SafeImg src={P.sky} />
+        </div>
+
+        {PIECES.map((item) => (
+          <PieceCutout key={item.cls} item={item} build={build} />
+        ))}
+
