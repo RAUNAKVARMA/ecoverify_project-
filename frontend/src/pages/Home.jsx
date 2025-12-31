@@ -378,3 +378,12 @@ export default function Home() {
           <PieceCutout key={item.cls} item={item} build={build} />
         ))}
 
+        {NOTES.map((n) => (
+          <div
+            key={n.cls}
+            className={`piece note piece-from-${n.from} ${n.cls} ${build ? 'is-in' : ''}`}
+            style={{
+              '--rot': `${n.rot}deg`,
+              '--spin': `${n.spin}deg`,
+              '--delay': `${n.delay}s`,
+              '--z': 22,
