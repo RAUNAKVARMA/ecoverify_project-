@@ -387,3 +387,11 @@ export default function Home() {
               '--spin': `${n.spin}deg`,
               '--delay': `${n.delay}s`,
               '--z': 22,
+              '--d': 1.55,
+            }}
+          >
+            {n.text}
+          </div>
+        ))}
+
+        {STICKERS.map((s) => (
