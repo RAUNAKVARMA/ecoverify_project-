@@ -395,3 +395,12 @@ export default function Home() {
         ))}
 
         {STICKERS.map((s) => (
+          <div
+            key={s.cls}
+            className={`piece sticker piece-from-${s.from} ${s.cls} ${build ? 'is-in' : ''}`}
+            style={{
+              '--rot': `${s.rot}deg`,
+              '--spin': `${s.spin}deg`,
+              '--delay': `${s.delay}s`,
+              '--z': 22,
+              '--d': 1.6,
