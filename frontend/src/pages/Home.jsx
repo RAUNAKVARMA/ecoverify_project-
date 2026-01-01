@@ -404,3 +404,12 @@ export default function Home() {
               '--delay': `${s.delay}s`,
               '--z': 22,
               '--d': 1.6,
+            }}
+          >
+            {s.text}
+          </div>
+        ))}
+      </div>
+
+      <div className={`amo-phones ${phones ? 'is-up' : ''}`}>
+        <div className="amo-app" style={{ '--i': 0 }}>
