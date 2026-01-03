@@ -413,3 +413,11 @@ export default function Home() {
 
       <div className={`amo-phones ${phones ? 'is-up' : ''}`}>
         <div className="amo-app" style={{ '--i': 0 }}>
+          <button type="button" className="amo-phone" onClick={() => setPhase('scan')}>
+            <SafeImg src={P.hands} />
+            <div className="amo-qr" aria-hidden>
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
