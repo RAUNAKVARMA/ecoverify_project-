@@ -430,3 +430,11 @@ export default function Home() {
               <strong>Scan</strong>
               <small>Trust Score in seconds</small>
             </span>
+          </button>
+        </div>
+
+        <div className="amo-app" style={{ '--i': 1 }}>
+          <Link to="/Alternatives" className="amo-phone">
+            <SafeImg src={P.produce} />
+            <div className="amo-qr" aria-hidden>
+              <span />
