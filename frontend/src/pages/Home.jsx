@@ -421,3 +421,12 @@ export default function Home() {
               <span />
               <span />
             </div>
+          </button>
+          <button type="button" className="amo-pill" onClick={() => setPhase('scan')}>
+            <span className="amo-pill-icon forest">
+              <Camera className="h-4 w-4" />
+            </span>
+            <span>
+              <strong>Scan</strong>
+              <small>Trust Score in seconds</small>
+            </span>
