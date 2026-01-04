@@ -438,3 +438,12 @@ export default function Home() {
             <SafeImg src={P.produce} />
             <div className="amo-qr" aria-hidden>
               <span />
+              <span />
+              <span />
+              <span />
+            </div>
+          </Link>
+          <Link to="/Alternatives" className="amo-pill">
+            <span className="amo-pill-icon ink">
+              <Leaf className="h-4 w-4" />
+            </span>
