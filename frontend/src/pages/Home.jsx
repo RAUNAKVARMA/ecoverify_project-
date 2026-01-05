@@ -447,3 +447,12 @@ export default function Home() {
             <span className="amo-pill-icon ink">
               <Leaf className="h-4 w-4" />
             </span>
+            <span>
+              <strong>Better picks</strong>
+              <small>Higher-trust alternatives</small>
+            </span>
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
