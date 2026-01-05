@@ -5,3 +5,12 @@
   --font-hand: "Caveat", "Segoe Print", cursive;
   --color-paper: #f7f3f0;
   --color-paper-deep: #f0ece9;
+  --color-ink: #323232;
+  --color-ink-soft: rgba(39, 39, 39, 0.87);
+  --color-border-warm: rgba(71, 58, 45, 0.12);
+  --color-forest: #1f6b4a;
+  --color-forest-deep: #0f3d2c;
+}
+
+@layer base {
+  html {
