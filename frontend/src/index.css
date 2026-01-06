@@ -14,3 +14,11 @@
 
 @layer base {
   html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply m-0 min-h-screen font-sans antialiased;
+    color: var(--color-ink-soft);
+    background: var(--color-paper);
+    font-weight: 500;
