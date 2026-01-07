@@ -22,3 +22,12 @@
     color: var(--color-ink-soft);
     background: var(--color-paper);
     font-weight: 500;
+  }
+
+  #root {
+    @apply min-h-screen;
+  }
+}
+
+@keyframes spring-in {
+  0% {
