@@ -57,3 +57,11 @@
 
 /* Cutout pops into place - springy scrapbook */
 @keyframes cutout-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(
+        calc(var(--ox, 0px) + var(--mx, 0px) * var(--d, 1)),
+        calc(var(--oy, 40px) + var(--my, 0px) * var(--d, 1)),
+        0
+      )
+      scale(0.18) rotate(calc(var(--rot, 0deg) + var(--spin, 48deg)));
