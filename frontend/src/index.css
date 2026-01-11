@@ -74,3 +74,12 @@
     filter: blur(0) brightness(1) saturate(1);
   }
   72% {
+    transform: translate3d(calc(var(--mx, 0px) * var(--d, 1)), calc(var(--my, 0px) * var(--d, 1)), 0)
+      scale(0.95) rotate(calc(var(--rot, 0deg) + 2.5deg));
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(calc(var(--mx, 0px) * var(--d, 1)), calc(var(--my, 0px) * var(--d, 1)), 0)
+      scale(1) rotate(var(--rot, 0deg));
+    filter: blur(0) brightness(1) saturate(1);
+  }
