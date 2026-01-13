@@ -108,3 +108,12 @@
       scale(0.35) rotate(calc(var(--rot, 0deg) + var(--spin, 40deg)));
     filter: blur(10px);
   }
+}
+
+/* AMO-style: snappy paper pop + stop-motion flicker (no cinematic blur fly) */
+@keyframes amo-pop {
+  0% {
+    opacity: 0;
+    transform: translate3d(
+        calc(var(--ox, 0px) * 0.22 + var(--mx, 0px) * var(--d, 1)),
+        calc(var(--oy, 40px) * 0.22 + var(--my, 0px) * var(--d, 1)),
