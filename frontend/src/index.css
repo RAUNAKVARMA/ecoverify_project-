@@ -100,3 +100,11 @@
   }
   100% {
     opacity: 0;
+    transform: translate3d(
+        calc(var(--ox, 0px) * -0.55 + var(--mx, 0px) * var(--d, 1)),
+        calc(var(--oy, 40px) * -0.55 + var(--my, 0px) * var(--d, 1)),
+        0
+      )
+      scale(0.35) rotate(calc(var(--rot, 0deg) + var(--spin, 40deg)));
+    filter: blur(10px);
+  }
