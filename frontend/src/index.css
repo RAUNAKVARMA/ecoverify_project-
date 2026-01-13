@@ -91,3 +91,12 @@
   100% { transform: scale(1); filter: blur(0); }
 }
 
+@keyframes cutout-out {
+  0% {
+    opacity: 1;
+    transform: translate3d(calc(var(--mx, 0px) * var(--d, 1)), calc(var(--my, 0px) * var(--d, 1)), 0)
+      scale(1) rotate(var(--rot, 0deg));
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
