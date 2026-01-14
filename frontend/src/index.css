@@ -117,3 +117,12 @@
     transform: translate3d(
         calc(var(--ox, 0px) * 0.22 + var(--mx, 0px) * var(--d, 1)),
         calc(var(--oy, 40px) * 0.22 + var(--my, 0px) * var(--d, 1)),
+        0
+      )
+      scale(0.72) rotate(calc(var(--rot, 0deg) + var(--spin, 12deg)));
+    filter: none;
+  }
+  55% {
+    opacity: 1;
+    transform: translate3d(calc(var(--mx, 0px) * var(--d, 1)), calc(var(--my, 0px) * var(--d, 1)), 0)
+      scale(1.08) rotate(calc(var(--rot, 0deg) - 2deg));
