@@ -134,3 +134,12 @@
     filter: none;
   }
 }
+
+@keyframes amo-flicker {
+  0% { opacity: 0; transform: scale(0.8) rotate(calc(var(--rot, 0deg) + 8deg)); }
+  6% { opacity: 1; transform: scale(1.12) rotate(calc(var(--rot, 0deg) - 4deg)); }
+  12% { opacity: 0; transform: scale(0.9) rotate(calc(var(--rot, 0deg) + 6deg)); }
+  22% { opacity: 1; transform: scale(1.06) rotate(calc(var(--rot, 0deg) + 2deg)); }
+  28% { opacity: 0.05; transform: scale(0.95) rotate(var(--rot, 0deg)); }
+  38% { opacity: 1; transform: scale(1.04) rotate(calc(var(--rot, 0deg) - 3deg)); }
+  52% { opacity: 1; transform: scale(0.98) rotate(calc(var(--rot, 0deg) + 1deg)); }
