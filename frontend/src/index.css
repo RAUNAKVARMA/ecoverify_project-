@@ -151,3 +151,12 @@
 @keyframes amo-jitter {
   0%, 100% { translate: 0 0; }
   20% { translate: 3px -2px; }
+  40% { translate: -2px 3px; }
+  60% { translate: 2px 1px; }
+  80% { translate: -3px -1px; }
+}
+
+
+@keyframes sky-in {
+  0% {
+    opacity: 0;
