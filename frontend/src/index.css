@@ -143,3 +143,11 @@
   28% { opacity: 0.05; transform: scale(0.95) rotate(var(--rot, 0deg)); }
   38% { opacity: 1; transform: scale(1.04) rotate(calc(var(--rot, 0deg) - 3deg)); }
   52% { opacity: 1; transform: scale(0.98) rotate(calc(var(--rot, 0deg) + 1deg)); }
+  64% { opacity: 0.2; transform: scale(1.1) rotate(calc(var(--rot, 0deg) - 6deg)); }
+  78% { opacity: 1; transform: scale(1.02) rotate(var(--rot, 0deg)); }
+  100% { opacity: 1; transform: scale(1) rotate(var(--rot, 0deg)); }
+}
+
+@keyframes amo-jitter {
+  0%, 100% { translate: 0 0; }
+  20% { translate: 3px -2px; }
