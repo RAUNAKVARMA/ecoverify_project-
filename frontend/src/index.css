@@ -169,3 +169,11 @@
     filter: blur(0) saturate(1) brightness(1);
   }
 }
+
+@keyframes reveal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
+    filter: blur(8px);
+  }
+  to {
