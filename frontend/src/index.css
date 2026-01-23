@@ -177,3 +177,12 @@
     filter: blur(8px);
   }
   to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes piece-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: calc(var(--fx, 0px)) calc(var(--fy, -6px)); }
