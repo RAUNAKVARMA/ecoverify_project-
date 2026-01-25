@@ -186,3 +186,11 @@
 @keyframes piece-float {
   0%, 100% { translate: 0 0; }
   50% { translate: calc(var(--fx, 0px)) calc(var(--fy, -6px)); }
+}
+
+@keyframes letter-in {
+  0% {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+  100% {
