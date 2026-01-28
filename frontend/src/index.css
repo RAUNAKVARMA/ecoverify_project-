@@ -237,3 +237,12 @@
     filter: blur(0);
   }
   100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes pill-up {
+  from {
+    opacity: 0;
