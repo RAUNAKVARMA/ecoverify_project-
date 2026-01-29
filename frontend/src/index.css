@@ -263,3 +263,12 @@
 }
 
 .font-hand {
+  font-family: var(--font-hand);
+}
+
+/* —— App scan page —— */
+.app-shell {
+  min-height: 100svh;
+  padding: 1rem 1rem 6.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
