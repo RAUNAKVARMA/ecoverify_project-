@@ -280,3 +280,12 @@
   }
 }
 
+.app-home-hero {
+  border-radius: 1.75rem;
+  border: 0.5px solid var(--color-border-warm);
+  background: rgba(255, 255, 255, 0.72);
+  padding: 1.25rem 1.25rem 1.5rem;
+  box-shadow: 0 10px 30px rgba(71, 58, 45, 0.06);
+}
+
+.skip-intro,
