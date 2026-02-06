@@ -323,3 +323,12 @@
   background: var(--color-paper);
   --mx: 0px;
   --my: 0px;
+}
+
+.amo-paper {
+  position: absolute;
+  inset: 0;
+  background: var(--color-paper);
+  z-index: 0;
+}
+
