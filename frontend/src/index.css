@@ -315,3 +315,11 @@
   z-index: 90;
 }
 
+/* —— AMO stage: cream paper + centered logo + scrapbook —— */
+.amo-stage {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  background: var(--color-paper);
+  --mx: 0px;
+  --my: 0px;
