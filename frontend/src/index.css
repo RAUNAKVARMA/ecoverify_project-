@@ -349,3 +349,12 @@
   display: grid;
   place-items: center;
   pointer-events: none;
+  transition: transform 0.7s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.is-phones .amo-center-brand {
+  opacity: 1;
+  transform: translateY(-36vh) scale(0.4);
+  transition:
+    opacity 0.45s ease,
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
