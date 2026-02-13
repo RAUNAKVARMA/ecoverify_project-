@@ -366,3 +366,12 @@
   font-family: var(--font-hand);
   font-weight: 700;
 }
+
+.wm-stage {
+  position: relative;
+  width: min(92vw, 760px);
+  height: clamp(5.5rem, 18vw, 9.5rem);
+  display: grid;
+  place-items: center;
+}
+
