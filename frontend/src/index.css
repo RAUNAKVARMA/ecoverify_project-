@@ -375,3 +375,12 @@
   place-items: center;
 }
 
+.wm-logo {
+  position: absolute;
+  margin: 0;
+  opacity: 0;
+  text-align: center;
+  line-height: 0.88;
+}
+
+.wm-logo.is-active {
