@@ -401,3 +401,12 @@
   color: #1a1919;
 }
 
+.wm-bold {
+  font-family: var(--font-sans);
+  font-size: clamp(3.2rem, 12vw, 7rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  color: #1a1919;
+}
+
+.wm-outline {
