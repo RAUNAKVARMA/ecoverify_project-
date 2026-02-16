@@ -384,3 +384,11 @@
 }
 
 .wm-logo.is-active {
+  opacity: 1;
+  animation: wm-morph 0.7s cubic-bezier(0.33, 1, 0.68, 1) both;
+}
+
+.wm-logo.is-active .wm-letter {
+  display: inline-block;
+  animation: letter-in 0.5s cubic-bezier(0.33, 1, 0.68, 1) calc(var(--i) * 0.04s) both;
+}
