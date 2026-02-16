@@ -392,3 +392,12 @@
   display: inline-block;
   animation: letter-in 0.5s cubic-bezier(0.33, 1, 0.68, 1) calc(var(--i) * 0.04s) both;
 }
+
+.wm-script {
+  font-family: var(--font-hand);
+  font-size: clamp(4.2rem, 15vw, 8.5rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: #1a1919;
+}
+
