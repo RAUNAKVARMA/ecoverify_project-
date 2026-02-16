@@ -410,3 +410,11 @@
 }
 
 .wm-outline {
+  font-family: var(--font-sans);
+  font-size: clamp(3.2rem, 12vw, 7rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  color: transparent;
+  -webkit-text-stroke: 3px #1a1919;
+  text-shadow:
+    4px 4px 0 #cfe8da,
