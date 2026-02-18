@@ -418,3 +418,12 @@
   -webkit-text-stroke: 3px #1a1919;
   text-shadow:
     4px 4px 0 #cfe8da,
+    8px 8px 0 rgba(31, 107, 74, 0.15);
+}
+
+.wm-outline .wm-letter {
+  -webkit-text-stroke: 3px #1a1919;
+}
+
+.wm-hint {
+  position: absolute;
