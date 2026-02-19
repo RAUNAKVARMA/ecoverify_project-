@@ -461,3 +461,12 @@
 
 
 
+.is-collage .amo-scene,
+.is-assemble .amo-scene {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* legacy middle layer unused — Option A is one continuous amo-scene */
+.amo-middle-scene {
+  display: none !important;
