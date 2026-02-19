@@ -444,3 +444,12 @@
   font-size: clamp(3rem, 11vw, 6.5rem);
   font-weight: 800;
   letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: #1a1919;
+  text-align: center;
+  animation: brand-settle 0.55s cubic-bezier(0.33, 1, 0.68, 1) both;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Scrapbook scene */
+.amo-scene {
