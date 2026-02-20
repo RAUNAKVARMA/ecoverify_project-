@@ -470,3 +470,11 @@
 /* legacy middle layer unused — Option A is one continuous amo-scene */
 .amo-middle-scene {
   display: none !important;
+}
+
+
+.is-wordmarks .amo-scene,
+.is-reveal .amo-scene {
+  visibility: hidden;
+  opacity: 0;
+}
