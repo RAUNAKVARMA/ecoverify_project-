@@ -478,3 +478,12 @@
   visibility: hidden;
   opacity: 0;
 }
+
+/* Act 2 - sky photo bloom (no video) */
+.amo-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
