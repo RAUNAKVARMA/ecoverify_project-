@@ -487,3 +487,12 @@
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
+  overflow: hidden;
+}
+
+.amo-reveal {
+  display: none !important;
+}
+
+.is-collage .amo-reveal {
+  opacity: 0;
