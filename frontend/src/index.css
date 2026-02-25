@@ -496,3 +496,11 @@
 
 .is-collage .amo-reveal {
   opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease;
+}
+
+.amo-reveal-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
