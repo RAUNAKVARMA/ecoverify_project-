@@ -521,3 +521,12 @@
     radial-gradient(ellipse at 50% 42%, transparent 28%, rgba(8, 22, 40, 0.38) 100%),
     linear-gradient(180deg, rgba(8, 20, 36, 0.18), transparent 42%, rgba(8, 20, 36, 0.22));
   pointer-events: none;
+}
+
+.amo-reveal-tag {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  z-index: 2;
+  margin: 0;
+  width: min(90vw, 28rem);
