@@ -530,3 +530,12 @@
   z-index: 2;
   margin: 0;
   width: min(90vw, 28rem);
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: clamp(1.55rem, 4.5vw, 2.45rem);
+  font-weight: 700;
+  line-height: 1.15;
+  color: rgba(255, 255, 255, 0.97);
+  text-shadow: 0 8px 28px rgba(0, 0, 0, 0.38);
+  opacity: 0;
