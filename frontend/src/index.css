@@ -547,3 +547,12 @@
 
 .is-reveal .amo-paper,
 .is-reveal .amo-dotgrid {
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+.is-reveal .amo-center-brand.is-on-sky .amo-center-title {
+  color: #fff;
+  text-shadow: 0 12px 36px rgba(0, 0, 0, 0.42);
+  transform: translateY(-8vh) scale(1.05);
+  animation: brand-settle 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
