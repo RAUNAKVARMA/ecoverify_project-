@@ -556,3 +556,11 @@
   text-shadow: 0 12px 36px rgba(0, 0, 0, 0.42);
   transform: translateY(-8vh) scale(1.05);
   animation: brand-settle 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.amo-sky-cutout {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: -3%;
+  height: min(42vh, 380px);
