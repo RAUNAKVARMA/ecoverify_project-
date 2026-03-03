@@ -539,3 +539,11 @@
   color: rgba(255, 255, 255, 0.97);
   text-shadow: 0 8px 28px rgba(0, 0, 0, 0.38);
   opacity: 0;
+}
+
+.is-reveal .amo-reveal-tag {
+  animation: fade-up 0.75s ease 0.35s both;
+}
+
+.is-reveal .amo-paper,
+.is-reveal .amo-dotgrid {
