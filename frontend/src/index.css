@@ -564,3 +564,12 @@
   right: 5%;
   top: -3%;
   height: min(42vh, 380px);
+  border-radius: 0 0 48% 48% / 0 0 34% 34%;
+  overflow: hidden;
+  opacity: 0;
+  z-index: 2;
+  box-shadow: 0 22px 48px rgba(47, 36, 28, 0.22);
+}
+
+.amo-sky-cutout.is-sky-in {
+  animation: sky-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.55s both;
