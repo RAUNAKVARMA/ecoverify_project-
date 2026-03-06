@@ -582,3 +582,11 @@
   object-fit: cover;
   object-position: center 40%;
 }
+
+/* Pieces = paper cutouts */
+.piece {
+  position: absolute;
+  z-index: var(--z, 5);
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
