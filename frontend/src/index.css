@@ -616,3 +616,12 @@
   --ox: -5vw;
   --oy: 105vh;
 }
+.piece-from-topleft {
+  --ox: -88vw;
+  --oy: -88vh;
+}
+.piece-from-topright {
+  --ox: 88vw;
+  --oy: -82vh;
+}
+.piece-from-bottomleft {
