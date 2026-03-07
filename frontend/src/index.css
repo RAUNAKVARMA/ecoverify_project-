@@ -599,3 +599,11 @@
     0 2px 0 rgba(255, 255, 255, 0.35) inset;
 }
 
+/* Fly-in origins — from EVERYWHERE (middle-act collage rain) */
+.piece-from-left {
+  --ox: -92vw;
+  --oy: 12vh;
+}
+.piece-from-right {
+  --ox: 92vw;
+  --oy: -10vh;
