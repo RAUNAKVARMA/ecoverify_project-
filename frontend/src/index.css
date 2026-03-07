@@ -607,3 +607,12 @@
 .piece-from-right {
   --ox: 92vw;
   --oy: -10vh;
+}
+.piece-from-top {
+  --ox: 6vw;
+  --oy: -95vh;
+}
+.piece-from-bottom {
+  --ox: -5vw;
+  --oy: 105vh;
+}
