@@ -625,3 +625,11 @@
   --oy: -82vh;
 }
 .piece-from-bottomleft {
+  --ox: -90vw;
+  --oy: 92vh;
+}
+.piece-from-bottomright {
+  --ox: 90vw;
+  --oy: 95vh;
+}
+
