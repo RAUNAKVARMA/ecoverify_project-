@@ -659,3 +659,12 @@
   left: 6%;
   right: 6%;
   bottom: -4%;
+  z-index: 4;
+  height: min(44vh, 400px);
+  border-radius: 42% 42% 0 0 / 32% 32% 0 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.32) translateY(48%);
+  transform-origin: 50% 100%;
+  box-shadow: 0 24px 50px rgba(47, 36, 28, 0.28);
+  pointer-events: none;
