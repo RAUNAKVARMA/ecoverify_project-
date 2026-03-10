@@ -642,3 +642,11 @@
     brand-settle 0.7s cubic-bezier(0.22, 1, 0.36, 1) both,
     assemble-pulse 2.4s ease-in-out 0.5s both;
 }
+
+/* Continuous collage — earth plate peaks then yields to finale wreath */
+.is-earth-open .amo-center-brand.is-assembling {
+  transform: scale(1.08);
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.is-earth-fade .amo-center-brand.is-assembling {
