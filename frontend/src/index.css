@@ -693,3 +693,12 @@
 }
 
 @keyframes earth-open {
+  0% {
+    opacity: 0;
+    transform: scale(0.28) translateY(52%);
+    filter: blur(8px) brightness(1.15);
+  }
+  55% {
+    opacity: 1;
+    filter: blur(0) brightness(1);
+  }
