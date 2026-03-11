@@ -685,3 +685,11 @@
 .is-earth-fade .mc-open {
   animation: earth-close 0.85s cubic-bezier(0.4, 0, 0.55, 1) both;
 }
+
+.is-phones .mc-open {
+  opacity: 0;
+  visibility: hidden;
+  animation: none;
+}
+
+@keyframes earth-open {
