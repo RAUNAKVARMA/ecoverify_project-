@@ -676,3 +676,12 @@
   object-fit: cover;
   object-position: center 55%;
 }
+
+.mc-open.is-open {
+  animation: earth-open 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.mc-open.is-out,
+.is-earth-fade .mc-open {
+  animation: earth-close 0.85s cubic-bezier(0.4, 0, 0.55, 1) both;
+}
