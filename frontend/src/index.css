@@ -719,3 +719,12 @@
     transform: scale(0.4) translateY(30%);
     filter: blur(6px);
   }
+}
+
+
+.is-phones .piece.is-in {
+  opacity: 1;
+  transform: translate3d(calc(var(--mx, 0px) * var(--d, 1)), calc(var(--my, 0px) * var(--d, 1)), 0)
+    scale(1) rotate(var(--rot, 0deg));
+  filter: none;
+  animation: piece-float 5.5s ease-in-out calc(var(--delay, 0s) + 0.35s) infinite;
