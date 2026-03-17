@@ -728,3 +728,11 @@
     scale(1) rotate(var(--rot, 0deg));
   filter: none;
   animation: piece-float 5.5s ease-in-out calc(var(--delay, 0s) + 0.35s) infinite;
+}
+
+.piece img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
