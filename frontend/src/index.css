@@ -736,3 +736,12 @@
   height: 100%;
   object-fit: cover;
 }
+
+.piece-round {
+  border-radius: 999px;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+}
+
+.piece-squircle {
+  border-radius: 1.5rem;
