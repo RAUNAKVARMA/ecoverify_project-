@@ -771,3 +771,11 @@
 }
 
 .piece-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.28rem;
+  text-align: center;
+  font-family: var(--font-hand);
+  font-size: 1rem;
+  color: #222;
