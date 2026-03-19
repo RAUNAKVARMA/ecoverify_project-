@@ -762,3 +762,12 @@
   background: #fff;
   padding: 0.45rem 0.45rem 1.45rem;
   border-radius: 0.28rem;
+  box-shadow: 0 20px 40px rgba(47, 36, 28, 0.2);
+}
+
+.piece-polaroid img {
+  height: calc(100% - 1rem);
+  border-radius: 0.12rem;
+}
+
+.piece-caption {
