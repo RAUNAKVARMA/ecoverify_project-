@@ -754,3 +754,11 @@
 }
 
 .piece-torn {
+  border-radius: 1rem 1.4rem 0.6rem 1.6rem / 1.3rem 0.8rem 1.5rem 1rem;
+  overflow: hidden;
+}
+
+.piece-polaroid {
+  background: #fff;
+  padding: 0.45rem 0.45rem 1.45rem;
+  border-radius: 0.28rem;
