@@ -797,3 +797,11 @@
 .piece.note {
   margin: 0;
   padding: 0.4rem 0.8rem;
+  border-radius: 0.4rem;
+  font-family: var(--font-hand);
+  font-size: clamp(1.25rem, 2.3vw, 1.75rem);
+  font-weight: 700;
+  color: #1a1919;
+  line-height: 1.05;
+  white-space: nowrap;
+  background: #fffef8;
