@@ -788,3 +788,12 @@
   padding: 0.5rem 0.95rem;
   border-radius: 999px;
   font-weight: 700;
+  font-size: 0.92rem;
+  color: #fff;
+  background: var(--color-forest);
+  white-space: nowrap;
+}
+
+.piece.note {
+  margin: 0;
+  padding: 0.4rem 0.8rem;
