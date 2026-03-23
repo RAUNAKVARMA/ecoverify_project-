@@ -814,3 +814,11 @@
 
 
 /* Middle-act positions — plants + goods around EcoVerify */
+.mc-trail {
+  right: 2%;
+  top: 6%;
+  width: clamp(130px, 15vw, 220px);
+  height: clamp(210px, 26vw, 360px);
+}
+.mc-olive {
+  left: 1%;
