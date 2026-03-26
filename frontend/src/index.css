@@ -840,3 +840,11 @@
 }
 .mc-apples {
   left: 16%;
+  top: 20%;
+  width: clamp(82px, 9.5vw, 125px);
+  height: clamp(82px, 9.5vw, 125px);
+}
+.mc-salad {
+  right: 16%;
+  top: 22%;
+  width: clamp(95px, 11vw, 150px);
