@@ -865,3 +865,12 @@
 .mc-mint {
   right: 28%;
   top: 12%;
+  width: clamp(68px, 8vw, 105px);
+  height: clamp(68px, 8vw, 105px);
+}
+.mc-oranges {
+  left: 28%;
+  top: 14%;
+  width: clamp(74px, 9vw, 115px);
+  height: clamp(74px, 9vw, 115px);
+}
