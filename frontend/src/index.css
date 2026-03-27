@@ -848,3 +848,12 @@
   right: 16%;
   top: 22%;
   width: clamp(95px, 11vw, 150px);
+  height: clamp(108px, 12vw, 165px);
+}
+.mc-greens {
+  left: 54%;
+  top: 28%;
+  width: clamp(86px, 10vw, 135px);
+  height: clamp(86px, 10vw, 135px);
+}
+.mc-market2 {
