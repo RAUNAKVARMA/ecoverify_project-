@@ -857,3 +857,11 @@
   height: clamp(86px, 10vw, 135px);
 }
 .mc-market2 {
+  right: 4%;
+  bottom: 34%;
+  width: clamp(115px, 12vw, 170px);
+  height: clamp(145px, 15vw, 210px);
+}
+.mc-mint {
+  right: 28%;
+  top: 12%;
