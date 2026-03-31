@@ -874,3 +874,12 @@
   width: clamp(74px, 9vw, 115px);
   height: clamp(74px, 9vw, 115px);
 }
+.mc-peppers {
+  right: 8%;
+  top: 48%;
+  width: clamp(90px, 10vw, 140px);
+  height: clamp(105px, 11vw, 155px);
+}
+.mc-grapes {
+  left: 18%;
+  top: 48%;
