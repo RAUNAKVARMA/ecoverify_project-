@@ -883,3 +883,11 @@
 .mc-grapes {
   left: 18%;
   top: 48%;
+  width: clamp(70px, 8vw, 105px);
+  height: clamp(70px, 8vw, 105px);
+}
+.mc-pottery {
+  right: 36%;
+  top: 18%;
+  width: clamp(66px, 7.5vw, 98px);
+  height: clamp(66px, 7.5vw, 98px);
