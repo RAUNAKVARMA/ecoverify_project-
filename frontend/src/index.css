@@ -891,3 +891,12 @@
   top: 18%;
   width: clamp(66px, 7.5vw, 98px);
   height: clamp(66px, 7.5vw, 98px);
+}
+.mc-soap {
+  left: 62%;
+  top: 44%;
+  width: clamp(82px, 9vw, 125px);
+  height: clamp(96px, 10vw, 145px);
+}
+.mc-cabbage {
+  right: 18%;
