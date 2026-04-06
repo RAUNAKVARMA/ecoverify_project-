@@ -900,3 +900,11 @@
 }
 .mc-cabbage {
   right: 18%;
+  top: 54%;
+  width: clamp(76px, 9vw, 115px);
+  height: clamp(76px, 9vw, 115px);
+}
+.mc-kiwi {
+  left: 40%;
+  top: 52%;
+  width: clamp(68px, 8vw, 100px);
