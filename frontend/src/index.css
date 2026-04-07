@@ -917,3 +917,12 @@
   left: -6%;
   bottom: -6%;
   width: clamp(200px, 26vw, 380px);
+  height: clamp(290px, 38vw, 520px);
+  --fx: 4px;
+  --fy: -8px;
+}
+.pc-leaves {
+  right: -6%;
+  top: 2%;
+  width: clamp(160px, 18vw, 280px);
+  height: clamp(230px, 26vw, 380px);
