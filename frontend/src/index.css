@@ -943,3 +943,12 @@
   width: clamp(100px, 12vw, 170px);
   height: clamp(100px, 12vw, 170px);
   --fy: -10px;
+}
+.pc-field {
+  left: -3%;
+  top: 18%;
+  width: clamp(130px, 14vw, 200px);
+  height: clamp(160px, 17vw, 250px);
+  --fx: 6px;
+}
+.pc-forest {
