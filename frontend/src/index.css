@@ -934,3 +934,12 @@
   right: 14%;
   bottom: -4%;
   width: auto;
+  height: clamp(130px, 19vh, 220px);
+  --fy: -5px;
+}
+.pc-sun {
+  left: 42%;
+  top: 14%;
+  width: clamp(100px, 12vw, 170px);
+  height: clamp(100px, 12vw, 170px);
+  --fy: -10px;
