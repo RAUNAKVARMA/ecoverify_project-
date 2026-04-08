@@ -952,3 +952,11 @@
   --fx: 6px;
 }
 .pc-forest {
+  right: -4%;
+  top: 24%;
+  width: clamp(150px, 16vw, 230px);
+  height: clamp(190px, 20vw, 290px);
+  --fx: -6px;
+}
+.pc-hands {
+  left: 4%;
