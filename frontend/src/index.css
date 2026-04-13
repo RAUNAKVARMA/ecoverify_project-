@@ -969,3 +969,11 @@
 .pc-bottle {
   left: 26%;
   top: 9%;
+  width: clamp(72px, 8vw, 108px);
+  height: clamp(72px, 8vw, 108px);
+  --fy: -9px;
+}
+.pc-honey {
+  right: 26%;
+  top: 8%;
+  width: clamp(70px, 7.5vw, 104px);
