@@ -977,3 +977,12 @@
   right: 26%;
   top: 8%;
   width: clamp(70px, 7.5vw, 104px);
+  height: clamp(70px, 7.5vw, 104px);
+  --fy: -8px;
+}
+.pc-market {
+  right: 3%;
+  bottom: 16%;
+  width: clamp(115px, 12vw, 170px);
+  height: clamp(140px, 14vw, 205px);
+  --fx: -5px;
