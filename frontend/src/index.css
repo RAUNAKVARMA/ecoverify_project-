@@ -960,3 +960,12 @@
 }
 .pc-hands {
   left: 4%;
+  top: 34%;
+  width: clamp(120px, 13vw, 185px);
+  height: clamp(150px, 15vw, 220px);
+  --fx: 5px;
+  --fy: -7px;
+}
+.pc-bottle {
+  left: 26%;
+  top: 9%;
