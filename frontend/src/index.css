@@ -986,3 +986,12 @@
   width: clamp(115px, 12vw, 170px);
   height: clamp(140px, 14vw, 205px);
   --fx: -5px;
+}
+.pc-bamboo {
+  left: 1%;
+  top: 56%;
+  width: clamp(95px, 10vw, 140px);
+  height: clamp(120px, 13vw, 175px);
+}
+.pc-berries {
+  right: 28%;
