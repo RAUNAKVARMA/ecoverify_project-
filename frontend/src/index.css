@@ -1012,3 +1012,11 @@
   width: clamp(88px, 9.5vw, 130px);
   height: clamp(100px, 11vw, 150px);
 }
+.pc-herbs {
+  left: 14%;
+  top: 48%;
+  width: clamp(85px, 9vw, 125px);
+  height: clamp(100px, 11vw, 145px);
+}
+.pc-coco {
+  right: 12%;
