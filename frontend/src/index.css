@@ -995,3 +995,11 @@
 }
 .pc-berries {
   right: 28%;
+  top: 46%;
+  width: clamp(68px, 7.5vw, 100px);
+  height: clamp(68px, 7.5vw, 100px);
+  --fy: -7px;
+}
+.pc-citrus {
+  left: 30%;
+  bottom: 8%;
