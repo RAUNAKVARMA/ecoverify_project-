@@ -1003,3 +1003,12 @@
 .pc-citrus {
   left: 30%;
   bottom: 8%;
+  width: clamp(68px, 7.5vw, 98px);
+  height: clamp(68px, 7.5vw, 98px);
+}
+.pc-moss {
+  left: 48%;
+  top: 8%;
+  width: clamp(88px, 9.5vw, 130px);
+  height: clamp(100px, 11vw, 150px);
+}
