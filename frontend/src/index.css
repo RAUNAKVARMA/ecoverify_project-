@@ -1020,3 +1020,12 @@
 }
 .pc-coco {
   right: 12%;
+  top: 52%;
+  width: clamp(70px, 7.5vw, 100px);
+  height: clamp(70px, 7.5vw, 100px);
+}
+.pc-milk {
+  right: 34%;
+  bottom: 7%;
+  width: clamp(80px, 8.5vw, 120px);
+  height: clamp(95px, 10vw, 140px);
