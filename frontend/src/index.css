@@ -1055,3 +1055,11 @@
   width: clamp(60px, 6.5vw, 88px);
   height: clamp(60px, 6.5vw, 88px);
 }
+
+.st-trust {
+  left: 20%;
+  top: 20%;
+}
+.st-scan {
+  right: 18%;
+  top: 22%;
