@@ -1098,3 +1098,11 @@
   left: 44%;
   bottom: 22%;
 }
+
+.piece.doodle {
+  display: grid;
+  place-items: center;
+  width: auto;
+  height: auto;
+  background: transparent;
+  box-shadow: none;
