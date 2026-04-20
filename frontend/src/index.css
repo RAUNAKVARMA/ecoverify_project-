@@ -1106,3 +1106,12 @@
   height: auto;
   background: transparent;
   box-shadow: none;
+  border: none;
+  font-size: clamp(1.4rem, 2.5vw, 2.1rem);
+  color: rgba(31, 107, 74, 0.55);
+  font-weight: 700;
+}
+.d-star { left: 34%; top: 42%; --rot: 12deg; --ox: 0px; --oy: -30px; }
+.d-plus { right: 36%; top: 40%; color: rgba(50, 50, 50, 0.35); --rot: -8deg; --ox: 20px; --oy: 0px; }
+.d-curl { left: 52%; bottom: 28%; font-family: var(--font-hand); font-size: clamp(2rem, 4vw, 3rem); color: rgba(31, 107, 74, 0.4); --rot: 6deg; }
+
