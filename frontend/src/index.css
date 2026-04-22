@@ -1141,3 +1141,11 @@
 
 .amo-phones.is-up .amo-pill {
   animation: pill-up 0.6s cubic-bezier(0.33, 1, 0.68, 1) calc(0.3s + var(--i) * 0.14s) both;
+}
+
+.amo-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  opacity: 0;
