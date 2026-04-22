@@ -1132,3 +1132,12 @@
 
 .amo-phones.is-up {
   opacity: 1;
+}
+
+.amo-phones.is-up .amo-app {
+  pointer-events: auto;
+  animation: phones-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 0.14s) both;
+}
+
+.amo-phones.is-up .amo-pill {
+  animation: pill-up 0.6s cubic-bezier(0.33, 1, 0.68, 1) calc(0.3s + var(--i) * 0.14s) both;
