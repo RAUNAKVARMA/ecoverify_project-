@@ -1115,3 +1115,12 @@
 .d-plus { right: 36%; top: 40%; color: rgba(50, 50, 50, 0.35); --rot: -8deg; --ox: 20px; --oy: 0px; }
 .d-curl { left: 52%; bottom: 28%; font-family: var(--font-hand); font-size: clamp(2rem, 4vw, 3rem); color: rgba(31, 107, 74, 0.4); --rot: 6deg; }
 
+/* Phones rise OVER the collage — AMO finale */
+.amo-phones {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
