@@ -1175,3 +1175,12 @@ a.amo-phone {
   color: inherit;
   text-decoration: none;
 }
+
+.amo-phone:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.amo-phone img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
