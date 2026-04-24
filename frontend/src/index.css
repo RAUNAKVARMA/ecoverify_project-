@@ -1192,3 +1192,12 @@ a.amo-phone {
   bottom: 0.7rem;
   width: 42px;
   height: 42px;
+  border-radius: 0.35rem;
+  background: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  padding: 5px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
