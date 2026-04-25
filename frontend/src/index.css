@@ -1201,3 +1201,12 @@ a.amo-phone {
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
+.amo-qr span {
+  background: #111;
+  border-radius: 2px;
+}
+
+.amo-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
