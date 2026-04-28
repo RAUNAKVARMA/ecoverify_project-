@@ -1235,3 +1235,12 @@ a.amo-phone {
   width: 34px;
   height: 34px;
   border-radius: 999px;
+  color: #fff;
+}
+
+.amo-pill-icon.forest {
+  background: var(--color-forest);
+}
+
+.amo-pill-icon.ink {
+  background: #1a1919;
