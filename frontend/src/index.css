@@ -1244,3 +1244,12 @@ a.amo-phone {
 
 .amo-pill-icon.ink {
   background: #1a1919;
+}
+
+.amo-pill strong {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  line-height: 1.1;
+}
