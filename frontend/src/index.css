@@ -1261,3 +1261,12 @@ a.amo-phone {
 }
 
 .menu-pill {
+  border: 0.5px solid var(--color-border-warm);
+  border-radius: 15px;
+  background:
+    linear-gradient(180deg, #fff 0%, rgba(255, 255, 255, 0) 100%),
+    var(--color-paper-deep);
+  box-shadow:
+    0 -1px 1.5px 0 var(--color-border-warm) inset,
+    0 1.5px 6px rgba(71, 58, 45, 0.05),
+    0 1.5px 6px rgba(71, 58, 45, 0.05);
