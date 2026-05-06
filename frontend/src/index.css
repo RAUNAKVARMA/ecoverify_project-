@@ -1278,3 +1278,12 @@ a.amo-phone {
 }
 
 @media (max-width: 900px) {
+  .pc-field,
+  .pc-moss,
+  .pc-herbs,
+  .pc-leaves,
+  .pc-beach {
+    display: none;
+  }
+}
+
