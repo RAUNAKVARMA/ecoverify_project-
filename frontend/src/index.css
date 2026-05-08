@@ -1287,3 +1287,12 @@ a.amo-phone {
   }
 }
 
+@media (max-width: 640px) {
+  .pc-milk,
+  .pc-coco,
+  .pc-bamboo,
+  .pc-bread,
+  .pc-tea,
+  .st-green,
+  .st-ok,
+  .sc-5,
