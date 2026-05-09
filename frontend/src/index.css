@@ -1296,3 +1296,11 @@ a.amo-phone {
   .st-green,
   .st-ok,
   .sc-5,
+  .doodle {
+    display: none;
+  }
+
+  .amo-phone {
+    width: min(155px, 38vw);
+  }
+}
