@@ -1304,3 +1304,12 @@ a.amo-phone {
     width: min(155px, 38vw);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .piece,
+  .wm-logo,
+  .wm-letter,
+  .amo-center-title,
+  .amo-sky-cutout,
+  .amo-phones.is-up .amo-app,
+  .amo-phones.is-up .amo-pill,
