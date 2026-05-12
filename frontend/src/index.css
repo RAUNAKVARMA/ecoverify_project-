@@ -1313,3 +1313,11 @@ a.amo-phone {
   .amo-sky-cutout,
   .amo-phones.is-up .amo-app,
   .amo-phones.is-up .amo-pill,
+  .amo-reveal,
+  .amo-reveal-photo,
+  .amo-reveal-tag,
+  .animate-fade-up,
+  .animate-spring-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
