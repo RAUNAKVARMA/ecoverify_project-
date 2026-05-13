@@ -1321,3 +1321,12 @@ a.amo-phone {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
+  }
+
+  .is-phones .amo-center-brand {
+    opacity: 1;
+    transform: translateY(-34vh) scale(0.4);
+  }
+
+  .amo-reveal {
