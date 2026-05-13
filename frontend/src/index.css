@@ -1330,3 +1330,12 @@ a.amo-phone {
   }
 
   .amo-reveal {
+    display: none;
+  }
+
+  .is-phones .piece.is-in {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  .amo-phone:hover {
