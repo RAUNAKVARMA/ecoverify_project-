@@ -1339,3 +1339,6 @@ a.amo-phone {
   }
 
   .amo-phone:hover {
+    transform: none;
+  }
+}
