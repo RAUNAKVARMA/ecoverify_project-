@@ -12,3 +12,11 @@ export const products = [
     trust_score: 72,
     breakdown: {
       certifications: ['FSC (verified)', 'Carbon Neutral (pending)'],
+      materials_analysis: '60% recycled, 40% virgin plastic',
+      supply_chain_transparency: 'Limited (country origin only)',
+      packaging_assessment: 'Fully recyclable',
+      carbon_footprint: 'Medium - 2.1kg CO2e per unit',
+    },
+    greenwashing_risk: 'low',
+  },
+  {
