@@ -20,3 +20,12 @@ export const products = [
     greenwashing_risk: 'low',
   },
   {
+    id: '2',
+    barcode: '8901234567891',
+    name: 'Bamboo Toothbrush Set',
+    brand: 'EcoSmile',
+    category: 'Personal Care',
+    price: 249,
+    image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=200',
+    trust_score: 89,
+    breakdown: {
