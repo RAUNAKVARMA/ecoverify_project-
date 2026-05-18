@@ -29,3 +29,12 @@ export const products = [
     image: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=200',
     trust_score: 89,
     breakdown: {
+      certifications: ['FSC (verified)', 'Plastic-Free (verified)'],
+      materials_analysis: '100% bamboo handle, plant-based bristles',
+      supply_chain_transparency: 'Full farm-to-shelf traceability',
+      packaging_assessment: 'Compostable cardboard',
+      carbon_footprint: 'Low - 0.4kg CO2e per unit',
+    },
+    greenwashing_risk: 'low',
+  },
+  {
