@@ -38,3 +38,11 @@ export const products = [
     greenwashing_risk: 'low',
   },
   {
+    id: '3',
+    barcode: '8901234567892',
+    name: 'Green Tea Bottles',
+    brand: 'PureBrew',
+    category: 'Beverages',
+    price: 120,
+    image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=200',
+    trust_score: 45,
