@@ -46,3 +46,12 @@ export const products = [
     price: 120,
     image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=200',
     trust_score: 45,
+    breakdown: {
+      certifications: ['Organic (unverified claim)'],
+      materials_analysis: 'Single-use PET plastic bottle',
+      supply_chain_transparency: 'Opaque — no origin disclosed',
+      packaging_assessment: 'Non-recyclable sleeve over PET',
+      carbon_footprint: 'High - 3.8kg CO2e per unit',
+    },
+    greenwashing_risk: 'high',
+  },
