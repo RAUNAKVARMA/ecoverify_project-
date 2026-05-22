@@ -72,3 +72,12 @@ export const products = [
       carbon_footprint: 'Low - 1.2kg CO2e per unit',
     },
     greenwashing_risk: 'low',
+  },
+  {
+    id: '5',
+    barcode: '8901234567894',
+    name: 'Almond Butter Jar',
+    brand: 'NutriNuts',
+    category: 'Food',
+    price: 450,
+    image: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=200',
