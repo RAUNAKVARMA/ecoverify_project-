@@ -55,3 +55,11 @@ export const products = [
     },
     greenwashing_risk: 'high',
   },
+  {
+    id: '4',
+    barcode: '8901234567893',
+    name: 'Organic Cotton T-Shirt',
+    brand: 'FairWear',
+    category: 'Fashion',
+    price: 899,
+    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200',
