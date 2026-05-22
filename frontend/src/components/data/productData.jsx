@@ -63,3 +63,12 @@ export const products = [
     category: 'Fashion',
     price: 899,
     image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=200',
+    trust_score: 82,
+    breakdown: {
+      certifications: ['GOTS (verified)', 'Fair Trade (verified)'],
+      materials_analysis: '100% organic cotton, low-impact dyes',
+      supply_chain_transparency: 'Factory audited, public supplier list',
+      packaging_assessment: 'Recycled paper mailer',
+      carbon_footprint: 'Low - 1.2kg CO2e per unit',
+    },
+    greenwashing_risk: 'low',
