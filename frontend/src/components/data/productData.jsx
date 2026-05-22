@@ -81,3 +81,11 @@ export const products = [
     category: 'Food',
     price: 450,
     image: 'https://images.unsplash.com/photo-1505576399279-565b52d4ac71?w=200',
+    trust_score: 68,
+    breakdown: {
+      certifications: ['Non-GMO (verified)', 'Organic (pending)'],
+      materials_analysis: 'Glass jar with plastic lid',
+      supply_chain_transparency: 'Partial — farm region disclosed',
+      packaging_assessment: 'Glass recyclable; lid is mixed plastic',
+      carbon_footprint: 'Medium - 2.5kg CO2e per unit',
+    },
