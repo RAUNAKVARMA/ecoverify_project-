@@ -107,3 +107,11 @@ export const products = [
       packaging_assessment: 'Minimal recycled cardboard',
       carbon_footprint: 'Very Low - 0.3kg CO2e per unit (lifetime amortized)',
     },
+    greenwashing_risk: 'low',
+  },
+  {
+    id: '7',
+    barcode: '8901234567896',
+    name: 'Dish Soap Liquid',
+    brand: 'CleanGreen',
+    category: 'Household',
