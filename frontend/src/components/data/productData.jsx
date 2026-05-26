@@ -98,3 +98,12 @@ export const products = [
     brand: 'HydroEco',
     category: 'Accessories',
     price: 699,
+    image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=200',
+    trust_score: 91,
+    breakdown: {
+      certifications: ['BPA-Free (verified)', 'Climate Neutral (verified)'],
+      materials_analysis: 'Food-grade stainless steel, silicone seal',
+      supply_chain_transparency: 'Full transparency report published',
+      packaging_assessment: 'Minimal recycled cardboard',
+      carbon_footprint: 'Very Low - 0.3kg CO2e per unit (lifetime amortized)',
+    },
