@@ -89,3 +89,12 @@ export const products = [
       packaging_assessment: 'Glass recyclable; lid is mixed plastic',
       carbon_footprint: 'Medium - 2.5kg CO2e per unit',
     },
+    greenwashing_risk: 'medium',
+  },
+  {
+    id: '6',
+    barcode: '8901234567895',
+    name: 'Reusable Water Bottle',
+    brand: 'HydroEco',
+    category: 'Accessories',
+    price: 699,
