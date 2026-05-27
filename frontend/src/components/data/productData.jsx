@@ -115,3 +115,12 @@ export const products = [
     name: 'Dish Soap Liquid',
     brand: 'CleanGreen',
     category: 'Household',
+    price: 180,
+    image: 'https://images.unsplash.com/photo-1585421514738-01798e348b17?w=200',
+    trust_score: 35,
+    breakdown: {
+      certifications: ['Eco-Friendly (marketing only)'],
+      materials_analysis: 'Petroleum-based surfactants, microplastics',
+      supply_chain_transparency: 'None disclosed',
+      packaging_assessment: 'Virgin plastic bottle, non-refillable',
+      carbon_footprint: 'High - 4.2kg CO2e per unit',
