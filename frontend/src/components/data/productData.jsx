@@ -124,3 +124,11 @@ export const products = [
       supply_chain_transparency: 'None disclosed',
       packaging_assessment: 'Virgin plastic bottle, non-refillable',
       carbon_footprint: 'High - 4.2kg CO2e per unit',
+    },
+    greenwashing_risk: 'high',
+  },
+  {
+    id: '8',
+    barcode: '8901234567897',
+    name: 'Organic Honey',
+    brand: 'BeeNatural',
