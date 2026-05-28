@@ -141,3 +141,12 @@ export const products = [
       materials_analysis: 'Glass jar, aluminum lid',
       supply_chain_transparency: 'Apiary location disclosed',
       packaging_assessment: 'Fully recyclable glass',
+      carbon_footprint: 'Low - 0.9kg CO2e per unit',
+    },
+    greenwashing_risk: 'low',
+  },
+  {
+    id: '9',
+    barcode: '8901234567898',
+    name: 'Eco Laundry Pods',
+    brand: 'WashWise',
