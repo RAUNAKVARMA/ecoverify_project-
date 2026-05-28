@@ -132,3 +132,12 @@ export const products = [
     barcode: '8901234567897',
     name: 'Organic Honey',
     brand: 'BeeNatural',
+    category: 'Food',
+    price: 320,
+    image: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=200',
+    trust_score: 78,
+    breakdown: {
+      certifications: ['Organic (verified)', 'Raw Unfiltered (verified)'],
+      materials_analysis: 'Glass jar, aluminum lid',
+      supply_chain_transparency: 'Apiary location disclosed',
+      packaging_assessment: 'Fully recyclable glass',
