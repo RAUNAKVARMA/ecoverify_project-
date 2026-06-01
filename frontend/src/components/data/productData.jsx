@@ -167,3 +167,11 @@ export const products = [
     id: '10',
     barcode: '8901234567899',
     name: 'Coconut Oil (Cold Pressed)',
+    brand: 'TropicPure',
+    category: 'Food',
+    price: 280,
+    image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=200',
+    trust_score: 84,
+    breakdown: {
+      certifications: ['Organic (verified)', 'Cold-Pressed (verified)'],
+      materials_analysis: 'Glass jar, metal lid',
