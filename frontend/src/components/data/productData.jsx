@@ -150,3 +150,11 @@ export const products = [
     barcode: '8901234567898',
     name: 'Eco Laundry Pods',
     brand: 'WashWise',
+    category: 'Household',
+    price: 399,
+    image: 'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=200',
+    trust_score: 76,
+    breakdown: {
+      certifications: ['EPA Safer Choice (verified)', 'Plastic-Free (verified)'],
+      materials_analysis: 'Plant-based enzymes, PVA film',
+      supply_chain_transparency: 'Ingredient list fully published',
