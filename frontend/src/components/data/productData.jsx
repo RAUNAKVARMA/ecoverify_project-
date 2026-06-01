@@ -158,3 +158,12 @@ export const products = [
       certifications: ['EPA Safer Choice (verified)', 'Plastic-Free (verified)'],
       materials_analysis: 'Plant-based enzymes, PVA film',
       supply_chain_transparency: 'Ingredient list fully published',
+      packaging_assessment: 'Cardboard box, recyclable',
+      carbon_footprint: 'Medium - 1.8kg CO2e per pack',
+    },
+    greenwashing_risk: 'low',
+  },
+  {
+    id: '10',
+    barcode: '8901234567899',
+    name: 'Coconut Oil (Cold Pressed)',
