@@ -175,3 +175,12 @@ export const products = [
     breakdown: {
       certifications: ['Organic (verified)', 'Cold-Pressed (verified)'],
       materials_analysis: 'Glass jar, metal lid',
+      supply_chain_transparency: 'Cooperative farms, fair wages',
+      packaging_assessment: 'Recyclable glass',
+      carbon_footprint: 'Low - 1.1kg CO2e per unit',
+    },
+    greenwashing_risk: 'low',
+  },
+  {
+    id: '11',
+    barcode: '8901234567800',
