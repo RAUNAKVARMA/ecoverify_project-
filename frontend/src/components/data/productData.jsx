@@ -184,3 +184,12 @@ export const products = [
   {
     id: '11',
     barcode: '8901234567800',
+    name: 'Energy Drink',
+    brand: 'PowerRush',
+    category: 'Beverages',
+    price: 99,
+    image: 'https://images.unsplash.com/photo-1622543925917-763c34f1f321?w=200',
+    trust_score: 28,
+    breakdown: {
+      certifications: ['Natural Energy (unverified)'],
+      materials_analysis: 'Aluminum can with plastic liner',
