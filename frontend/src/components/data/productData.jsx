@@ -193,3 +193,11 @@ export const products = [
     breakdown: {
       certifications: ['Natural Energy (unverified)'],
       materials_analysis: 'Aluminum can with plastic liner',
+      supply_chain_transparency: 'None',
+      packaging_assessment: 'Single-use aluminum, plastic ring',
+      carbon_footprint: 'Very High - 5.1kg CO2e per unit',
+    },
+    greenwashing_risk: 'high',
+  },
+  {
+    id: '12',
