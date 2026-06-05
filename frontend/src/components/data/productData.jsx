@@ -201,3 +201,12 @@ export const products = [
   },
   {
     id: '12',
+    barcode: '8901234567801',
+    name: 'Recycled Paper Notebook',
+    brand: 'WriteRight',
+    category: 'Stationery',
+    price: 150,
+    image: 'https://images.unsplash.com/photo-1531346878377-a5be20836c33?w=200',
+    trust_score: 88,
+    breakdown: {
+      certifications: ['FSC Recycled (verified)', 'Cradle to Cradle (verified)'],
