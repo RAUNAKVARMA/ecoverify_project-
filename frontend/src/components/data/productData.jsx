@@ -210,3 +210,11 @@ export const products = [
     trust_score: 88,
     breakdown: {
       certifications: ['FSC Recycled (verified)', 'Cradle to Cradle (verified)'],
+      materials_analysis: '100% post-consumer recycled paper',
+      supply_chain_transparency: 'Mill and binder disclosed',
+      packaging_assessment: 'No plastic wrap — soy ink label',
+      carbon_footprint: 'Very Low - 0.2kg CO2e per unit',
+    },
+    greenwashing_risk: 'low',
+  },
+]
