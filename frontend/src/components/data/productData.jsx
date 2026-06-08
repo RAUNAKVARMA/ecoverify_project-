@@ -218,3 +218,12 @@ export const products = [
     greenwashing_risk: 'low',
   },
 ]
+
+export const mockScanHistory = [
+  { productId: '6', timestamp: hoursAgo(2), saved: true },
+  { productId: '2', timestamp: hoursAgo(8), saved: false },
+  { productId: '3', timestamp: hoursAgo(18), saved: true },
+  { productId: '1', timestamp: hoursAgo(36), saved: false },
+  { productId: '7', timestamp: hoursAgo(60), saved: false },
+]
+
