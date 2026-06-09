@@ -227,3 +227,12 @@ export const mockScanHistory = [
   { productId: '7', timestamp: hoursAgo(60), saved: false },
 ]
 
+export const ecoTips = [
+  'Choose products with verified third-party certifications over vague “eco” marketing claims.',
+  'Prefer reusable and refillable packaging — it often cuts lifecycle emissions more than material swaps alone.',
+  'Check supply-chain transparency: brands that name farms and factories are harder to greenwash.',
+  'Compare Trust Scores within the same category — a 70 in fashion is not the same as a 70 in beverages.',
+  'Look for plastic reduction and recyclability together; recyclable virgin plastic still has a high footprint.',
+]
+
+export function getProductById(id) {
