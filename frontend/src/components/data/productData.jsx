@@ -254,3 +254,11 @@ export function searchProducts(query) {
       p.category.toLowerCase().includes(q)
   )
 }
+
+export function getAlternatives(productId) {
+  const product = getProductById(productId)
+  if (!product) {
+    return products.filter((p) => p.trust_score >= 70).sort((a, b) => b.trust_score - a.trust_score).slice(0, 6)
+  }
+  return products
+    .filter((p) => p.id !== product.id && p.trust_score > product.trust_score)
