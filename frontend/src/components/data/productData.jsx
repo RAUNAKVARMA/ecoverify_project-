@@ -236,3 +236,11 @@ export const ecoTips = [
 ]
 
 export function getProductById(id) {
+  return products.find((p) => p.id === String(id)) || null
+}
+
+export function getProductByBarcode(barcode) {
+  const clean = String(barcode).replace(/\s/g, '')
+  return products.find((p) => p.barcode === clean) || null
+}
+
