@@ -244,3 +244,13 @@ export function getProductByBarcode(barcode) {
   return products.find((p) => p.barcode === clean) || null
 }
 
+export function searchProducts(query) {
+  const q = String(query).toLowerCase().trim()
+  if (!q) return []
+  return products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(q) ||
+      p.brand.toLowerCase().includes(q) ||
+      p.category.toLowerCase().includes(q)
+  )
+}
