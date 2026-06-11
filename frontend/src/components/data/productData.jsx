@@ -262,3 +262,12 @@ export function getAlternatives(productId) {
   }
   return products
     .filter((p) => p.id !== product.id && p.trust_score > product.trust_score)
+    .sort((a, b) => b.trust_score - a.trust_score)
+    .slice(0, 5)
+}
+
+export function getProductsByCategory(category) {
+  if (!category || category === 'All') return products
+  return products.filter((p) => p.category.toLowerCase() === category.toLowerCase())
+}
+
