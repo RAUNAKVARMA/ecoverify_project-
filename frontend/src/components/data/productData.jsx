@@ -271,3 +271,12 @@ export function getProductsByCategory(category) {
   return products.filter((p) => p.category.toLowerCase() === category.toLowerCase())
 }
 
+export function getTrustLabel(score) {
+  if (score < 40) return { label: 'Low', color: 'text-red-600', bg: 'bg-red-100' }
+  if (score < 70) return { label: 'Medium', color: 'text-yellow-600', bg: 'bg-yellow-100' }
+  return { label: 'High', color: 'text-green-600', bg: 'bg-green-100' }
+}
+
+export function getRandomEcoTip() {
+  return ecoTips[Math.floor(Math.random() * ecoTips.length)]
+}
