@@ -288,3 +288,12 @@ export function getCategories() {
 export function matchProductFromAI(classification, ecoRating) {
   // Prefer explicit model pick when confidence is decent
   if (classification?.detected_product_id) {
+    const direct = products.find((p) => p.id === String(classification.detected_product_id))
+    if (direct && (classification.confidence ?? 0) >= 25) {
+      return direct
+    }
+  }
+
+  if (classification?.candidates?.length) {
+    const top = classification.candidates[0]
+    const byId = products.find((p) => p.id === String(top.product_id))
