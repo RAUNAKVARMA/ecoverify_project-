@@ -280,3 +280,11 @@ export function getTrustLabel(score) {
 export function getRandomEcoTip() {
   return ecoTips[Math.floor(Math.random() * ecoTips.length)]
 }
+
+export function getCategories() {
+  return [...new Set(products.map((p) => p.category))]
+}
+
+export function matchProductFromAI(classification, ecoRating) {
+  // Prefer explicit model pick when confidence is decent
+  if (classification?.detected_product_id) {
