@@ -297,3 +297,11 @@ export function matchProductFromAI(classification, ecoRating) {
   if (classification?.candidates?.length) {
     const top = classification.candidates[0]
     const byId = products.find((p) => p.id === String(top.product_id))
+    if (byId && (top.confidence ?? 0) >= 25) return byId
+  }
+
+  let best = null
+  let bestScore = -1
+
+  for (const product of products) {
+    let score = 0
