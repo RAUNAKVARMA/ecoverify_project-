@@ -314,3 +314,12 @@ export function matchProductFromAI(classification, ecoRating) {
     if (name && product.name.toLowerCase().includes(name.split(' ')[0])) score += 30
     if (name && product.name.toLowerCase().includes(name)) score += 20
     if (brand && product.brand.toLowerCase().includes(brand)) score += 25
+    if (category && product.category.toLowerCase().includes(category)) score += 15
+    if (materials && product.breakdown.materials_analysis.toLowerCase().includes(materials.split(',')[0]?.trim())) score += 10
+    if (certs && product.breakdown.certifications.some((c) => certs.includes(c.split(' ')[0].toLowerCase()))) score += 10
+
+    const aiScore = ecoRating?.trust_score
+    if (typeof aiScore === 'number') {
+      score += Math.max(0, 10 - Math.abs(aiScore - product.trust_score) / 5)
+    }
+
