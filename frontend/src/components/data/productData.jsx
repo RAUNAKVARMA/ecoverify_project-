@@ -323,3 +323,11 @@ export function matchProductFromAI(classification, ecoRating) {
       score += Math.max(0, 10 - Math.abs(aiScore - product.trust_score) / 5)
     }
 
+    if (score > bestScore) {
+      bestScore = score
+      best = product
+    }
+  }
+
+  return best || products[0]
+}
