@@ -7,3 +7,11 @@
  * 3. Browser OpenAI vision when VITE_OPENAI_API_KEY is set (enrichment)
  * 4. Filename heuristic mock
  */
+
+import { classifyWithLocalModel } from './vision/localClassifier'
+
+function getApiKey() {
+  return import.meta.env.VITE_OPENAI_API_KEY || ''
+}
+
+function getApiBase() {
