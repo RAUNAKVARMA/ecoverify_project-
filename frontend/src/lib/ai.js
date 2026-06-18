@@ -33,3 +33,11 @@ async function callLLM(messages, { json = true } = {}) {
     body: JSON.stringify({
       model: 'gpt-4o-mini',
       messages,
+      temperature: 0.2,
+      response_format: json ? { type: 'json_object' } : undefined,
+    }),
+  })
+
+  if (!res.ok) throw new Error(`LLM request failed (${res.status})`)
+  const data = await res.json()
+  const content = data.choices?.[0]?.message?.content || '{}'
