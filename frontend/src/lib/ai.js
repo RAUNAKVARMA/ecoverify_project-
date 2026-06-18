@@ -15,3 +15,12 @@ function getApiKey() {
 }
 
 function getApiBase() {
+  // Empty string → same-origin / Vite proxy (/api → backend)
+  if (import.meta.env.VITE_API_URL === undefined) return ''
+  return String(import.meta.env.VITE_API_URL).replace(/\/$/, '')
+}
+
+async function callLLM(messages, { json = true } = {}) {
+  const key = getApiKey()
+  if (!key) return null
+
