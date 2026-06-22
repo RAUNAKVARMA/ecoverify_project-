@@ -41,3 +41,12 @@ async function callLLM(messages, { json = true } = {}) {
   if (!res.ok) throw new Error(`LLM request failed (${res.status})`)
   const data = await res.json()
   const content = data.choices?.[0]?.message?.content || '{}'
+  return json ? JSON.parse(content) : content
+}
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
