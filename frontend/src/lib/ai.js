@@ -50,3 +50,11 @@ function fileToDataUrl(file) {
     reader.onload = () => resolve(reader.result)
     reader.onerror = reject
     reader.readAsDataURL(file)
+  })
+}
+
+async function classifyViaBackend(file, onStage) {
+  // Prefer explicit API URL; otherwise try same-origin proxy (dev)
+  const base = getApiBase()
+  const url = `${base}/api/scan/classify`
+
