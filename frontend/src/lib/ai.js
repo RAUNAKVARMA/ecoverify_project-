@@ -58,3 +58,12 @@ async function classifyViaBackend(file, onStage) {
   const base = getApiBase()
   const url = `${base}/api/scan/classify`
 
+  onStage?.('Checking EcoVerify vision API…')
+  const form = new FormData()
+  form.append('image', file)
+
+  const res = await fetch(url, {
+    method: 'POST',
+    body: form,
+  })
+
