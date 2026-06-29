@@ -67,3 +67,12 @@ async function classifyViaBackend(file, onStage) {
     body: form,
   })
 
+  if (!res.ok) {
+    // Soft-fail when backend isn't running
+    if (res.status === 404 || res.status === 502 || res.status === 504) return null
+    const text = await res.text().catch(() => '')
+    throw new Error(text || `Vision API failed (${res.status})`)
+  }
+
+  return res.json()
+}
