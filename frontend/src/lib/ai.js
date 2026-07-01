@@ -76,3 +76,11 @@ async function classifyViaBackend(file, onStage) {
 
   return res.json()
 }
+
+async function enrichWithOpenAIVision(file, localResult, onStage) {
+  const key = getApiKey()
+  if (!key) return null
+
+  onStage?.('Refining classification with cloud vision…')
+  const dataUrl = await fileToDataUrl(file)
+
