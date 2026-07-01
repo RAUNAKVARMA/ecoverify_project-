@@ -84,3 +84,12 @@ async function enrichWithOpenAIVision(file, localResult, onStage) {
   onStage?.('Refining classification with cloud vision…')
   const dataUrl = await fileToDataUrl(file)
 
+  const live = await callLLM([
+    {
+      role: 'system',
+      content:
+        'You are a product vision classifier for EcoVerify. Return JSON with: product_name, product_type, brand, category, primary_materials, secondary_materials, certifications (array), sustainability_claims (array), reusability, packaging_type, confidence (0-100). Prefer matching this local hint when plausible: ' +
+        JSON.stringify({
+          product_name: localResult?.product_name,
+          brand: localResult?.brand,
+          category: localResult?.category,
