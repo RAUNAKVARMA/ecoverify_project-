@@ -101,3 +101,12 @@ async function enrichWithOpenAIVision(file, localResult, onStage) {
       content: [
         { type: 'text', text: 'Identify this product for sustainability analysis.' },
         { type: 'image_url', image_url: { url: dataUrl } },
+      ],
+    },
+  ]).catch(() => null)
+
+  if (!live) return null
+  return {
+    ...localResult,
+    ...live,
+    detected_product_id: live.detected_product_id || localResult?.detected_product_id || null,
