@@ -93,3 +93,11 @@ async function enrichWithOpenAIVision(file, localResult, onStage) {
           product_name: localResult?.product_name,
           brand: localResult?.brand,
           category: localResult?.category,
+          detected_product_id: localResult?.detected_product_id,
+        }),
+    },
+    {
+      role: 'user',
+      content: [
+        { type: 'text', text: 'Identify this product for sustainability analysis.' },
+        { type: 'image_url', image_url: { url: dataUrl } },
