@@ -110,3 +110,12 @@ async function enrichWithOpenAIVision(file, localResult, onStage) {
     ...localResult,
     ...live,
     detected_product_id: live.detected_product_id || localResult?.detected_product_id || null,
+    candidates: localResult?.candidates || [],
+    detections: localResult?.detections || [],
+    provider: 'openai+local-clip',
+    product_detected: live.product_detected ?? localResult?.product_detected ?? true,
+  }
+}
+
+function mockFromFilename(file) {
+  const nameHint = (file.name || '').toLowerCase()
