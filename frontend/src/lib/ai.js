@@ -119,3 +119,11 @@ async function enrichWithOpenAIVision(file, localResult, onStage) {
 
 function mockFromFilename(file) {
   const nameHint = (file.name || '').toLowerCase()
+  return {
+    product_detected: true,
+    product_name: nameHint.includes('bottle')
+      ? 'Reusable Water Bottle'
+      : nameHint.includes('milk')
+        ? 'Organic Milk Tetra Pack'
+        : nameHint.includes('honey')
+          ? 'Organic Honey'
