@@ -127,3 +127,12 @@ function mockFromFilename(file) {
         ? 'Organic Milk Tetra Pack'
         : nameHint.includes('honey')
           ? 'Organic Honey'
+          : nameHint.includes('brush')
+            ? 'Bamboo Toothbrush Set'
+            : 'Eco Product',
+    product_type: 'consumer_good',
+    brand: nameHint.includes('hydro') ? 'HydroEco' : "Nature's Promise",
+    category: nameHint.includes('bottle') ? 'Accessories' : 'Food',
+    primary_materials: 'mixed materials',
+    secondary_materials: 'packaging',
+    certifications: ['Unverified visual claim'],
