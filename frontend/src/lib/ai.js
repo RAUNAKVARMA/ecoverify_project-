@@ -136,3 +136,11 @@ function mockFromFilename(file) {
     primary_materials: 'mixed materials',
     secondary_materials: 'packaging',
     certifications: ['Unverified visual claim'],
+    sustainability_claims: ['Eco-friendly packaging'],
+    reusability: 'unknown',
+    packaging_type: 'retail packaging',
+    confidence: 62,
+    detected_product_id: nameHint.includes('bottle')
+      ? '6'
+      : nameHint.includes('milk')
+        ? '1'
