@@ -144,3 +144,12 @@ function mockFromFilename(file) {
       ? '6'
       : nameHint.includes('milk')
         ? '1'
+        : nameHint.includes('honey')
+          ? '8'
+          : nameHint.includes('brush')
+            ? '2'
+            : null,
+    candidates: [],
+    detections: [],
+    provider: 'mock-filename',
+    _mock: true,
