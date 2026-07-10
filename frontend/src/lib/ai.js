@@ -153,3 +153,12 @@ function mockFromFilename(file) {
     detections: [],
     provider: 'mock-filename',
     _mock: true,
+  }
+}
+
+/**
+ * Stage 1 — detect + classify the uploaded product image.
+ * Primary path: on-device CLIP. Fallbacks only if local model fails.
+ */
+export async function classifyProductImage(file, onStage) {
+  onStage?.('Stage 1 — Vision: detecting and classifying product…')
