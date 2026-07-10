@@ -162,3 +162,11 @@ function mockFromFilename(file) {
  */
 export async function classifyProductImage(file, onStage) {
   onStage?.('Stage 1 — Vision: detecting and classifying product…')
+
+  // 1) On-device CLIP (built-in)
+  try {
+    const local = await classifyWithLocalModel(file, onStage)
+
+    // Optional OpenAI refinement when key is present and we have a detection
+    if (local?.product_detected !== false && getApiKey()) {
+      const enriched = await enrichWithOpenAIVision(file, local, onStage)
