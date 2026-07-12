@@ -179,3 +179,11 @@ export async function classifyProductImage(file, onStage) {
     onStage?.('On-device model unavailable — trying server / cloud…')
   }
 
+  // 2) Backend vision API
+  try {
+    const remote = await classifyViaBackend(file, onStage)
+    if (remote?.product_name) {
+      return {
+        ...remote,
+        provider: remote.provider || 'backend',
+      }
