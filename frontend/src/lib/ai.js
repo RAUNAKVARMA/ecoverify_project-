@@ -170,3 +170,12 @@ export async function classifyProductImage(file, onStage) {
     // Optional OpenAI refinement when key is present and we have a detection
     if (local?.product_detected !== false && getApiKey()) {
       const enriched = await enrichWithOpenAIVision(file, local, onStage)
+      if (enriched) return enriched
+    }
+
+    return local
+  } catch (err) {
+    console.warn('Local CLIP failed, trying server / cloud', err)
+    onStage?.('On-device model unavailable — trying server / cloud…')
+  }
+
