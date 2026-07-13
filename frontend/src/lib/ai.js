@@ -196,3 +196,12 @@ export async function classifyProductImage(file, onStage) {
   try {
     onStage?.('Trying cloud vision…')
     const dataUrl = await fileToDataUrl(file)
+    const live = await callLLM([
+      {
+        role: 'system',
+        content:
+          'You are a product vision classifier for EcoVerify. Return JSON with: product_name, product_type, brand, category, primary_materials, secondary_materials, certifications (array), sustainability_claims (array), reusability, packaging_type, confidence (0-100), product_detected (boolean).',
+      },
+      {
+        role: 'user',
+        content: [
