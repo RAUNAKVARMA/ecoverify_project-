@@ -187,3 +187,12 @@ export async function classifyProductImage(file, onStage) {
         ...remote,
         provider: remote.provider || 'backend',
       }
+    }
+  } catch (err) {
+    console.warn('Backend classify failed', err)
+  }
+
+  // 3) Browser OpenAI vision (no local result)
+  try {
+    onStage?.('Trying cloud vision…')
+    const dataUrl = await fileToDataUrl(file)
