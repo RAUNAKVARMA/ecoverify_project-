@@ -222,3 +222,11 @@ export async function classifyProductImage(file, onStage) {
   await delay(600)
   return mockFromFilename(file)
 }
+
+export async function analyzeEcoRating(classification, onStage) {
+  onStage?.('Stage 2 — Eco-Rating Analysis: scoring certifications, materials, lifecycle…')
+
+  const live = await callLLM([
+    {
+      role: 'system',
+      content: `Score product sustainability 0-100. Rubric: Certifications max 30, Materials max 25, Reusability max 20, Supply chain max 15, Packaging max 10. Detect greenwashing. Return JSON: trust_score, sub_scores {certifications, materials, reusability, supply_chain, packaging}, greenwashing_risk (low|medium|high), verified_claims[], unverified_claims[], carbon_footprint_estimate, summary, suggestions[].`,
