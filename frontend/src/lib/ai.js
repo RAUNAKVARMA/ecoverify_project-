@@ -213,3 +213,12 @@ export async function classifyProductImage(file, onStage) {
     if (live) {
       return { ...live, provider: 'openai', candidates: [], detections: [] }
     }
+  } catch (err) {
+    console.warn('OpenAI vision failed', err)
+  }
+
+  // 4) Last-resort mock
+  onStage?.('Using fallback classifier…')
+  await delay(600)
+  return mockFromFilename(file)
+}
