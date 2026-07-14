@@ -230,3 +230,12 @@ export async function analyzeEcoRating(classification, onStage) {
     {
       role: 'system',
       content: `Score product sustainability 0-100. Rubric: Certifications max 30, Materials max 25, Reusability max 20, Supply chain max 15, Packaging max 10. Detect greenwashing. Return JSON: trust_score, sub_scores {certifications, materials, reusability, supply_chain, packaging}, greenwashing_risk (low|medium|high), verified_claims[], unverified_claims[], carbon_footprint_estimate, summary, suggestions[].`,
+    },
+    { role: 'user', content: JSON.stringify(classification) },
+  ]).catch(() => null)
+
+  if (live) return live
+
+  // Heuristic score from classification confidence + materials cues
+  await delay(700)
+  const text = [
