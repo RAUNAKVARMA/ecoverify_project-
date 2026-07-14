@@ -205,3 +205,11 @@ export async function classifyProductImage(file, onStage) {
       {
         role: 'user',
         content: [
+          { type: 'text', text: 'Identify this product for sustainability analysis.' },
+          { type: 'image_url', image_url: { url: dataUrl } },
+        ],
+      },
+    ])
+    if (live) {
+      return { ...live, provider: 'openai', candidates: [], detections: [] }
+    }

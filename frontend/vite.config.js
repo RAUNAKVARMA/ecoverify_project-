@@ -13,4 +13,15 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  optimizeDeps: {
+    exclude: ['@huggingface/transformers'],
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:10000',
+        changeOrigin: true,
+      },
+    },
+  },
 })
