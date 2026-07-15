@@ -239,3 +239,12 @@ export async function analyzeEcoRating(classification, onStage) {
   // Heuristic score from classification confidence + materials cues
   await delay(700)
   const text = [
+    classification.product_name,
+    classification.primary_materials,
+    classification.packaging_type,
+    classification.reusability,
+  ]
+    .join(' ')
+    .toLowerCase()
+
+  let trust = 55
