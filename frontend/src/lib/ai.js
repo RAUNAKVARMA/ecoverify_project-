@@ -248,3 +248,11 @@ export async function analyzeEcoRating(classification, onStage) {
     .toLowerCase()
 
   let trust = 55
+  if (/stainless|bamboo|recycled|glass|organic|compostable/.test(text)) trust += 18
+  if (/plastic|pet|single-use|petroleum|microplastic/.test(text)) trust -= 15
+  if (/reusable|refill/.test(text)) trust += 12
+  if (classification.confidence) trust = Math.round(trust * 0.7 + classification.confidence * 0.3)
+  trust = Math.max(15, Math.min(95, trust))
+
+  const risk =
+    /plastic|unverif|marketing|single-use/.test(text) && trust < 50
