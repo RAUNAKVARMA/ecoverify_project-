@@ -265,3 +265,103 @@ export async function analyzeEcoRating(classification, onStage) {
     trust_score: trust,
     sub_scores: {
       certifications: Math.round(trust * 0.25),
+      materials: Math.round(trust * 0.28),
+      reusability: Math.round(trust * 0.2),
+      supply_chain: Math.round(trust * 0.15),
+      packaging: Math.round(trust * 0.12),
+    },
+    greenwashing_risk: risk,
+    verified_claims: classification.certifications?.filter((c) => !/unverif/i.test(c)) || [],
+    unverified_claims: classification.sustainability_claims || [],
+    carbon_footprint_estimate:
+      trust >= 80 ? 'Low' : trust >= 55 ? 'Medium — estimated 1.5–2.5kg CO2e' : 'High',
+    summary: classification.provider?.includes('clip')
+      ? `Scored from on-device vision match (${classification.product_name}, ${classification.confidence}% confidence).`
+      : 'Heuristic eco-rating from visual classification.',
+    suggestions: ['Prefer verified certifications', 'Reduce virgin plastic packaging'],
+    _mock: !getApiKey(),
+  }
+}
+
+export async function validateBarcode(barcode, onStage) {
+  onStage?.('Validating barcode format…')
+  const clean = String(barcode).replace(/\D/g, '')
+
+  const live = await callLLM([
+    {
+      role: 'system',
+      content:
+        'Validate retail barcodes. Return JSON: format (EAN-13|UPC-A|Code 128|ISBN|Unknown), valid (boolean), confidence (0-100), clean_barcode, gs1_country_prefix, notes.',
+    },
+    { role: 'user', content: `Barcode: ${barcode}` },
+  ]).catch(() => null)
+
+  if (live) return live
+
+  await delay(400)
+  let format = 'Unknown'
+  if (clean.length === 13) format = 'EAN-13'
+  else if (clean.length === 12) format = 'UPC-A'
+  else if (clean.length === 8) format = 'EAN-8'
+  else if (clean.length > 0) format = 'Code 128'
+
+  return {
+    format,
+    valid: clean.length >= 8,
+    confidence: clean.length === 13 || clean.length === 12 ? 88 : 55,
+    clean_barcode: clean || String(barcode).trim(),
+    gs1_country_prefix: clean.startsWith('890') ? 'India (890)' : clean.slice(0, 3) || 'N/A',
+    notes: 'Local format validation.',
+    _mock: true,
+  }
+}
+
+export function generateEcoExplain(product, adjustedScore, prefs = {}) {
+  if (!product) return ''
+  const parts = []
+  parts.push(`This product scores ${Math.round(adjustedScore)}/100.`)
+
+  const certs = product.breakdown?.certifications || []
+  const verified = certs.filter((c) => /verified/i.test(c))
+  if (verified.length) {
+    parts.push(`It has ${verified.join(' and ')} which adds significant trust.`)
+  } else if (certs.length) {
+    parts.push(`Certification status: ${certs.join(', ')}.`)
+  }
+
+  if (product.breakdown?.materials_analysis) {
+    parts.push(`Materials: ${product.breakdown.materials_analysis}.`)
+  }
+  if (product.breakdown?.supply_chain_transparency) {
+    parts.push(`Supply chain transparency is ${product.breakdown.supply_chain_transparency.toLowerCase()}.`)
+  }
+  if (product.breakdown?.packaging_assessment) {
+    parts.push(`Packaging assessment: ${product.breakdown.packaging_assessment}.`)
+  }
+
+  const priorities = prefs.priorities || []
+  if (priorities.includes('Plastic Reduction')) {
+    parts.push('Based on your preference for plastic reduction, packaging materials deserve extra scrutiny.')
+  }
+  if (priorities.includes('Climate')) {
+    parts.push(`Climate focus: carbon footprint is listed as ${product.breakdown?.carbon_footprint || 'unavailable'}.`)
+  }
+  if (priorities.includes('Fair Trade')) {
+    parts.push('Fair Trade priority: look for audited labor and supplier disclosures in the breakdown.')
+  }
+  if (priorities.includes('Animal Welfare')) {
+    parts.push('Animal Welfare priority: verify sourcing claims and cruelty-free certifications carefully.')
+  }
+
+  if (prefs.sensitivity === 'strict') {
+    parts.push('Strict sensitivity is applied, so borderline claims weigh more heavily against the score.')
+  } else if (prefs.sensitivity === 'lenient') {
+    parts.push('Lenient sensitivity is applied, giving more weight to pending certifications.')
+  }
+
+  return parts.join(' ')
+}
+
+function delay(ms) {
+  return new Promise((r) => setTimeout(r, ms))
+}
