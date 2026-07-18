@@ -256,3 +256,12 @@ export async function analyzeEcoRating(classification, onStage) {
 
   const risk =
     /plastic|unverif|marketing|single-use/.test(text) && trust < 50
+      ? 'high'
+      : trust < 65
+        ? 'medium'
+        : 'low'
+
+  return {
+    trust_score: trust,
+    sub_scores: {
+      certifications: Math.round(trust * 0.25),
