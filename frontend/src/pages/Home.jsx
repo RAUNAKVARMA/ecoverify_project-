@@ -182,22 +182,37 @@ function LetterWordmark({ text, className, active }) {
 
 function ScanPage({ onBack }) {
   return (
-    <div className="app-shell animate-fade-up">
-      <button type="button" className="back-collage" onClick={onBack}>
-        <ArrowLeft className="h-4 w-4" />
-        Back
-      </button>
-      <div className="app-home-hero">
-        <p className="text-xs font-medium tracking-[0.2em] text-[var(--color-ink)]/45 uppercase">EcoVerify</p>
-        <h1 className="mt-1 text-3xl font-bold tracking-tight text-[var(--color-ink)] sm:text-4xl">
-          Know if it&apos;s truly green.
-        </h1>
-        <p className="mt-2 max-w-lg text-sm text-[var(--color-ink)]/60">
-          Scan a product for an instant Trust Score — and catch greenwashing before you buy.
-        </p>
-        <div className="mt-6">
-          <QuickScan />
-        </div>
+    <div className="scan-home animate-fade-up">
+      <div className="scan-home-bg" aria-hidden>
+        <div className="scan-home-orb scan-home-orb-a" />
+        <div className="scan-home-orb scan-home-orb-b" />
+        <div className="scan-home-grid" />
+      </div>
+
+      <div className="scan-home-inner">
+        <button type="button" className="back-collage" onClick={onBack}>
+          <ArrowLeft className="h-4 w-4" />
+          Back
+        </button>
+
+        <header className="scan-hero">
+          <p className="scan-hero-brand">EcoVerify</p>
+          <h1>
+            Know if it&apos;s
+            <br />
+            <em>truly green.</em>
+          </h1>
+          <p className="scan-hero-lede">
+            Scan a product for an instant Trust Score — and catch greenwashing before you buy.
+          </p>
+          <ul className="scan-hero-points">
+            <li>Photo · barcode · search</li>
+            <li>Live catalog match</li>
+            <li>Saved to History</li>
+          </ul>
+        </header>
+
+        <QuickScan />
       </div>
     </div>
   )
