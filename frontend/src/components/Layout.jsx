@@ -64,20 +64,13 @@ export default function Layout() {
   }, [isImmersiveFull])
 
   return (
-    <div className={`min-h-svh relative ${isHome ? '' : 'immersive-app'}`}>
+    <div className={`min-h-svh relative ${isHome ? '' : isAbout ? 'immersive-app immersive-app--about' : 'immersive-app'}`}>
       {!isHome && !isAbout && (
         <>
           <div className="immersive-paper" aria-hidden />
           <div className="immersive-dotgrid" aria-hidden />
           <div className="immersive-wash" aria-hidden />
           <div ref={glowRef} className="ix-cursor-glow" aria-hidden />
-        </>
-      )}
-
-      {isAbout && (
-        <>
-          <div className="immersive-paper" aria-hidden />
-          <div className="immersive-dotgrid about-dotgrid" aria-hidden />
         </>
       )}
 

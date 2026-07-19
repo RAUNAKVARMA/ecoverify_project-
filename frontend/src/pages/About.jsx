@@ -1,406 +1,472 @@
 import { useEffect, useRef, useState } from 'react'
-import Reveal from '@/components/Reveal'
 import MagneticLink from '@/components/MagneticLink'
-import StaggerText from '@/components/StaggerText'
-import useReveal from '@/hooks/useReveal'
-import { useCountUp, useScrollProgress } from '@/hooks/useMotion'
-import { usePointerStage } from '@/hooks/usePointerStage'
+import { useCountUp } from '@/hooks/useMotion'
 
-const BEATS = [
+/** Local Mixkit downloads + CDN fallbacks (stock, free license). */
+const VIDEO = {
+  canopy: {
+    local: '/video/canopy.mp4',
+    cdn: 'https://assets.mixkit.co/videos/50837/50837-720.mp4',
+    poster:
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1600&q=70',
+  },
+  leaves: {
+    local: '/video/leaves.mp4',
+    cdn: 'https://assets.mixkit.co/videos/50847/50847-720.mp4',
+    poster:
+      'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=1200&q=70',
+  },
+  trees: {
+    local: '/video/trees.mp4',
+    cdn: 'https://assets.mixkit.co/active_storage/video_items/100182/1721167927/100182-video-720.mp4',
+    poster:
+      'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1200&q=70',
+  },
+}
+
+const CLAIMS = [
+  { pretence: '100% natural', truth: 'Undefined term', tone: 'warn' },
+  { pretence: 'Eco-friendly', truth: 'No standard', tone: 'warn' },
+  { pretence: 'Carbon neutral', truth: 'Offset only', tone: 'mid' },
+  { pretence: 'Ocean plastic', truth: 'Trace amount', tone: 'mid' },
+  { pretence: 'Certified green', truth: 'Self-issued', tone: 'warn' },
+  { pretence: 'Plant based', truth: 'Check % share', tone: 'ok' },
+]
+
+const CHAPTERS = [
   {
+    id: 'scan',
     step: '01',
-    title: 'Scan',
-    body: 'A glance at packaging. Labels, marks, and material cues become readable signals.',
-    image:
-      'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=900&q=80',
+    title: 'See the signal',
+    body: 'Packaging marks, materials, and claims become readable data — not vibe.',
+    video: VIDEO.trees,
   },
   {
+    id: 'score',
     step: '02',
-    title: 'Trust Score',
-    body: 'Evidence distilled into 0–100. Greenwash risk rises when claims outrun proof.',
-    image:
-      'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80',
+    title: 'Weigh the evidence',
+    body: 'A trust score from 0–100. When claims outrun proof, the number falls.',
+    video: VIDEO.canopy,
   },
   {
+    id: 'pick',
     step: '03',
-    title: 'Better picks',
-    body: 'Higher-trust alternatives in the same aisle — so the next choice is clearer.',
-    image:
-      'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=900&q=80',
+    title: 'Choose better',
+    body: 'Higher-trust alternatives in the same aisle — so the next pick is clearer.',
+    video: VIDEO.leaves,
   },
 ]
 
-const FLOATS = [
-  {
-    cls: 'af-1',
-    depth: 1.2,
-    src: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    cls: 'af-2',
-    depth: 0.7,
-    src: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    cls: 'af-3',
-    depth: 1,
-    src: 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    cls: 'af-4',
-    depth: 0.55,
-    src: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=400&q=80',
-  },
-]
-
-const MARQUEE = [
-  'certifications',
-  'materials',
-  'supply chain',
-  'packaging',
-  'carbon',
-  'greenwash risk',
-  'trust score',
-  'better aisle',
-]
-
-function ClaimFlip() {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <button
-      type="button"
-      className={`about-claim ${open ? 'is-open' : ''}`}
-      onClick={() => setOpen((v) => !v)}
-      aria-expanded={open}
-    >
-      <span className="about-claim-glow" aria-hidden />
-      <span className="about-claim-face about-claim-front">
-        <span className="about-tape" aria-hidden />
-        <span className="about-hand">100% eco</span>
-        <span className="about-claim-hint">{open ? 'fold it back' : 'peel the sticker'}</span>
-      </span>
-      <span className="about-claim-face about-claim-back">
-        <span className="about-hand">weak proof</span>
-        <span className="about-claim-hint">no trail · vague certs · vibes only</span>
-      </span>
-    </button>
-  )
-}
-
-function ScoreOrb() {
-  const { ref, visible } = useReveal({ threshold: 0.4 })
-  const score = useCountUp(91, visible, 1600)
-
-  return (
-    <div ref={ref} className={`about-orb ${visible ? 'is-in' : ''}`}>
-      <div className="about-orb-halo" aria-hidden />
-      <svg viewBox="0 0 120 120" className="about-orb-ring" aria-hidden>
-        <circle cx="60" cy="60" r="52" className="about-orb-track" />
-        <circle
-          cx="60"
-          cy="60"
-          r="52"
-          className="about-orb-progress"
-          style={{ strokeDashoffset: visible ? 326 - (326 * score) / 100 : 326 }}
-        />
-      </svg>
-      <div className="about-orb-core">
-        <span className="about-orb-num">{score}</span>
-        <span className="about-orb-label">Trust</span>
-      </div>
-    </div>
-  )
-}
-
-function LetterBrand({ text }) {
-  return (
-    <h1 className="about-brand" aria-label={text}>
-      {text.split('').map((ch, i) => (
-        <span
-          key={`${ch}-${i}`}
-          className="about-letter"
-          style={{ animationDelay: `${80 + i * 70}ms` }}
-        >
-          {ch}
-        </span>
-      ))}
-    </h1>
-  )
-}
-
-function FilmBeats() {
-  const [active, setActive] = useState(0)
-  const trackRef = useRef(null)
+/** Muted autoplay loop — resumes when visible, pauses when offscreen. */
+function AutoVideo({
+  src,
+  className = '',
+  poster,
+  style,
+  priority = false,
+}) {
+  const ref = useRef(null)
+  const primary = src?.local || src?.cdn || ''
+  const fallback = src?.local && src?.cdn ? src.cdn : ''
 
   useEffect(() => {
-    const el = trackRef.current
+    const el = ref.current
     if (!el) return undefined
-    const onScroll = () => {
-      const cards = [...el.querySelectorAll('.about-frame')]
-      if (!cards.length) return
-      const mid = el.scrollLeft + el.clientWidth / 2
-      let best = 0
-      let bestDist = Infinity
-      cards.forEach((card, i) => {
-        const c = card.offsetLeft + card.offsetWidth / 2
-        const d = Math.abs(c - mid)
-        if (d < bestDist) {
-          bestDist = d
-          best = i
-        }
-      })
-      setActive(best)
+
+    el.muted = true
+    el.defaultMuted = true
+    el.setAttribute('muted', '')
+    el.playsInline = true
+    el.setAttribute('playsinline', '')
+    el.setAttribute('webkit-playsinline', '')
+
+    let cancelled = false
+    const tryPlay = () => {
+      if (cancelled) return
+      el.muted = true
+      const p = el.play()
+      if (p && typeof p.catch === 'function') p.catch(() => {})
     }
-    onScroll()
-    el.addEventListener('scroll', onScroll, { passive: true })
-    return () => el.removeEventListener('scroll', onScroll)
+
+    // Don't let IO pause before first layout paint
+    const boot = window.setTimeout(tryPlay, 50)
+    el.addEventListener('loadeddata', tryPlay)
+    el.addEventListener('canplay', tryPlay)
+
+    const onVis = () => {
+      if (document.hidden) el.pause()
+      else tryPlay()
+    }
+    document.addEventListener('visibilitychange', onVis)
+
+    let io
+    if ('IntersectionObserver' in window) {
+      io = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) tryPlay()
+          else if (entry.intersectionRatio === 0) el.pause()
+        },
+        { threshold: [0, 0.05, 0.2] },
+      )
+      io.observe(el)
+    }
+
+    return () => {
+      cancelled = true
+      window.clearTimeout(boot)
+      el.removeEventListener('loadeddata', tryPlay)
+      el.removeEventListener('canplay', tryPlay)
+      document.removeEventListener('visibilitychange', onVis)
+      io?.disconnect()
+    }
+  }, [primary, fallback])
+
+  return (
+    <video
+      ref={ref}
+      className={className}
+      style={style}
+      src={primary}
+      poster={poster || src?.poster}
+      muted
+      autoPlay
+      loop
+      playsInline
+      preload={priority ? 'auto' : 'metadata'}
+      disablePictureInPicture
+      disableRemotePlayback
+      aria-hidden
+      tabIndex={-1}
+      onError={(e) => {
+        const el = e.currentTarget
+        if (fallback && el.src !== fallback && !el.dataset.fallback) {
+          el.dataset.fallback = '1'
+          el.src = fallback
+          el.load()
+          el.play?.()?.catch?.(() => {})
+        }
+      }}
+    />
+  )
+}
+
+function useScrollProgress(ref) {
+  const [p, setP] = useState(0)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return undefined
+    let raf = 0
+    const tick = () => {
+      const rect = el.getBoundingClientRect()
+      const total = Math.max(1, el.offsetHeight - window.innerHeight)
+      setP(Math.min(1, Math.max(0, -rect.top / total)))
+      raf = 0
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(tick)
+    }
+    tick()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [ref])
+  return p
+}
+
+function HorizontalRail() {
+  const sectionRef = useRef(null)
+  const trackRef = useRef(null)
+  const p = useScrollProgress(sectionRef)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const max = Math.max(0, track.scrollWidth - window.innerWidth)
+    track.style.transform = `translate3d(${-p * max}px, 0, 0)`
+  }, [p])
+
+  return (
+    <section className="av4-rail" ref={sectionRef} aria-label="Greenwash claims">
+      <div className="av4-rail-sticky">
+        <header className="av4-rail-head">
+          <p className="av4-eyebrow">Scroll through the fog</p>
+          <h2>
+            Pretty words.
+            <em> Thin proof.</em>
+          </h2>
+        </header>
+        <div className="av4-rail-viewport">
+          <div className="av4-rail-track" ref={trackRef}>
+            {CLAIMS.map((c, i) => (
+              <article key={c.pretence} className={`av4-claim av4-claim--${c.tone}`} style={{ '--i': i }}>
+                <span className="av4-claim-index">0{i + 1}</span>
+                <h3>{c.pretence}</h3>
+                <p>
+                  Reads as <strong>{c.truth}</strong>
+                </p>
+                <div className="av4-claim-bar" aria-hidden />
+              </article>
+            ))}
+          </div>
+        </div>
+        <div className="av4-rail-meter" aria-hidden>
+          <span style={{ transform: `scaleX(${p})` }} />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function PinStory() {
+  const sectionRef = useRef(null)
+  const p = useScrollProgress(sectionRef)
+  const active = Math.min(CHAPTERS.length - 1, Math.floor(p * CHAPTERS.length * 0.999))
+  const chapter = CHAPTERS[active]
+
+  return (
+    <section className="av4-pin" ref={sectionRef} id="how">
+      <div className="av4-pin-sticky">
+        <div className="av4-pin-media av4-pin-media--video" style={{ '--focus': p }}>
+          {CHAPTERS.map((c, i) => (
+            <div key={c.id} className={`av4-pin-layer ${i === active ? 'is-on' : ''}`}>
+              <AutoVideo src={c.video} poster={c.video.poster} />
+            </div>
+          ))}
+          <div className="av4-pin-hud" aria-hidden>
+            <i className="tl" />
+            <i className="tr" />
+            <i className="bl" />
+            <i className="br" />
+            <span className="av4-pin-live">REC · LIVE FIELD</span>
+          </div>
+          <div className="av4-pin-scan" style={{ transform: `translateY(${p * 100}%)` }} />
+        </div>
+        <div className="av4-pin-copy">
+          <p className="av4-eyebrow">The loop</p>
+          <div className="av4-pin-steps" aria-hidden>
+            {CHAPTERS.map((c, i) => (
+              <span key={c.id} className={i === active ? 'is-on' : ''}>
+                {c.step}
+              </span>
+            ))}
+          </div>
+          <h2 key={chapter.id} className="av4-pin-title">
+            {chapter.title}
+          </h2>
+          <p key={`${chapter.id}-b`} className="av4-pin-body">
+            {chapter.body}
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function TruthSwap() {
+  const [on, setOn] = useState(false)
+
+  return (
+    <section className="av4-swap" id="story">
+      <div className="av4-swap-grid">
+        <div className="av4-swap-copy">
+          <p className="av4-eyebrow av4-reveal">Look closer</p>
+          <h2 className="av4-display av4-reveal">
+            Labels look green.
+            <br />
+            <span className="av4-italic">Proof is hard.</span>
+          </h2>
+          <p className="av4-body av4-reveal">
+            Packaging shouts sustainability. Marks blur together. Shoppers guess —
+            and greenwash wins by default.
+          </p>
+          <button
+            type="button"
+            className={`av4-truthcard ${on ? 'is-truth' : ''}`}
+            onClick={() => setOn((v) => !v)}
+            aria-pressed={on}
+          >
+            <span className="av4-truthcard-face av4-truthcard-claim">
+              <small>Shelf claim</small>
+              <strong>100% eco</strong>
+              <em>tap to verify</em>
+            </span>
+            <span className="av4-truthcard-face av4-truthcard-proof">
+              <small>Evidence</small>
+              <strong>weak proof</strong>
+              <em>score 34 · thin trail</em>
+            </span>
+          </button>
+        </div>
+
+        <div className="av4-filmstrip av4-reveal" aria-hidden>
+          <AutoVideo src={VIDEO.leaves} className="av4-filmstrip-video" />
+          <div className="av4-filmstrip-sprockets">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <i key={i} />
+            ))}
+          </div>
+          <p className="av4-filmstrip-cap">field reel · auto</p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function ScoreMoment() {
+  const ref = useRef(null)
+  const [visible, setVisible] = useState(false)
+  const score = useCountUp(91, visible, 1800)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return undefined
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) setVisible(true)
+      },
+      { threshold: 0.35 },
+    )
+    io.observe(el)
+    return () => io.disconnect()
   }, [])
 
   return (
-    <>
-      <div className="about-film-track" ref={trackRef}>
-        {BEATS.map((beat, i) => (
-          <article
-            key={beat.step}
-            className={`about-frame ${active === i ? 'is-active' : ''}`}
-            onMouseEnter={() => setActive(i)}
-            onFocus={() => setActive(i)}
-            tabIndex={0}
-          >
-            <div className="about-frame-media">
-              <img src={beat.image} alt="" />
-              <span className="about-frame-step">{beat.step}</span>
-              <span className="about-frame-shine" aria-hidden />
+    <section className="av4-score" ref={ref}>
+      <div className="av4-score-stage">
+        <AutoVideo src={VIDEO.trees} className="av4-score-bg" />
+        <div className="av4-score-veil" />
+        <div className="av4-score-inner">
+          <p className="av4-eyebrow av4-reveal">Under the hood</p>
+          <h2 className="av4-display av4-reveal">
+            Evidence tips
+            <br />
+            the scale
+          </h2>
+          <div className={`av4-score-orb ${visible ? 'is-in' : ''}`}>
+            <svg viewBox="0 0 200 200" className="av4-score-ring">
+              <circle cx="100" cy="100" r="88" className="av4-score-track" />
+              <circle
+                cx="100"
+                cy="100"
+                r="88"
+                className="av4-score-progress"
+                style={{ strokeDashoffset: visible ? 552 - (552 * score) / 100 : 552 }}
+              />
+            </svg>
+            <div className="av4-score-num">
+              <strong>{score}</strong>
+              <span>trust</span>
             </div>
-            <h3>{beat.title}</h3>
-            <p>{beat.body}</p>
-          </article>
-        ))}
+          </div>
+          <p className="av4-body av4-reveal av4-center">
+            Vision reads the pack. Signals weigh the claim. A quiet number lands.
+          </p>
+        </div>
       </div>
-      <div className="about-film-dots" aria-hidden>
-        {BEATS.map((b, i) => (
-          <span key={b.step} className={`about-film-dot ${active === i ? 'is-on' : ''}`} />
-        ))}
-      </div>
-    </>
-  )
-}
-
-function TiltPanel({ className, children }) {
-  const [style, setStyle] = useState({})
-  return (
-    <div
-      className={className}
-      style={style}
-      onPointerMove={(e) => {
-        if (window.matchMedia('(pointer: coarse)').matches) return
-        const r = e.currentTarget.getBoundingClientRect()
-        const x = ((e.clientX - r.left) / r.width - 0.5) * 12
-        const y = ((e.clientY - r.top) / r.height - 0.5) * -10
-        setStyle({ transform: `perspective(900px) rotateX(${y}deg) rotateY(${x}deg) translateY(-4px)` })
-      }}
-      onPointerLeave={() => setStyle({ transform: 'none' })}
-    >
-      {children}
-    </div>
+    </section>
   )
 }
 
 export default function About() {
-  const pageRef = useRef(null)
-  const progress = useScrollProgress(pageRef)
-  const [heroShift, setHeroShift] = useState(0)
-  const { ref: heroPtr, mediaStyle, floatStyle, spotlightStyle, pos } = usePointerStage(0.85)
+  const [boot, setBoot] = useState(false)
 
   useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const onScroll = () => {
-      if (reduced) return
-      setHeroShift(Math.min(140, window.scrollY * 0.32))
-    }
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const t = window.setTimeout(() => setBoot(true), 40)
+    return () => window.clearTimeout(t)
   }, [])
 
   return (
-    <div className="about-page" ref={pageRef}>
-      <div className="about-progress" aria-hidden>
-        <div className="about-progress-fill" style={{ transform: `scaleX(${progress})` }} />
+    <div className={`about-page about-page--v4 about-page--video ${boot ? 'is-boot' : ''}`}>
+      <div className="av4-progress" aria-hidden>
+        <div className="av4-progress-fill" />
       </div>
 
-      <div className="about-noise" aria-hidden />
+      {/* Full-bleed autoplay video — type sits on live footage */}
+      <section className="av5-hero">
+        <div className="av5-hero-stage">
+          <AutoVideo src={VIDEO.canopy} className="av5-hero-video" priority />
+          <div className="av5-hero-scrim" aria-hidden />
+          <div className="av5-hero-grain" aria-hidden />
 
-      <section className="about-hero" ref={heroPtr}>
-        <div
-          className="about-hero-media"
-          aria-hidden
-          style={{
-            ...mediaStyle,
-            transform: `${mediaStyle.transform || ''} translate3d(0, ${heroShift}px, 0)`.trim(),
-          }}
-        >
-          <img
-            src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=82"
-            alt=""
-          />
-          <div className="about-hero-grain" />
-          <div className="about-hero-veil" />
-          <div className="about-hero-spotlight" style={spotlightStyle} />
+          <div className="av5-hero-brand">
+            <p className="av5-hero-kicker">Live field reel</p>
+            <h1 className="av5-hero-title">EcoVerify</h1>
+          </div>
+
+          <div className="av5-hero-frame" aria-hidden>
+            <span className="av5-corner tl" />
+            <span className="av5-corner tr" />
+            <span className="av5-corner bl" />
+            <span className="av5-corner br" />
+            <span className="av5-rec">
+              <i /> AUTO · MUTED LOOP
+            </span>
+          </div>
         </div>
 
-        <div className="about-hero-floats" aria-hidden>
-          {FLOATS.map((f) => (
-            <img
-              key={f.cls}
-              src={f.src}
-              alt=""
-              className={`about-float ${f.cls}`}
-              style={floatStyle(f.depth)}
-            />
-          ))}
-        </div>
-
-        <div
-          className="about-hero-copy"
-          style={floatStyle(0.35)}
-        >
-          <p className="about-kicker">Trust, made legible</p>
-          <LetterBrand text="EcoVerify" />
-          <p className="about-lede">
+        <div className="av5-hero-dock">
+          <p className="av4-eyebrow av4-hero-in" style={{ '--d': '0.08s' }}>
+            Trust, on camera
+          </p>
+          <p className="av5-hero-lede av4-hero-in" style={{ '--d': '0.22s' }}>
             The trust score for everyday products — so green claims meet real evidence.
           </p>
-          <div className="about-cta-row">
-            <MagneticLink to="/" className="about-cta about-cta-primary" strength={0.4}>
+          <div className="av4-cta-row av4-hero-in" style={{ '--d': '0.38s' }}>
+            <MagneticLink to="/" className="av4-cta av4-cta-primary" strength={0.42}>
               Try a scan
             </MagneticLink>
-            <MagneticLink href="#story" className="about-cta about-cta-ghost" strength={0.22}>
-              Enter the story
+            <MagneticLink href="#story" className="av4-cta av4-cta-ghost" strength={0.22}>
+              Enter the brief
             </MagneticLink>
           </div>
-          <p className="about-hero-hint" aria-hidden>
-            {pos.active ? 'Keep moving — the forest follows.' : 'Move your pointer across the canopy.'}
-          </p>
-        </div>
-
-        <a href="#story" className="about-scroll-cue" aria-label="Scroll to story">
-          <span />
-          <em>scroll</em>
-        </a>
-      </section>
-
-      <div className="about-marquee" aria-hidden>
-        <div className="about-marquee-track">
-          {[...MARQUEE, ...MARQUEE].map((word, i) => (
-            <span key={`${word}-${i}`}>{word}</span>
-          ))}
-        </div>
-      </div>
-
-      <section className="about-chapter" id="story">
-        <div className="about-chapter-inner about-problem">
-          <Reveal>
-            <p className="about-hand about-section-hand">look closer</p>
-            <StaggerText
-              as="h2"
-              className="about-display"
-              text="Labels look green."
-              mode="words"
-              delay={55}
-            />
-            <h2 className="about-display about-display-em">
-              <em>Proof is hard.</em>
-            </h2>
-            <p className="about-body">
-              Packaging shouts sustainability. Marks blur together. Shoppers guess —
-              and greenwash wins by default.
-            </p>
-          </Reveal>
-          <Reveal delay={140} className="about-claim-wrap" variant="scale">
-            <ClaimFlip />
-          </Reveal>
         </div>
       </section>
 
-      <section className="about-film" id="how">
-        <div className="about-film-head">
-          <Reveal>
-            <p className="about-hand about-section-hand">the loop</p>
-            <h2 className="about-display">What EcoVerify does</h2>
-            <p className="about-body">Drag sideways. Watch the beat that stays in focus.</p>
-          </Reveal>
-        </div>
-        <FilmBeats />
+      <TruthSwap />
+      <HorizontalRail />
+      <PinStory />
+      <ScoreMoment />
+
+      <section className="av4-split">
+        <article className="av4-split-card av4-reveal">
+          <p className="av4-eyebrow">Shoppers</p>
+          <h3>Cut through the green fog at the shelf.</h3>
+          <p>Know what holds up — and what is marketing vapor.</p>
+          <MagneticLink to="/" className="av4-cta av4-cta-primary">
+            Start a scan
+          </MagneticLink>
+        </article>
+        <article className="av4-split-card av4-reveal">
+          <p className="av4-eyebrow">Brands</p>
+          <h3>See claims the way critical buyers do.</h3>
+          <p>Strengthen evidence before the aisle calls you out.</p>
+          <MagneticLink to="/BrandDashboard" className="av4-cta av4-cta-ghost">
+            Brand dashboard
+          </MagneticLink>
+        </article>
       </section>
 
-      <section className="about-scoreband">
-        <div className="about-scoreband-inner">
-          <Reveal>
-            <p className="about-hand about-section-hand">under the hood</p>
-            <h2 className="about-display">
-              How a score
-              <br />
-              is born
-            </h2>
-            <p className="about-body">Vision reads. Signals weigh. A trust number lands — quietly rigorous.</p>
-            <div className="about-pipeline" aria-label="Scoring pipeline">
-              <span className="about-pipe-node">Vision</span>
-              <span className="about-pipe" aria-hidden />
-              <span className="about-pipe-node">Signals</span>
-              <span className="about-pipe" aria-hidden />
-              <span className="about-pipe-node">Trust Score</span>
-            </div>
-          </Reveal>
-          <Reveal delay={160} variant="scale">
-            <ScoreOrb />
-          </Reveal>
+      <section className="av5-finale">
+        <div className="av5-finale-video" aria-hidden>
+          <AutoVideo src={VIDEO.canopy} />
+          <div className="av5-finale-veil" />
         </div>
-      </section>
-
-      <section className="about-split">
-        <Reveal>
-          <TiltPanel className="about-split-panel about-split-shop">
-            <p className="about-hand">for shoppers</p>
-            <h3>Cut through the green fog at the shelf.</h3>
-            <p>Know what holds up — and what is marketing vapor.</p>
-            <MagneticLink to="/" className="about-cta about-cta-primary">
-              Start a scan
-            </MagneticLink>
-          </TiltPanel>
-        </Reveal>
-        <Reveal delay={100}>
-          <TiltPanel className="about-split-panel about-split-brand">
-            <p className="about-hand">for brands</p>
-            <h3>See your claims the way critical buyers do.</h3>
-            <p>Strengthen evidence before the aisle calls you out.</p>
-            <MagneticLink to="/BrandDashboard" className="about-cta about-cta-ghost">
-              Brand dashboard
-            </MagneticLink>
-          </TiltPanel>
-        </Reveal>
-      </section>
-
-      <section className="about-finale">
-        <div className="about-finale-glow" aria-hidden />
-        <div className="about-finale-orbit" aria-hidden>
-          {Array.from({ length: 8 }).map((_, i) => (
-            <span key={i} style={{ '--i': i }} />
-          ))}
-        </div>
-        <Reveal>
-          <p className="about-hand about-section-hand">ready?</p>
-          <LetterBrand text="EcoVerify" />
-          <p className="about-lede about-lede-center">Trust scores for the products you already buy.</p>
-          <div className="about-cta-row about-cta-center">
-            <MagneticLink to="/" className="about-cta about-cta-primary" strength={0.42}>
+        <div className="av5-finale-copy">
+          <h2 className="av5-finale-title av4-reveal">EcoVerify</h2>
+          <p className="av4-lede av4-center av4-reveal">Trust scores for the products you already buy.</p>
+          <div className="av4-cta-row av4-center-row av4-reveal">
+            <MagneticLink to="/" className="av4-cta av4-cta-primary" strength={0.4}>
               Scan something
             </MagneticLink>
-            <MagneticLink to="/Alternatives" className="about-cta about-cta-ghost" strength={0.24}>
-              Browse better picks
+            <MagneticLink to="/Alternatives" className="av4-cta av4-cta-ghost" strength={0.2}>
+              Better picks
             </MagneticLink>
           </div>
-        </Reveal>
+        </div>
       </section>
     </div>
   )
