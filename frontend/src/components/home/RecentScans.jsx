@@ -1,41 +1,83 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
 import { Clock } from 'lucide-react'
 import SectionCard from '@/components/SectionCard'
-import { mockScanHistory, getProductById, getTrustLabel } from '@/components/data/productData'
+import { getProductById, getTrustLabel } from '@/components/data/productData'
+import { listScans, loadScans } from '@/lib/scanHistory'
 
 export default function RecentScans() {
-  const scans = mockScanHistory
-    .map((s) => ({ ...s, product: getProductById(s.productId) }))
-    .filter((s) => s.product)
-    .slice(0, 5)
+  const [scans, setScans] = useState(() =>
+    listScans()
+      .map((s) => ({
+        ...s,
+        product: getProductById(s.productId),
+        displayScore: s.trustScore ?? getProductById(s.productId)?.trust_score ?? 0,
+      }))
+      .filter((s) => s.product)
+      .slice(0, 5),
+  )
+
+  useEffect(() => {
+    let alive = true
+    loadScans().then((items) => {
+      if (!alive) return
+      setScans(
+        items
+          .map((s) => ({
+            ...s,
+            product: getProductById(s.productId),
+            displayScore: s.trustScore ?? getProductById(s.productId)?.trust_score ?? 0,
+          }))
+          .filter((s) => s.product)
+          .slice(0, 5),
+      )
+    })
+    return () => {
+      alive = false
+    }
+  }, [])
 
   return (
-    <SectionCard icon={Clock} title="Recent Scans" description="Your last 5 mock scans" accentColor="border-teal-400">
-      <ul className="space-y-2">
-        {scans.map((s) => {
-          const trust = getTrustLabel(s.product.trust_score)
-          return (
-            <li key={`${s.productId}-${s.timestamp}`}>
-              <Link
-                to={`/ProductDetail?id=${s.product.id}`}
-                className="flex items-center gap-3 rounded-lg p-2 hover:bg-gray-50 transition-colors"
-              >
-                <img src={s.product.image} alt="" className="h-12 w-12 rounded-lg object-cover" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{s.product.name}</p>
-                  <p className="text-xs text-gray-500">
-                    {formatDistanceToNow(new Date(s.timestamp), { addSuffix: true })}
-                  </p>
-                </div>
-                <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${trust.bg} ${trust.color}`}>
-                  {s.product.trust_score}
-                </span>
-              </Link>
-            </li>
-          )
-        })}
-      </ul>
+    <SectionCard
+      icon={Clock}
+      title="Recent Scans"
+      description={scans.length ? 'From your scan history' : 'Scan something to fill this list'}
+      accentColor="border-teal-400"
+    >
+      {scans.length ? (
+        <ul className="space-y-2">
+          {scans.map((s) => {
+            const trust = getTrustLabel(s.displayScore)
+            return (
+              <li key={s.id}>
+                <Link
+                  to={`/ProductDetail?id=${s.product.id}`}
+                  className="immersive-list-item flex items-center gap-3 rounded-lg p-2"
+                >
+                  <img src={s.product.image} alt="" className="h-12 w-12 rounded-lg object-cover" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-gray-900">{s.product.name}</p>
+                    <p className="text-xs text-gray-500">
+                      {formatDistanceToNow(new Date(s.timestamp), { addSuffix: true })}
+                    </p>
+                  </div>
+                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${trust.bg} ${trust.color}`}>
+                    {Math.round(s.displayScore)}
+                  </span>
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      ) : (
+        <p className="text-sm text-gray-500">
+          No scans yet.{' '}
+          <Link to="/" className="font-medium text-emerald-700 underline">
+            Start on Home
+          </Link>
+        </p>
+      )}
     </SectionCard>
   )
 }

@@ -8,25 +8,25 @@ datasource db {
 }
 
 model Product {
-  id                        String   @id
-  barcode                   String   @unique
-  name                      String
-  brand                     String
-  category                  String
-  price                     Int
-  image                     String
-  trustScore                Int      @map("trust_score")
-  greenwashingRisk          String   @map("greenwashing_risk")
-  certifications            String[]
-  materialsAnalysis         String   @map("materials_analysis")
-  supplyChainTransparency   String   @map("supply_chain_transparency")
-  packagingAssessment       String   @map("packaging_assessment")
-  carbonFootprint           String   @map("carbon_footprint")
-  createdAt                 DateTime @default(now()) @map("created_at")
-  updatedAt                 DateTime @updatedAt @map("updated_at")
+  id                      String   @id
+  barcode                 String   @unique
+  name                    String
+  brand                   String
+  category                String
+  price                   Int
+  image                   String
+  trustScore              Int      @map("trust_score")
+  greenwashingRisk        String   @map("greenwashing_risk")
+  certifications          Json
+  materialsAnalysis       String   @map("materials_analysis")
+  supplyChainTransparency String   @map("supply_chain_transparency")
+  packagingAssessment     String   @map("packaging_assessment")
+  carbonFootprint         String   @map("carbon_footprint")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
 
-  scans                     Scan[]
-  barcodeHistory            BarcodeHistory[]
+  scans          Scan[]
+  barcodeHistory BarcodeHistory[]
 
   @@map("products")
 }
@@ -42,24 +42,24 @@ model Scan {
   saved          Boolean  @default(false)
   createdAt      DateTime @default(now()) @map("created_at")
 
-  product        Product? @relation(fields: [productId], references: [id])
+  product Product? @relation(fields: [productId], references: [id])
 
   @@index([userEmail])
   @@map("scans")
 }
 
 model BarcodeHistory {
-  id                    String   @id @default(cuid())
-  userEmail             String   @map("user_email")
-  barcode               String
-  barcodeFormat         String?  @map("barcode_format")
-  productId             String?  @map("product_id")
-  productName           String?  @map("product_name")
-  trustScore            Int?     @map("trust_score")
-  validationConfidence  Int?     @map("validation_confidence")
-  createdAt             DateTime @default(now()) @map("created_at")
+  id                   String   @id @default(cuid())
+  userEmail            String   @map("user_email")
+  barcode              String
+  barcodeFormat        String?  @map("barcode_format")
+  productId            String?  @map("product_id")
+  productName          String?  @map("product_name")
+  trustScore           Int?     @map("trust_score")
+  validationConfidence Int?     @map("validation_confidence")
+  createdAt            DateTime @default(now()) @map("created_at")
 
-  product               Product? @relation(fields: [productId], references: [id])
+  product Product? @relation(fields: [productId], references: [id])
 
   @@index([userEmail])
   @@map("barcode_history")

@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import multer from 'multer'
 import { classifyImageFile } from '../services/vision.js'
+import { prisma, toClientProduct } from '../db.js'
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -33,7 +34,38 @@ router.post('/classify', upload.single('image'), async (req, res) => {
     }
 
     const result = await classifyImageFile(req.file)
-    res.json(result)
+    const catalogId =
+      result?.detected_product_id ||
+      result?.candidates?.[0]?.product_id ||
+      result?.matched_product_id ||
+      null
+    let product = null
+    let scan = null
+
+    if (catalogId) {
+      product = await prisma.product.findUnique({ where: { id: String(catalogId) } })
+    }
+
+    if (product) {
+      const persist = String(req.query.persist || req.body?.persist || '1') !== '0'
+      if (persist) {
+        scan = await prisma.scan.create({
+          data: {
+            productId: product.id,
+            source: 'photo',
+            trustScore: product.trustScore,
+            classification: result,
+            saved: false,
+          },
+        })
+      }
+    }
+
+    res.json({
+      ...result,
+      product: product ? toClientProduct(product) : null,
+      scanId: scan?.id ?? null,
+    })
   } catch (err) {
     console.error('classify error', err)
     res.status(500).json({ error: err.message || 'Classification failed' })
