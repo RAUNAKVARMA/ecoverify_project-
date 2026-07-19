@@ -3683,3 +3683,265 @@ a.amo-phone {
 }
 .ix-stage-orb .font-display { color: #f7f3f0 !important; }
 .ix-stage-orb span.rounded-full { background: rgba(247,243,240,0.92) !important; }
+
+/* -- About iconic upgrade -- */
+.about-noise {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.about-hero-spotlight {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: soft-light;
+}
+
+.about-float.af-4 {
+  width: clamp(54px, 8vw, 84px);
+  height: clamp(54px, 8vw, 84px);
+  top: 48%;
+  left: 14%;
+  border-radius: 1rem;
+  animation-delay: -6s;
+}
+
+.about-hero-hint {
+  margin: 1rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  color: rgba(15, 61, 44, 0.65);
+  min-height: 1.2em;
+  transition: opacity 0.3s ease;
+}
+
+.about-scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(15, 61, 44, 0.7);
+  text-decoration: none;
+}
+
+.about-scroll-cue em {
+  font-family: var(--font-hand);
+  font-style: normal;
+  font-size: 1rem;
+}
+
+.about-marquee {
+  overflow: hidden;
+  border-block: 1px solid rgba(31, 107, 74, 0.14);
+  background: rgba(255, 255, 255, 0.45);
+  padding: 0.85rem 0;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.about-marquee-track {
+  display: flex;
+  gap: 2.5rem;
+  width: max-content;
+  animation: about-marquee 28s linear infinite;
+}
+
+.about-marquee-track span {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--color-forest-deep);
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+.about-marquee-track span::after {
+  content: '?';
+  margin-left: 2.5rem;
+  color: rgba(31, 107, 74, 0.35);
+}
+
+@keyframes about-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.about-display-em {
+  margin-top: 0.15rem;
+}
+
+.about-frame {
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.35s ease,
+    filter 0.35s ease;
+  opacity: 0.62;
+  filter: saturate(0.8);
+  scroll-snap-align: center;
+}
+
+.about-frame.is-active {
+  opacity: 1;
+  filter: none;
+  transform: scale(1.04) translateY(-6px);
+}
+
+.about-frame-shine {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35), transparent 70%);
+  transform: translateX(-120%);
+}
+
+.about-frame.is-active .about-frame-shine {
+  animation: about-shine 1.4s ease both;
+}
+
+@keyframes about-shine {
+  to { transform: translateX(120%); }
+}
+
+.about-film-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+
+.about-film-dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: rgba(31, 107, 74, 0.2);
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.about-film-dot.is-on {
+  background: var(--color-forest);
+  transform: scale(1.35);
+}
+
+.about-pipe-node {
+  position: relative;
+  animation: about-node-pulse 2.8s ease-in-out infinite;
+}
+
+.about-pipe-node:nth-child(3) { animation-delay: 0.4s; }
+.about-pipe-node:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes about-node-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+.about-pipe {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-pipe::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(31, 107, 74, 0.85), transparent);
+  animation: about-pipe-run 2.2s linear infinite;
+}
+
+@keyframes about-pipe-run {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.about-orb-halo {
+  position: absolute;
+  inset: -18%;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(31, 107, 74, 0.22), transparent 65%);
+  animation: orb-pulse 3.2s ease-in-out infinite;
+}
+
+.about-split-panel {
+  transition: transform 0.18s linear, box-shadow 0.35s ease;
+  will-change: transform;
+}
+
+.about-split-panel:hover {
+  box-shadow: 0 24px 50px rgba(15, 61, 44, 0.14);
+}
+
+.about-finale-orbit {
+  pointer-events: none;
+  position: absolute;
+  inset: 10% 15%;
+}
+
+.about-finale-orbit span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin: -4px;
+  border-radius: 999px;
+  background: rgba(31, 107, 74, 0.45);
+  animation: about-orbit 12s linear infinite;
+  animation-delay: calc(var(--i) * -1.5s);
+  transform-origin: 0 0;
+}
+
+@keyframes about-orbit {
+  from { transform: rotate(calc(var(--i) * 45deg)) translateX(min(28vw, 180px)) rotate(0deg); }
+  to { transform: rotate(calc(var(--i) * 45deg + 360deg)) translateX(min(28vw, 180px)) rotate(-360deg); }
+}
+
+/* Global page polish */
+.immersive-app .page-enter > * {
+  animation: fade-up 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.history-timeline-item {
+  opacity: 0;
+  transform: translateX(-12px);
+  animation: ix-chip-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.history-timeline-item:nth-child(1) { animation-delay: 0.05s; }
+.history-timeline-item:nth-child(2) { animation-delay: 0.1s; }
+.history-timeline-item:nth-child(3) { animation-delay: 0.15s; }
+.history-timeline-item:nth-child(4) { animation-delay: 0.2s; }
+.history-timeline-item:nth-child(5) { animation-delay: 0.25s; }
+.history-timeline-item:nth-child(n + 6) { animation-delay: 0.3s; }
+
+.dossier-sheet {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+}
+
+.dossier-sheet:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 48px rgba(71, 58, 45, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-marquee-track,
+  .about-frame-shine,
+  .about-pipe::after,
+  .about-pipe-node,
+  .about-orb-halo,
+  .about-finale-orbit span,
+  .history-timeline-item {
+    animation: none !important;
+  }
+
+  .about-frame,
+  .about-frame.is-active {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}

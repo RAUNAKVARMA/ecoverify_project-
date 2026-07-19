@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import Reveal from '@/components/Reveal'
 import MagneticLink from '@/components/MagneticLink'
+import StaggerText from '@/components/StaggerText'
 import useReveal from '@/hooks/useReveal'
 import { useCountUp, useScrollProgress } from '@/hooks/useMotion'
+import { usePointerStage } from '@/hooks/usePointerStage'
 
 const BEATS = [
   {
@@ -31,16 +33,35 @@ const BEATS = [
 const FLOATS = [
   {
     cls: 'af-1',
+    depth: 1.2,
     src: 'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=400&q=80',
   },
   {
     cls: 'af-2',
+    depth: 0.7,
     src: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=400&q=80',
   },
   {
     cls: 'af-3',
+    depth: 1,
     src: 'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=400&q=80',
   },
+  {
+    cls: 'af-4',
+    depth: 0.55,
+    src: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=400&q=80',
+  },
+]
+
+const MARQUEE = [
+  'certifications',
+  'materials',
+  'supply chain',
+  'packaging',
+  'carbon',
+  'greenwash risk',
+  'trust score',
+  'better aisle',
 ]
 
 function ClaimFlip() {
@@ -73,6 +94,7 @@ function ScoreOrb() {
 
   return (
     <div ref={ref} className={`about-orb ${visible ? 'is-in' : ''}`}>
+      <div className="about-orb-halo" aria-hidden />
       <svg viewBox="0 0 120 120" className="about-orb-ring" aria-hidden>
         <circle cx="60" cy="60" r="52" className="about-orb-track" />
         <circle
@@ -98,7 +120,7 @@ function LetterBrand({ text }) {
         <span
           key={`${ch}-${i}`}
           className="about-letter"
-          style={{ animationDelay: `${120 + i * 55}ms` }}
+          style={{ animationDelay: `${80 + i * 70}ms` }}
         >
           {ch}
         </span>
@@ -107,18 +129,95 @@ function LetterBrand({ text }) {
   )
 }
 
+function FilmBeats() {
+  const [active, setActive] = useState(0)
+  const trackRef = useRef(null)
+
+  useEffect(() => {
+    const el = trackRef.current
+    if (!el) return undefined
+    const onScroll = () => {
+      const cards = [...el.querySelectorAll('.about-frame')]
+      if (!cards.length) return
+      const mid = el.scrollLeft + el.clientWidth / 2
+      let best = 0
+      let bestDist = Infinity
+      cards.forEach((card, i) => {
+        const c = card.offsetLeft + card.offsetWidth / 2
+        const d = Math.abs(c - mid)
+        if (d < bestDist) {
+          bestDist = d
+          best = i
+        }
+      })
+      setActive(best)
+    }
+    onScroll()
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <>
+      <div className="about-film-track" ref={trackRef}>
+        {BEATS.map((beat, i) => (
+          <article
+            key={beat.step}
+            className={`about-frame ${active === i ? 'is-active' : ''}`}
+            onMouseEnter={() => setActive(i)}
+            onFocus={() => setActive(i)}
+            tabIndex={0}
+          >
+            <div className="about-frame-media">
+              <img src={beat.image} alt="" />
+              <span className="about-frame-step">{beat.step}</span>
+              <span className="about-frame-shine" aria-hidden />
+            </div>
+            <h3>{beat.title}</h3>
+            <p>{beat.body}</p>
+          </article>
+        ))}
+      </div>
+      <div className="about-film-dots" aria-hidden>
+        {BEATS.map((b, i) => (
+          <span key={b.step} className={`about-film-dot ${active === i ? 'is-on' : ''}`} />
+        ))}
+      </div>
+    </>
+  )
+}
+
+function TiltPanel({ className, children }) {
+  const [style, setStyle] = useState({})
+  return (
+    <div
+      className={className}
+      style={style}
+      onPointerMove={(e) => {
+        if (window.matchMedia('(pointer: coarse)').matches) return
+        const r = e.currentTarget.getBoundingClientRect()
+        const x = ((e.clientX - r.left) / r.width - 0.5) * 12
+        const y = ((e.clientY - r.top) / r.height - 0.5) * -10
+        setStyle({ transform: `perspective(900px) rotateX(${y}deg) rotateY(${x}deg) translateY(-4px)` })
+      }}
+      onPointerLeave={() => setStyle({ transform: 'none' })}
+    >
+      {children}
+    </div>
+  )
+}
+
 export default function About() {
   const pageRef = useRef(null)
-  const heroRef = useRef(null)
   const progress = useScrollProgress(pageRef)
   const [heroShift, setHeroShift] = useState(0)
+  const { ref: heroPtr, mediaStyle, floatStyle, spotlightStyle, pos } = usePointerStage(0.85)
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const onScroll = () => {
       if (reduced) return
-      const y = window.scrollY
-      setHeroShift(Math.min(120, y * 0.28))
+      setHeroShift(Math.min(140, window.scrollY * 0.32))
     }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -131,11 +230,16 @@ export default function About() {
         <div className="about-progress-fill" style={{ transform: `scaleX(${progress})` }} />
       </div>
 
-      <section className="about-hero" ref={heroRef}>
+      <div className="about-noise" aria-hidden />
+
+      <section className="about-hero" ref={heroPtr}>
         <div
           className="about-hero-media"
           aria-hidden
-          style={{ transform: `translate3d(0, ${heroShift}px, 0) scale(1.08)` }}
+          style={{
+            ...mediaStyle,
+            transform: `${mediaStyle.transform || ''} translate3d(0, ${heroShift}px, 0)`.trim(),
+          }}
         >
           <img
             src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2400&q=82"
@@ -143,42 +247,69 @@ export default function About() {
           />
           <div className="about-hero-grain" />
           <div className="about-hero-veil" />
+          <div className="about-hero-spotlight" style={spotlightStyle} />
         </div>
 
         <div className="about-hero-floats" aria-hidden>
           {FLOATS.map((f) => (
-            <img key={f.cls} src={f.src} alt="" className={`about-float ${f.cls}`} />
+            <img
+              key={f.cls}
+              src={f.src}
+              alt=""
+              className={`about-float ${f.cls}`}
+              style={floatStyle(f.depth)}
+            />
           ))}
         </div>
 
-        <div className="about-hero-copy">
+        <div
+          className="about-hero-copy"
+          style={floatStyle(0.35)}
+        >
           <p className="about-kicker">Trust, made legible</p>
           <LetterBrand text="EcoVerify" />
           <p className="about-lede">
             The trust score for everyday products — so green claims meet real evidence.
           </p>
           <div className="about-cta-row">
-            <MagneticLink to="/" className="about-cta about-cta-primary">
+            <MagneticLink to="/" className="about-cta about-cta-primary" strength={0.4}>
               Try a scan
             </MagneticLink>
-            <MagneticLink href="#story" className="about-cta about-cta-ghost" strength={0.18}>
+            <MagneticLink href="#story" className="about-cta about-cta-ghost" strength={0.22}>
               Enter the story
             </MagneticLink>
           </div>
+          <p className="about-hero-hint" aria-hidden>
+            {pos.active ? 'Keep moving — the forest follows.' : 'Move your pointer across the canopy.'}
+          </p>
         </div>
 
         <a href="#story" className="about-scroll-cue" aria-label="Scroll to story">
           <span />
+          <em>scroll</em>
         </a>
       </section>
+
+      <div className="about-marquee" aria-hidden>
+        <div className="about-marquee-track">
+          {[...MARQUEE, ...MARQUEE].map((word, i) => (
+            <span key={`${word}-${i}`}>{word}</span>
+          ))}
+        </div>
+      </div>
 
       <section className="about-chapter" id="story">
         <div className="about-chapter-inner about-problem">
           <Reveal>
             <p className="about-hand about-section-hand">look closer</p>
-            <h2 className="about-display">
-              Labels look green.
-              <br />
+            <StaggerText
+              as="h2"
+              className="about-display"
+              text="Labels look green."
+              mode="words"
+              delay={55}
+            />
+            <h2 className="about-display about-display-em">
               <em>Proof is hard.</em>
             </h2>
             <p className="about-body">
@@ -197,21 +328,10 @@ export default function About() {
           <Reveal>
             <p className="about-hand about-section-hand">the loop</p>
             <h2 className="about-display">What EcoVerify does</h2>
-            <p className="about-body">Three beats from shelf curiosity to a clearer cart.</p>
+            <p className="about-body">Drag sideways. Watch the beat that stays in focus.</p>
           </Reveal>
         </div>
-        <div className="about-film-track">
-          {BEATS.map((beat, i) => (
-            <Reveal as="article" key={beat.step} delay={i * 100} className="about-frame">
-              <div className="about-frame-media">
-                <img src={beat.image} alt="" />
-                <span className="about-frame-step">{beat.step}</span>
-              </div>
-              <h3>{beat.title}</h3>
-              <p>{beat.body}</p>
-            </Reveal>
-          ))}
-        </div>
+        <FilmBeats />
       </section>
 
       <section className="about-scoreband">
@@ -225,11 +345,11 @@ export default function About() {
             </h2>
             <p className="about-body">Vision reads. Signals weigh. A trust number lands — quietly rigorous.</p>
             <div className="about-pipeline" aria-label="Scoring pipeline">
-              <span>Vision</span>
+              <span className="about-pipe-node">Vision</span>
               <span className="about-pipe" aria-hidden />
-              <span>Signals</span>
+              <span className="about-pipe-node">Signals</span>
               <span className="about-pipe" aria-hidden />
-              <span>Trust Score</span>
+              <span className="about-pipe-node">Trust Score</span>
             </div>
           </Reveal>
           <Reveal delay={160} variant="scale">
@@ -239,35 +359,44 @@ export default function About() {
       </section>
 
       <section className="about-split">
-        <Reveal className="about-split-panel about-split-shop">
-          <p className="about-hand">for shoppers</p>
-          <h3>Cut through the green fog at the shelf.</h3>
-          <p>Know what holds up — and what is marketing vapor.</p>
-          <MagneticLink to="/" className="about-cta about-cta-primary">
-            Start a scan
-          </MagneticLink>
+        <Reveal>
+          <TiltPanel className="about-split-panel about-split-shop">
+            <p className="about-hand">for shoppers</p>
+            <h3>Cut through the green fog at the shelf.</h3>
+            <p>Know what holds up — and what is marketing vapor.</p>
+            <MagneticLink to="/" className="about-cta about-cta-primary">
+              Start a scan
+            </MagneticLink>
+          </TiltPanel>
         </Reveal>
-        <Reveal delay={100} className="about-split-panel about-split-brand">
-          <p className="about-hand">for brands</p>
-          <h3>See your claims the way critical buyers do.</h3>
-          <p>Strengthen evidence before the aisle calls you out.</p>
-          <MagneticLink to="/BrandDashboard" className="about-cta about-cta-ghost">
-            Brand dashboard
-          </MagneticLink>
+        <Reveal delay={100}>
+          <TiltPanel className="about-split-panel about-split-brand">
+            <p className="about-hand">for brands</p>
+            <h3>See your claims the way critical buyers do.</h3>
+            <p>Strengthen evidence before the aisle calls you out.</p>
+            <MagneticLink to="/BrandDashboard" className="about-cta about-cta-ghost">
+              Brand dashboard
+            </MagneticLink>
+          </TiltPanel>
         </Reveal>
       </section>
 
       <section className="about-finale">
         <div className="about-finale-glow" aria-hidden />
+        <div className="about-finale-orbit" aria-hidden>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <span key={i} style={{ '--i': i }} />
+          ))}
+        </div>
         <Reveal>
           <p className="about-hand about-section-hand">ready?</p>
-          <h2 className="about-brand about-brand-sm">EcoVerify</h2>
+          <LetterBrand text="EcoVerify" />
           <p className="about-lede about-lede-center">Trust scores for the products you already buy.</p>
           <div className="about-cta-row about-cta-center">
-            <MagneticLink to="/" className="about-cta about-cta-primary">
+            <MagneticLink to="/" className="about-cta about-cta-primary" strength={0.42}>
               Scan something
             </MagneticLink>
-            <MagneticLink to="/Alternatives" className="about-cta about-cta-ghost">
+            <MagneticLink to="/Alternatives" className="about-cta about-cta-ghost" strength={0.24}>
               Browse better picks
             </MagneticLink>
           </div>
