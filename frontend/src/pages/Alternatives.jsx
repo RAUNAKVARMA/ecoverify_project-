@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { Star, ChevronRight, MapPin, HelpCircle } from 'lucide-react'
 import PageHeader from '@/components/PageHeader'
 import SectionCard from '@/components/SectionCard'
+import Reveal from '@/components/Reveal'
 import TrustScoreCircle from '@/components/TrustScoreCircle'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
@@ -59,25 +60,46 @@ export default function Alternatives() {
       <PageHeader
         icon={Star}
         title="Alternatives"
+        sticker="better picks"
         description="Higher-trust options ranked by sustainability score."
-        gradient="from-sky-400 to-sky-500"
+        gradient="from-sky-500 to-teal-600"
       />
 
       {original && (
-        <SectionCard title="Comparing Against" accentColor="border-sky-400">
-          <div className="flex items-center gap-3">
-            <img src={original.image} alt="" className="h-14 w-14 rounded-lg object-cover" />
-            <div className="flex-1">
-              <p className="font-semibold text-gray-900">{original.name}</p>
-              <p className="text-sm text-gray-500">{original.brand}</p>
+        <Reveal>
+          <SectionCard title="Comparing Against" accentColor="border-sky-400">
+            <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+              <div className="flex items-center gap-3 rounded-2xl bg-[var(--color-paper-deep)]/70 p-3">
+                <img src={original.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-semibold text-gray-900">{original.name}</p>
+                  <p className="text-sm text-gray-500">{original.brand}</p>
+                </div>
+                <TrustScoreCircle score={original.trust_score} size="small" showLabel={false} />
+              </div>
+              <p className="text-center font-hand text-2xl text-[var(--color-forest)]">vs</p>
+              <div className="flex items-center gap-3 rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-3">
+                {topAlt ? (
+                  <>
+                    <img src={topAlt.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-semibold text-gray-900">{topAlt.name}</p>
+                      <p className="text-xs font-medium text-emerald-700">
+                        +{topAlt.trust_score - original.trust_score} pts better
+                      </p>
+                    </div>
+                    <TrustScoreCircle score={topAlt.trust_score} size="small" showLabel={false} />
+                  </>
+                ) : (
+                  <p className="text-sm text-gray-500">No stronger pick yet — loosen filters.</p>
+                )}
+              </div>
             </div>
-            <Badge className={getTrustLabel(original.trust_score).bg + ' ' + getTrustLabel(original.trust_score).color}>
-              {original.trust_score}
-            </Badge>
-          </div>
-        </SectionCard>
+          </SectionCard>
+        </Reveal>
       )}
 
+      <Reveal delay={60}>
       <SectionCard icon={Star} title="Better Alternatives" description="Minimum +15 points when available" accentColor="border-amber-400">
         {list.length === 0 ? (
           <p className="text-sm text-gray-500">No alternatives match your filters.</p>
@@ -89,7 +111,7 @@ export default function Alternatives() {
                 <li key={p.id}>
                   <Link
                     to={`/ProductDetail?id=${p.id}`}
-                    className="flex items-center gap-3 rounded-lg p-2 hover:bg-gray-50 transition-colors"
+                    className="immersive-list-item flex items-center gap-3 rounded-lg p-2"
                   >
                     <img src={p.image} alt="" className="h-14 w-14 rounded-lg object-cover" />
                     <div className="flex-1 min-w-0">
@@ -108,7 +130,9 @@ export default function Alternatives() {
           </ul>
         )}
       </SectionCard>
+      </Reveal>
 
+      <Reveal delay={100}>
       <SectionCard title="Filters" accentColor="border-gray-300">
         <div className="space-y-4">
           <div>
@@ -151,7 +175,9 @@ export default function Alternatives() {
           </div>
         </div>
       </SectionCard>
+      </Reveal>
 
+      <Reveal delay={140}>
       <SectionCard icon={MapPin} title="Where to Buy" accentColor="border-red-400">
         <div className="flex flex-wrap gap-2">
           {STORES.map((s) => (
@@ -161,14 +187,17 @@ export default function Alternatives() {
           ))}
         </div>
       </SectionCard>
+      </Reveal>
 
       {topAlt && original && (
-        <SectionCard icon={HelpCircle} title="Why this alternative?" accentColor="border-teal-500">
-          <p className="text-sm text-gray-700">
-            {topAlt.name} scores {topAlt.trust_score - original.trust_score} points higher because of: better certifications,
-            superior packaging, lower greenwashing risk.
-          </p>
-        </SectionCard>
+        <Reveal delay={180}>
+          <SectionCard icon={HelpCircle} title="Why this alternative?" accentColor="border-teal-500">
+            <p className="text-sm text-gray-700">
+              {topAlt.name} scores {topAlt.trust_score - original.trust_score} points higher because of: better certifications,
+              superior packaging, lower greenwashing risk.
+            </p>
+          </SectionCard>
+        </Reveal>
       )}
     </div>
   )

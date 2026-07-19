@@ -3,6 +3,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom'
 
 const navItems = [
   { to: '/', label: 'Home', end: true },
+  { to: '/About', label: 'About' },
   { to: '/History', label: 'History' },
   { to: '/Alternatives', label: 'Alternatives' },
   { to: '/Profile', label: 'Profile' },
@@ -13,6 +14,8 @@ const navItems = [
 export default function Layout() {
   const { pathname } = useLocation()
   const isHome = pathname === '/'
+  const isAbout = pathname === '/About'
+  const isImmersiveFull = isHome || isAbout
   const [open, setOpen] = useState(false)
   const menuRef = useRef(null)
 
@@ -37,15 +40,30 @@ export default function Layout() {
   }, [open])
 
   return (
-    <div className={`min-h-svh ${isHome ? '' : 'bg-[var(--color-paper)]'}`}>
-      {!isHome && (
-        <header className="sticky top-0 z-30 border-b border-[var(--color-border-warm)] bg-[var(--color-paper)]/90 backdrop-blur-md">
+    <div className={`min-h-svh relative ${isHome ? '' : 'immersive-app'}`}>
+      {!isHome && !isAbout && (
+        <>
+          <div className="immersive-paper" aria-hidden />
+          <div className="immersive-dotgrid" aria-hidden />
+          <div className="immersive-wash" aria-hidden />
+        </>
+      )}
+
+      {isAbout && (
+        <>
+          <div className="immersive-paper" aria-hidden />
+          <div className="immersive-dotgrid about-dotgrid" aria-hidden />
+        </>
+      )}
+
+      {!isImmersiveFull && (
+        <header className="immersive-header sticky top-0 z-30">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
             <NavLink to="/" className="text-xl font-bold tracking-tight text-[var(--color-ink)]">
               EcoVerify
             </NavLink>
-            <nav className="hidden items-center gap-1 md:flex">
-              {navItems.slice(0, 5).map((item) => (
+            <nav className="hidden items-center gap-1 lg:flex">
+              {navItems.slice(0, 6).map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
@@ -66,7 +84,14 @@ export default function Layout() {
         </header>
       )}
 
-      <main className={isHome ? '' : 'mx-auto w-full max-w-6xl p-4 pb-28 md:p-6 md:pb-10'}>
+      <main
+        key={pathname}
+        className={
+          isImmersiveFull
+            ? 'page-enter relative z-10'
+            : 'page-enter relative z-10 mx-auto w-full max-w-6xl p-4 pb-28 md:p-6 md:pb-10'
+        }
+      >
         <Outlet />
       </main>
 
@@ -78,7 +103,7 @@ export default function Layout() {
               ? 'bottom-8 right-6 w-[min(345px,calc(100vw-2rem))] p-5 pb-14 sm:right-10'
               : 'bottom-8 right-6 h-[50px] w-[120px] sm:right-10'
           }`}
-          style={open ? { height: 'auto', minHeight: 320 } : undefined}
+          style={open ? { height: 'auto', minHeight: 360 } : undefined}
         >
           {open && (
             <div className="mb-3 flex flex-col items-end gap-1 pr-1">

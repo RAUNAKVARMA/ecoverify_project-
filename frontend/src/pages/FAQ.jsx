@@ -4,6 +4,7 @@ import { HelpCircle, ChevronDown, ChevronUp, ArrowLeft, Video, BookOpen, Message
 import PageHeader from '@/components/PageHeader'
 import SectionCard from '@/components/SectionCard'
 import { Button } from '@/components/ui/button'
+import { showToast } from '@/lib/toast'
 
 const FAQ_DATA = [
   {
@@ -77,13 +78,13 @@ export default function FAQ() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <SectionCard icon={Video} title="Video Tutorials" accentColor="border-red-400">
-          <Button variant="destructive" onClick={() => alert('Opening tutorials (demo)')}>Watch Tutorials</Button>
+          <Button variant="destructive" onClick={() => showToast('Opening tutorials')}>Watch Tutorials</Button>
         </SectionCard>
         <SectionCard icon={BookOpen} title="User Guide" accentColor="border-blue-400">
-          <Button variant="secondary" onClick={() => alert('PDF download (demo)')}>Download PDF Guide</Button>
+          <Button variant="secondary" onClick={() => showToast('PDF guide download started')}>Download PDF Guide</Button>
         </SectionCard>
         <SectionCard icon={MessageCircle} title="Contact Support" accentColor="border-emerald-500">
-          <Button onClick={() => alert('support@ecoverify.com')}>Get Help</Button>
+          <Button onClick={() => { navigator.clipboard?.writeText('support@ecoverify.com'); showToast('support@ecoverify.com copied') }}>Get Help</Button>
         </SectionCard>
       </div>
 
@@ -98,7 +99,7 @@ export default function FAQ() {
       ))}
 
       <SectionCard title="Still Need Help?" accentColor="border-gray-300">
-        <Button onClick={() => alert('Chat support (demo)')}>Chat with Support</Button>
+        <Button onClick={() => showToast('Chat support unavailable offline')}>Chat with Support</Button>
         <p className="mt-2 text-sm text-gray-600">Email: support@ecoverify.com</p>
       </SectionCard>
     </div>

@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useAuth } from '@/context/AuthContext'
 import { products, getTrustLabel } from '@/components/data/productData'
+import { showToast } from '@/lib/toast'
 
 const brandProducts = products.slice(0, 5).map((p, i) => ({
   ...p,
@@ -47,12 +48,13 @@ export default function BrandDashboard() {
       <PageHeader
         icon={Building2}
         title="Brand dashboard"
+        sticker="for brands"
         badges={['Verified']}
         description="Manage products, claims, and analytics."
-        gradient="from-teal-600 to-emerald-600"
+        gradient="from-teal-700 to-emerald-800"
       />
 
-      <div className="rounded-2xl bg-gradient-to-r from-teal-700 to-emerald-600 p-4 text-white md:p-6">
+      <div className="imm-tilt rounded-2xl bg-gradient-to-r from-teal-800 to-emerald-700 p-4 text-white md:p-6">
         <p className="text-sm text-white/80">Welcome back</p>
         <h2 className="font-display text-xl font-semibold">{brand.companyName}</h2>
         <p className="mt-1 text-sm text-white/90">Verified brand · {brand.email}</p>
@@ -106,7 +108,7 @@ export default function BrandDashboard() {
         <label className="mt-4 flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 border-dashed border-teal-200 p-6 hover:bg-teal-50/50">
           <Upload className="h-6 w-6 text-teal-600" />
           <span className="text-sm text-teal-800">Upload certification documents (PDF/images)</span>
-          <input type="file" accept=".pdf,image/*" className="hidden" onChange={() => alert('Document uploaded (demo)')} />
+          <input type="file" accept=".pdf,image/*" className="hidden" onChange={() => showToast('Document uploaded')} />
         </label>
       </SectionCard>
 
@@ -120,11 +122,11 @@ export default function BrandDashboard() {
 
       <SectionCard title="Claims Management" accentColor="border-orange-400">
         <div className="flex flex-wrap gap-2">
-          <Button onClick={() => alert('Claim form opened (demo)')}>Submit New Claims</Button>
-          <Button variant="secondary" onClick={() => alert('Certification update (demo)')}>
+          <Button onClick={() => showToast('Claim form opened')}>Submit New Claims</Button>
+          <Button variant="secondary" onClick={() => showToast('Certification update started')}>
             Update Certifications
           </Button>
-          <Button variant="outline" onClick={() => alert('Reports inbox (demo)')}>
+          <Button variant="outline" onClick={() => showToast('Opened reports inbox')}>
             Respond to User Reports
             <Badge className="ml-1" variant="warning">
               3 pending

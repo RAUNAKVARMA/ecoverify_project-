@@ -9,7 +9,7 @@ export default function SectionCard({
 }) {
   return (
     <section
-      className={`overflow-hidden rounded-[1.5rem] border border-[var(--color-border-warm)] bg-white/75 shadow-[0_8px_30px_rgba(71,58,45,0.06)] backdrop-blur-sm ${className}`}
+      className={`imm-tilt overflow-hidden rounded-[1.5rem] border border-[var(--color-border-warm)] bg-white/70 shadow-[0_8px_30px_rgba(71,58,45,0.06)] backdrop-blur-sm ${className}`}
     >
       {(title || description || Icon || actions) && (
         <div className={`border-l-[3px] ${accentColor} px-4 py-3.5 sm:px-5`}>
@@ -22,7 +22,7 @@ export default function SectionCard({
               )}
               <div className="min-w-0">
                 {title && (
-                  <h2 className="text-lg font-semibold tracking-tight text-[var(--color-ink)]">
+                  <h2 className="font-display text-lg font-semibold tracking-tight text-[var(--color-ink)]">
                     {title}
                   </h2>
                 )}

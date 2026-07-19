@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom'
 import { User, BookOpen, MessageCircle, Video } from 'lucide-react'
 import PageHeader from '@/components/PageHeader'
 import SectionCard from '@/components/SectionCard'
+import Reveal from '@/components/Reveal'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { mockScanHistory } from '@/components/data/productData'
+import { getScanStats } from '@/lib/scanHistory'
 import { useAuth } from '@/context/AuthContext'
+import { showToast } from '@/lib/toast'
 
 const PRIORITIES = [
   { id: 'Climate', label: 'Climate' },
@@ -18,9 +20,11 @@ const PRIORITIES = [
 export default function Profile() {
   const { prefs, updatePrefs, user, signInWithGoogle, signOutUser } = useAuth()
 
-  const totalScans = mockScanHistory.length + 12
-  const greenwashingAvoided = 4
+  const stats = getScanStats()
+  const totalScans = stats.totalScans
+  const greenwashingAvoided = Math.max(0, Math.floor(stats.uniqueProducts * 0.35))
   const ecoImpact = totalScans * 15 + greenwashingAvoided * 25
+  const savedLabel = String(stats.savedCount)
 
   const togglePriority = (id) => {
     const set = new Set(prefs.priorities || [])
@@ -34,10 +38,12 @@ export default function Profile() {
       <PageHeader
         icon={User}
         title="Profile"
+        sticker="you +"
         description="Preferences, stats, and support."
-        gradient="from-emerald-500 to-teal-500"
+        gradient="from-emerald-600 to-teal-700"
       />
 
+      <Reveal>
       <SectionCard title="Account" accentColor="border-emerald-500">
         {user ? (
           <div className="flex items-center justify-between gap-3">
@@ -62,16 +68,20 @@ export default function Profile() {
           </button>
         )}
       </SectionCard>
+      </Reveal>
 
+      <Reveal delay={70}>
       <SectionCard title="Personal Stats" accentColor="border-blue-400">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <Stat label="Products Scanned" value={totalScans} color="bg-blue-50 text-blue-800" />
-          <Stat label="Greenwashing Avoided" value={greenwashingAvoided} color="bg-red-50 text-red-800" />
+          <Stat label="Unique products" value={stats.uniqueProducts} color="bg-red-50 text-red-800" />
           <Stat label="Eco Impact Score" value={ecoImpact} color="bg-amber-50 text-amber-800" />
-          <Stat label="Monthly Insights" value="+12%" color="bg-teal-50 text-teal-800" />
+          <Stat label="Saved" value={savedLabel} color="bg-teal-50 text-teal-800" />
         </div>
       </SectionCard>
+      </Reveal>
 
+      <Reveal delay={120}>
       <SectionCard title="Preferences" accentColor="border-emerald-500">
         <div className="space-y-4">
           <div>
@@ -128,36 +138,44 @@ export default function Profile() {
           </div>
         </div>
       </SectionCard>
+      </Reveal>
 
+      <Reveal delay={160}>
       <SectionCard title="Notifications" accentColor="border-amber-400">
         <div className="flex items-center justify-between">
           <Label>Enable notifications</Label>
           <Switch checked={prefs.notifications} onCheckedChange={(v) => updatePrefs({ notifications: v })} />
         </div>
       </SectionCard>
+      </Reveal>
 
+      <Reveal delay={200}>
       <SectionCard title="Help & Support" accentColor="border-blue-400">
         <div className="space-y-2">
           <Link to="/FAQ" className="flex items-center gap-2 text-sm text-blue-700 hover:underline">
-            <BookOpen className="h-4 w-4" /> 📖 FAQs & Tutorials
+            <BookOpen className="h-4 w-4" /> FAQs & Tutorials
           </Link>
-          <button type="button" className="flex items-center gap-2 text-sm text-blue-700" onClick={() => alert('support@ecoverify.com')}>
-            <MessageCircle className="h-4 w-4" /> 💬 Contact Support
+          <button type="button" className="flex items-center gap-2 text-sm text-blue-700" onClick={() => { navigator.clipboard?.writeText('support@ecoverify.com'); showToast('support@ecoverify.com copied') }}>
+            <MessageCircle className="h-4 w-4" /> Contact Support
           </button>
-          <button type="button" className="flex items-center gap-2 text-sm text-blue-700" onClick={() => alert('Video guides coming soon')}>
-            <Video className="h-4 w-4" /> 🎥 Video Guides
+          <button type="button" className="flex items-center gap-2 text-sm text-blue-700" onClick={() => showToast('Video guides coming soon')}>
+            <Video className="h-4 w-4" /> Video Guides
           </button>
         </div>
       </SectionCard>
+      </Reveal>
 
+      <Reveal delay={240}>
       <SectionCard title="About" accentColor="border-gray-300">
         <p className="text-sm text-gray-700 mb-2">EcoVerify v1.0.0</p>
         <div className="space-y-1 text-sm">
+          <Link to="/About" className="block text-emerald-700 hover:underline">What is EcoVerify →</Link>
           <Link to="/Terms" className="block text-emerald-700 hover:underline">Terms of Service →</Link>
           <Link to="/Privacy" className="block text-emerald-700 hover:underline">Privacy Policy →</Link>
           <Link to="/DataUsage" className="block text-emerald-700 hover:underline">Data Usage →</Link>
         </div>
       </SectionCard>
+      </Reveal>
     </div>
   )
 }
