@@ -5,7 +5,6 @@ import PageHeader from '@/components/PageHeader'
 import SectionCard from '@/components/SectionCard'
 import Reveal from '@/components/Reveal'
 import TrustScoreCircle from '@/components/TrustScoreCircle'
-import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -59,11 +58,11 @@ export default function Alternatives() {
   return (
     <div className="space-y-4">
       <PageHeader
-        icon={Star}
+        index="03"
+        kicker="Swap"
         title="Alternatives"
-        sticker="better picks"
+        sticker="better aisle"
         description="Higher-trust options ranked by sustainability score."
-        gradient="from-sky-500 to-teal-600"
       />
 
       {original && (

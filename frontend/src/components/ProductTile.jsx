@@ -1,17 +1,34 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, Leaf } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 import ProductImage from '@/components/ProductImage'
 import { getTrustLabel } from '@/components/data/productData'
 
-/**
- * Immersive product tile for lists / grids.
- */
 export default function ProductTile({ product, to, meta, badge, className = '' }) {
   const trust = getTrustLabel(product.trust_score)
   const href = to || `/ProductDetail?id=${product.id}`
+  const [tilt, setTilt] = useState({ x: 0, y: 0, on: false })
+
+  const onMove = (e) => {
+    if (window.matchMedia('(pointer: coarse)').matches) return
+    const r = e.currentTarget.getBoundingClientRect()
+    const px = (e.clientX - r.left) / r.width
+    const py = (e.clientY - r.top) / r.height
+    setTilt({ x: (py - 0.5) * -10, y: (px - 0.5) * 12, on: true })
+  }
 
   return (
-    <Link to={href} className={`product-tile group ${className}`}>
+    <Link
+      to={href}
+      className={`product-tile group ix-tile ${className}`}
+      onPointerMove={onMove}
+      onPointerLeave={() => setTilt({ x: 0, y: 0, on: false })}
+      style={{
+        transform: tilt.on
+          ? `perspective(700px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) translateY(-4px)`
+          : undefined,
+      }}
+    >
       <div className="product-tile-media">
         <ProductImage
           src={product.image}
@@ -41,50 +58,5 @@ export default function ProductTile({ product, to, meta, badge, className = '' }
         </span>
       </div>
     </Link>
-  )
-}
-
-/**
- * Full spotlight hero used on Product Detail.
- */
-export function ProductSpotlight({
-  product,
-  adjustedScore,
-  scoreNode,
-  actions,
-  riskLabel,
-}) {
-  return (
-    <article className="product-spotlight">
-      <div className="product-spotlight-stage">
-        <ProductImage
-          src={product.image}
-          alt={product.name}
-          category={product.category}
-          className="absolute inset-0 h-full w-full"
-          imgClassName="product-spotlight-img"
-        />
-        <div className="product-spotlight-grain" aria-hidden />
-        <div className="product-spotlight-fade" aria-hidden />
-        <div className="product-spotlight-orb" aria-hidden />
-        <p className="product-spotlight-kicker">
-          <Leaf className="h-3.5 w-3.5" />
-          Live catalog match
-        </p>
-        <div className="product-spotlight-score">{scoreNode}</div>
-      </div>
-
-      <div className="product-spotlight-copy">
-        <p className="product-spotlight-brand">{product.brand}</p>
-        <h2 className="product-spotlight-title">{product.name}</h2>
-        <div className="product-spotlight-chips">
-          <span className="chip chip-forest">{product.category}</span>
-          <span className="chip">₹{product.price}</span>
-          {riskLabel ? <span className="chip chip-risk">{riskLabel}</span> : null}
-          <span className="chip chip-soft">Score {Math.round(adjustedScore)}</span>
-        </div>
-        {actions ? <div className="product-spotlight-actions">{actions}</div> : null}
-      </div>
-    </article>
   )
 }

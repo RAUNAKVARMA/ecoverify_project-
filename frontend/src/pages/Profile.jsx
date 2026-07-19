@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { getScanStats } from '@/lib/scanHistory'
 import { useAuth } from '@/context/AuthContext'
 import { showToast } from '@/lib/toast'
+import useReveal from '@/hooks/useReveal'
+import { useCountUp } from '@/hooks/useMotion'
 
 const PRIORITIES = [
   { id: 'Climate', label: 'Climate' },
@@ -36,11 +38,11 @@ export default function Profile() {
   return (
     <div className="space-y-4">
       <PageHeader
-        icon={User}
+        index="04"
+        kicker="You"
         title="Profile"
-        sticker="you +"
-        description="Preferences, stats, and support."
-        gradient="from-emerald-600 to-teal-700"
+        sticker="preferences"
+        description="Stats, taste dials, and how you shop."
       />
 
       <Reveal>
@@ -71,13 +73,13 @@ export default function Profile() {
       </Reveal>
 
       <Reveal delay={70}>
-      <SectionCard title="Personal Stats" accentColor="border-blue-400">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Stat label="Products Scanned" value={totalScans} color="bg-blue-50 text-blue-800" />
-          <Stat label="Unique products" value={stats.uniqueProducts} color="bg-red-50 text-red-800" />
-          <Stat label="Eco Impact Score" value={ecoImpact} color="bg-amber-50 text-amber-800" />
-          <Stat label="Saved" value={savedLabel} color="bg-teal-50 text-teal-800" />
-        </div>
+      <SectionCard index="Pulse" title="Personal stats">
+        <StatMarquee
+          totalScans={totalScans}
+          unique={stats.uniqueProducts}
+          ecoImpact={ecoImpact}
+          savedLabel={savedLabel}
+        />
       </SectionCard>
       </Reveal>
 
@@ -180,11 +182,31 @@ export default function Profile() {
   )
 }
 
-function Stat({ label, value, color }) {
+function StatMarquee({ totalScans, unique, ecoImpact, savedLabel }) {
+  const { ref, visible } = useReveal({ threshold: 0.3 })
+  const scans = useCountUp(Number(totalScans) || 0, visible, 1100)
+  const uniq = useCountUp(Number(unique) || 0, visible, 1200)
+  const impact = useCountUp(Number(ecoImpact) || 0, visible, 1400)
+  const saved = useCountUp(Number(savedLabel) || 0, visible, 1000)
+
   return (
-    <div className={`rounded-xl p-3 text-center ${color}`}>
-      <p className="text-lg font-bold">{value}</p>
-      <p className="text-xs opacity-80">{label}</p>
+    <div ref={ref} className="stat-marquee">
+      <div className="stat-marquee-item">
+        <p className="stat-marquee-value">{scans}</p>
+        <p className="stat-marquee-label">Scans</p>
+      </div>
+      <div className="stat-marquee-item">
+        <p className="stat-marquee-value">{uniq}</p>
+        <p className="stat-marquee-label">Unique</p>
+      </div>
+      <div className="stat-marquee-item">
+        <p className="stat-marquee-value">{impact}</p>
+        <p className="stat-marquee-label">Impact</p>
+      </div>
+      <div className="stat-marquee-item">
+        <p className="stat-marquee-value">{saved}</p>
+        <p className="stat-marquee-label">Saved</p>
+      </div>
     </div>
   )
 }

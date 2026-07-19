@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { format, isToday, isThisWeek, isThisMonth } from 'date-fns'
-import { BarChart3, Star, ChevronRight, Download } from 'lucide-react'
+import { Star, Download } from 'lucide-react'
 import PageHeader from '@/components/PageHeader'
 import SectionCard from '@/components/SectionCard'
 import Reveal from '@/components/Reveal'
@@ -100,34 +100,38 @@ export default function History() {
   return (
     <div className="space-y-4">
       <PageHeader
-        icon={BarChart3}
+        index="02"
+        kicker="Trail"
         title="History"
-        sticker="your trail"
-        description={`${allScans.length} scans — synced to the EcoVerify API when available.`}
-        gradient="from-teal-600 to-emerald-700"
+        sticker="keep receipts"
+        description={`${allScans.length} scans logged — synced when the API is awake.`}
+        action={
+          <Button variant="outline" size="sm" onClick={exportCsv} disabled={!scans.length}>
+            <Download className="h-4 w-4" />
+            Export CSV
+          </Button>
+        }
       />
 
       <Reveal>
-        <SectionCard icon={BarChart3} title="All Scans" accentColor="border-teal-400">
-          <ul className="space-y-2">
+        <SectionCard index="Trail" title="All scans" description="Newest first">
+          <ol className="history-timeline">
             {scans.map((s) => {
               const trust = getTrustLabel(s.displayScore)
               return (
-                <li key={s.id}>
-                  <Link
-                    to={`/ProductDetail?id=${s.product.id}`}
-                    className="immersive-list-item flex items-center gap-3 rounded-lg p-2"
-                  >
+                <li key={s.id} className="history-timeline-item">
+                  <span className="history-timeline-dot" aria-hidden />
+                  <Link to={`/ProductDetail?id=${s.product.id}`} className="history-card">
                     <ProductImage
                       src={s.product.image}
                       alt={s.product.name}
                       category={s.product.category}
-                      className="h-12 w-12 shrink-0 rounded-lg"
+                      className="history-card-media"
                     />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-gray-900">{s.product.name}</p>
-                      <p className="text-xs text-gray-500">
-                        {format(s.date, 'MMM d, yyyy • h:mm a')}
+                      <p className="history-card-name">{s.product.name}</p>
+                      <p className="history-card-meta">
+                        {format(s.date, 'MMM d · h:mm a')}
                         {s.source ? ` · ${s.source}` : ''}
                       </p>
                     </div>
@@ -141,41 +145,40 @@ export default function History() {
                         className={`h-4 w-4 ${s.saved ? 'fill-amber-500 text-amber-500' : 'text-gray-300'}`}
                       />
                     </button>
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${trust.bg} ${trust.color}`}>
+                    <span className={`history-score ${trust.bg} ${trust.color}`}>
                       {Math.round(s.displayScore)}
                     </span>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
                   </Link>
                 </li>
               )
             })}
             {!scans.length && (
               <p className="text-sm text-gray-500">
-                No scans match these filters. Try a scan from Home — photo, barcode, or search.
+                No scans match these filters. Try a scan from Home.
               </p>
             )}
-          </ul>
+          </ol>
         </SectionCard>
       </Reveal>
 
       <Reveal delay={80}>
-        <SectionCard icon={Star} title="Saved Products" accentColor="border-amber-400">
+        <SectionCard index="Pinned" title="Saved products">
           {saved.length ? (
             <div className="flex gap-2 overflow-x-auto pb-1">
               {saved.map((p) => (
                 <Link
                   key={p.id}
                   to={`/ProductDetail?id=${p.id}`}
-                  className="flex shrink-0 items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5"
+                  className="history-saved-chip"
                 >
                   <ProductImage
                     src={p.image}
                     alt={p.name}
                     category={p.category}
-                    className="h-6 w-6 shrink-0 rounded-full"
+                    className="h-7 w-7 shrink-0 rounded-full"
                     imgClassName="h-full w-full object-cover"
                   />
-                  <span className="whitespace-nowrap text-xs font-medium text-amber-900">{p.name}</span>
+                  <span>{p.name}</span>
                 </Link>
               ))}
             </div>
@@ -186,7 +189,7 @@ export default function History() {
       </Reveal>
 
       <Reveal delay={120}>
-        <SectionCard title="Filters" accentColor="border-gray-300">
+        <SectionCard index="Filter" title="Narrow the trail">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div>
               <Label className="mb-2 block">Date range</Label>
@@ -233,14 +236,6 @@ export default function History() {
               </Select>
             </div>
           </div>
-        </SectionCard>
-      </Reveal>
-
-      <Reveal delay={160}>
-        <SectionCard icon={Download} title="Export Data" accentColor="border-emerald-500">
-          <Button variant="secondary" onClick={exportCsv} disabled={!scans.length}>
-            Export filtered history (CSV)
-          </Button>
         </SectionCard>
       </Reveal>
     </div>

@@ -1,25 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import {
-  FileText,
-  Settings,
-  RefreshCw,
-  Flag,
-  Share2,
-  ArrowRight,
-  Star,
-} from 'lucide-react'
-import PageHeader from '@/components/PageHeader'
-import SectionCard from '@/components/SectionCard'
+import { ArrowRight, RefreshCw, Settings, Share2, Star } from 'lucide-react'
 import Reveal from '@/components/Reveal'
-import TrustScoreCircle from '@/components/TrustScoreCircle'
 import ScoreBreakdown from '@/components/ScoreBreakdown'
-import { Button } from '@/components/ui/button'
+import InteractiveProductStage from '@/components/InteractiveProductStage'
+import Magnetic from '@/components/Magnetic'
+import MagneticLink from '@/components/MagneticLink'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { getProductById } from '@/components/data/productData'
 import { fetchProductById } from '@/lib/productsApi'
-import { ProductSpotlight } from '@/components/ProductTile'
 import { generateEcoExplain } from '@/lib/ai'
 import { useAuth } from '@/context/AuthContext'
 import { isProductSaved, toggleSavedForProduct } from '@/lib/scanHistory'
@@ -62,7 +52,7 @@ export default function ProductDetail() {
   const adjusted = adjustScore(product?.trust_score || 0, prefs.sensitivity)
   const explanation = useMemo(
     () => generateEcoExplain(product, adjusted, prefs),
-    [product, adjusted, prefs, explainKey]
+    [product, adjusted, prefs, explainKey],
   )
 
   const flash = (msg) => {
@@ -75,32 +65,27 @@ export default function ProductDetail() {
   }, [product])
 
   if (loadingProduct && !product) {
-    return (
-      <div className="space-y-4">
-        <PageHeader icon={FileText} title="Product detail" sticker="loading" />
-        <p className="text-sm text-gray-600">Loading product from database…</p>
-      </div>
-    )
+    return <p className="dossier-deck">Loading product from database…</p>
   }
 
   if (!product) {
     return (
-      <div className="space-y-4">
-        <PageHeader icon={FileText} title="Product detail" sticker="hmm..." />
-        <p className="text-sm text-gray-600">Product not found. Try scanning again from Home.</p>
+      <div className="space-y-3">
+        <h1 className="dossier-title">Not found</h1>
+        <p className="dossier-deck">Try scanning again from Home.</p>
+        <Link to="/" className="dossier-text-link">
+          ← Back to Home
+        </Link>
       </div>
     )
   }
 
-  const sensitivityBadge =
-    prefs.sensitivity === 'strict' ? 'Strict' : prefs.sensitivity === 'lenient' ? 'Lenient' : 'Balanced'
-
-  const riskBox =
+  const risk =
     product.greenwashing_risk === 'high'
-      ? { cls: 'bg-red-50/90 border-red-200 text-red-800', text: 'High greenwashing risk — some claims could not be verified' }
+      ? { label: 'High greenwash risk', tone: 'danger' }
       : product.greenwashing_risk === 'medium'
-        ? { cls: 'bg-amber-50/90 border-amber-200 text-amber-900', text: 'Medium greenwashing risk — some certifications are pending verification' }
-        : { cls: 'bg-emerald-50/90 border-emerald-200 text-emerald-900', text: 'Low greenwashing risk — claims are well-documented and verified' }
+        ? { label: 'Medium greenwash risk', tone: 'warm' }
+        : { label: 'Low greenwash risk', tone: 'safe' }
 
   const share = async () => {
     const text = `Check out ${product.name}'s sustainability score: ${Math.round(adjusted)}/100 on EcoVerify!`
@@ -130,54 +115,70 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="dossier-page">
       {toast && (
-        <div
-          className="fixed bottom-24 left-1/2 z-50 -translate-x-1/2 rounded-full border border-[var(--color-border-warm)] bg-white/95 px-4 py-2 text-sm font-medium text-[var(--color-ink)] shadow-lg"
-          role="status"
-        >
+        <div className="app-toast is-in" role="status">
           {toast}
         </div>
       )}
-      <PageHeader
-        icon={FileText}
-        title="Product detail"
-        sticker="trace it."
-        badges={[sensitivityBadge]}
-        description="Sustainability analysis with adjustable scoring sensitivity."
-        action={
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={onToggleSave}>
-              <Star className={`h-4 w-4 ${saved ? 'fill-amber-500 text-amber-500' : ''}`} />
-              {saved ? 'Saved' : 'Save'}
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowSettings((v) => !v)}>
-              <Settings className="h-4 w-4" />
-              Settings
-            </Button>
+
+      <Reveal>
+        <article className="trust-dossier">
+          <InteractiveProductStage product={product} score={adjusted} risk={risk} />
+
+          <div className="trust-dossier-panel">
+            <div className="trust-meta-row">
+              <span className="ix-meta-chip">₹{product.price}</span>
+              <span className="ix-meta-chip">Barcode {product.barcode}</span>
+              <span className="ix-meta-chip">Sensitivity {prefs.sensitivity}</span>
+            </div>
+
+            <div className="trust-actions">
+              <Magnetic as="button" type="button" className="trust-action primary" onClick={onToggleSave}>
+                <Star className={`h-4 w-4 ${saved ? 'fill-current' : ''}`} />
+                {saved ? 'Saved' : 'Save'}
+              </Magnetic>
+              <MagneticLink to={`/Alternatives?id=${product.id}`} className="trust-action primary">
+                Better picks <ArrowRight className="h-4 w-4" />
+              </MagneticLink>
+              <Magnetic as="button" type="button" className="trust-action" onClick={() => setShowSettings((v) => !v)}>
+                <Settings className="h-4 w-4" />
+                Dial in
+              </Magnetic>
+              <Magnetic as="button" type="button" className="trust-action" onClick={share}>
+                <Share2 className="h-4 w-4" />
+                Share
+              </Magnetic>
+            </div>
           </div>
-        }
-      />
+        </article>
+      </Reveal>
 
       {showSettings && (
         <Reveal>
-          <SectionCard icon={Settings} title="Context-Sensitive Settings" accentColor="border-amber-400">
-            <div className="space-y-4">
+          <section className="dossier-sheet">
+            <div className="dossier-sheet-head">
               <div>
-                <Label className="mb-2 block">Scoring Sensitivity</Label>
+                <span className="dossier-sheet-index">Controls</span>
+                <h2 className="dossier-sheet-title">Scoring dial</h2>
+              </div>
+            </div>
+            <div className="dossier-sheet-body space-y-4">
+              <div>
+                <Label className="mb-2 block">Sensitivity</Label>
                 <Select value={prefs.sensitivity} onValueChange={(v) => updatePrefs({ sensitivity: v })}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="strict">Strict (−10 to scores)</SelectItem>
-                    <SelectItem value="balanced">Balanced (default)</SelectItem>
-                    <SelectItem value="lenient">Lenient (+10 to scores)</SelectItem>
+                    <SelectItem value="strict">Strict (−10)</SelectItem>
+                    <SelectItem value="balanced">Balanced</SelectItem>
+                    <SelectItem value="lenient">Lenient (+10)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label className="mb-2 block">Priority Concerns</Label>
+                <Label className="mb-2 block">Priority concerns</Label>
                 <div className="flex flex-wrap gap-2">
                   {PRIORITIES.map((p) => {
                     const active = (prefs.priorities || []).includes(p)
@@ -186,11 +187,7 @@ export default function ProductDetail() {
                         key={p}
                         type="button"
                         onClick={() => togglePriority(p)}
-                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
-                          active
-                            ? 'border-amber-300 bg-amber-100 text-amber-900'
-                            : 'border-gray-200 bg-white text-gray-600'
-                        }`}
+                        className={`dossier-chip ${active ? 'is-on' : ''}`}
                       >
                         {p}
                       </button>
@@ -199,91 +196,51 @@ export default function ProductDetail() {
                 </div>
               </div>
             </div>
-          </SectionCard>
+          </section>
         </Reveal>
       )}
 
-      <Reveal delay={40}>
-        <ProductSpotlight
-          product={product}
-          adjustedScore={adjusted}
-          riskLabel={
-            product.greenwashing_risk === 'high'
-              ? 'High greenwash risk'
-              : product.greenwashing_risk === 'medium'
-                ? 'Medium greenwash risk'
-                : 'Low greenwash risk'
-          }
-          scoreNode={<TrustScoreCircle score={adjusted} size="large" />}
-          actions={
-            <>
-              <Button asChild className="spotlight-cta">
-                <Link to={`/Alternatives?id=${product.id}`}>
-                  Better picks <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="outline" onClick={onToggleSave}>
-                <Star className={`h-4 w-4 ${saved ? 'fill-amber-500 text-amber-500' : ''}`} />
-                {saved ? 'Saved' : 'Save'}
-              </Button>
-            </>
-          }
-        />
-      </Reveal>
-
       <Reveal delay={80}>
-        <SectionCard icon={FileText} title="Trust Score Overview" description="EcoExplain" accentColor="border-emerald-500">
-          <p className="text-sm leading-relaxed text-gray-700">{explanation}</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" onClick={() => setExplainKey((k) => k + 1)}>
-              <RefreshCw className="h-4 w-4" />
-              Regenerate
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowSettings(true)}>
-              <Settings className="h-4 w-4" />
-              Adjust Settings
-            </Button>
+        <section className="explain-board ix-explain" key={explainKey}>
+          <div className="explain-board-mark" aria-hidden>
+            “
           </div>
-        </SectionCard>
+          <div className="explain-board-head">
+            <span className="dossier-sheet-index">EcoExplain</span>
+            <Magnetic as="button" type="button" className="dossier-text-btn" onClick={() => setExplainKey((k) => k + 1)}>
+              <RefreshCw className="h-3.5 w-3.5 ix-spin-on-hover" />
+              Rewrite
+            </Magnetic>
+          </div>
+          <p className="explain-board-copy ix-typewriter">{explanation}</p>
+        </section>
       </Reveal>
 
       <Reveal delay={120}>
         <ScoreBreakdown breakdown={product.breakdown} />
       </Reveal>
 
-      <Reveal delay={140}>
-        <SectionCard title="Claims Analysis" accentColor="border-amber-400">
-          <div className={`rounded-lg border p-3 text-sm ${riskBox.cls}`}>{riskBox.text}</div>
-        </SectionCard>
-      </Reveal>
-
       <Reveal delay={160}>
-        <SectionCard title="Similar Products Comparison" accentColor="border-sky-400">
-          <Button asChild>
-            <Link to={`/Alternatives?id=${product.id}`}>
-              View Better Alternatives <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </SectionCard>
+        <section className="dossier-cta-band ix-cta-wave">
+          <div>
+            <p className="dossier-sheet-index">Next move</p>
+            <h2 className="dossier-sheet-title">Find a cleaner swap</h2>
+            <p className="dossier-sheet-desc">Higher-trust options in the same aisle, ranked for you.</p>
+          </div>
+          <MagneticLink to={`/Alternatives?id=${product.id}`} className="spotlight-cta ix-cta-btn">
+            Open alternatives <ArrowRight className="h-4 w-4" />
+          </MagneticLink>
+        </section>
       </Reveal>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Reveal delay={180}>
-          <SectionCard icon={Flag} title="Report Issue" accentColor="border-red-400">
-            <Button variant="destructive" onClick={() => flash('Thanks — report received')}>
-              Report Incorrect Data
-            </Button>
-          </SectionCard>
-        </Reveal>
-        <Reveal delay={200}>
-          <SectionCard icon={Share2} title="Share Result" accentColor="border-emerald-500">
-            <Button variant="secondary" onClick={share}>
-              <Share2 className="h-4 w-4" />
-              Share Result
-            </Button>
-          </SectionCard>
-        </Reveal>
-      </div>
+      <Reveal delay={200}>
+        <p className="dossier-footnote">
+          See something wrong?{' '}
+          <button type="button" className="dossier-text-link" onClick={() => flash('Thanks — report received')}>
+            Report this score
+          </button>
+        </p>
+      </Reveal>
     </div>
   )
 }
