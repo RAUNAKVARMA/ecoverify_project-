@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Camera, Barcode, Search, Loader2, Sparkles, ShieldCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -46,6 +46,7 @@ export default function QuickScan({ embedded = false }) {
   const [stage, setStage] = useState('')
   const [error, setError] = useState('')
   const [preview, setPreview] = useState(null)
+  const fileInputRef = useRef(null)
 
   const samples = useMemo(
     () =>
@@ -223,15 +224,36 @@ export default function QuickScan({ embedded = false }) {
 
       {mode === 'photo' && (
         <div className="qs-panel">
-          <label className={`qs-drop ${preview ? 'has-preview' : ''}`}>
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              className="qs-drop-input"
-              disabled={loading}
-              onChange={(e) => runPhotoScan(e.target.files?.[0])}
-            />
+          <input
+            ref={fileInputRef}
+            id="qs-photo-input"
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="qs-file"
+            tabIndex={-1}
+            disabled={loading}
+            onChange={(e) => {
+              runPhotoScan(e.target.files?.[0])
+              e.target.value = ''
+            }}
+          />
+          <button
+            type="button"
+            className={`qs-drop ${preview ? 'has-preview' : ''}`}
+            disabled={loading}
+            onClick={() => fileInputRef.current?.click()}
+            onDragOver={(e) => {
+              e.preventDefault()
+              e.currentTarget.classList.add('is-drag')
+            }}
+            onDragLeave={(e) => e.currentTarget.classList.remove('is-drag')}
+            onDrop={(e) => {
+              e.preventDefault()
+              e.currentTarget.classList.remove('is-drag')
+              runPhotoScan(e.dataTransfer.files?.[0])
+            }}
+          >
             {preview ? (
               <img src={preview} alt="" className="qs-drop-preview" />
             ) : (
@@ -243,7 +265,7 @@ export default function QuickScan({ embedded = false }) {
                 <em>JPG or PNG · saved to History</em>
               </span>
             )}
-          </label>
+          </button>
           <p className="qs-tip">
             <Sparkles className="h-3.5 w-3.5 shrink-0" />
             Best results: clear pack front, good light, whole label in frame.
