@@ -343,9 +343,12 @@
 .scan-home-inner {
   position: relative;
   z-index: 1;
+  width: 100%;
   max-width: 44rem;
+  min-width: 0;
   margin: 0 auto;
   padding: 1rem 1rem 7rem;
+  box-sizing: border-box;
 }
 
 @media (min-width: 768px) {
@@ -413,12 +416,16 @@
 
 /* QuickScan card */
 .qs-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   border-radius: 1.6rem;
   border: 1px solid rgba(71, 58, 45, 0.1);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.78));
   box-shadow: 0 22px 50px rgba(71, 58, 45, 0.08);
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .qs-card-head {
@@ -453,6 +460,10 @@
   padding: 1rem 1.15rem 1.25rem;
   display: grid;
   gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .qs-tabs {
@@ -462,6 +473,9 @@
   padding: 0.3rem;
   border-radius: 1.1rem;
   background: rgba(15, 61, 44, 0.06);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .qs-tab {
@@ -561,6 +575,10 @@
   position: relative;
   display: grid;
   gap: 0.7rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .qs-label {
@@ -586,11 +604,11 @@
 
 .qs-drop {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   min-height: 12rem;
   margin: 0;
   padding: 1.25rem;
@@ -605,18 +623,18 @@
   -webkit-appearance: none;
   font: inherit;
   color: inherit;
+  box-sizing: border-box;
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
 }
 
 .qs-drop-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   gap: 0.4rem;
-  width: 100%;
-  max-width: 18rem;
-  margin-inline: auto;
+  width: min(100%, 18rem);
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .qs-drop:hover,
@@ -754,6 +772,8 @@
   margin-top: 0.25rem;
   padding-top: 0.85rem;
   border-top: 1px solid rgba(71, 58, 45, 0.08);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .qs-rail-head {
@@ -769,20 +789,26 @@
 }
 
 .qs-rail-track {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(11.5rem, 42%);
+  display: flex;
   gap: 0.65rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
   padding-bottom: 0.35rem;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 .qs-product {
+  flex: 0 0 auto;
+  width: 13.5rem;
+  max-width: 78vw;
   scroll-snap-align: start;
   display: grid;
-  grid-template-columns: 3.4rem 1fr auto;
+  grid-template-columns: 3.4rem minmax(0, 1fr) auto;
   gap: 0.55rem;
   align-items: center;
   padding: 0.5rem;
@@ -791,6 +817,7 @@
   background: rgba(255, 255, 255, 0.85);
   text-align: left;
   cursor: pointer;
+  box-sizing: border-box;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
