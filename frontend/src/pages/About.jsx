@@ -2,25 +2,39 @@ import { useEffect, useRef, useState } from 'react'
 import MagneticLink from '@/components/MagneticLink'
 import { useCountUp } from '@/hooks/useMotion'
 
-/** Local Mixkit downloads + CDN fallbacks (stock, free license). */
+/** Prefer CDN so stale local forest files can never win. */
 const VIDEO = {
+  /** Hero only — greenery open. */
   canopy: {
     local: '/video/canopy.mp4',
     cdn: 'https://assets.mixkit.co/videos/50837/50837-720.mp4',
     poster:
       'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1600&q=70',
   },
-  leaves: {
-    local: '/video/leaves.mp4',
-    cdn: 'https://assets.mixkit.co/videos/50847/50847-720.mp4',
+  /** Eco products only — produce, market, grocery. */
+  ecoScan: {
+    local: '/video/eco-scan.mp4',
+    cdn: 'https://assets.mixkit.co/videos/22683/22683-720.mp4',
     poster:
-      'https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=1200&q=70',
+      'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1200&q=70',
   },
-  trees: {
-    local: '/video/trees.mp4',
-    cdn: 'https://assets.mixkit.co/active_storage/video_items/100182/1721167927/100182-video-720.mp4',
+  ecoProof: {
+    local: '/video/eco-proof.mp4',
+    cdn: 'https://assets.mixkit.co/videos/10420/10420-720.mp4',
     poster:
-      'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1200&q=70',
+      'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=1200&q=70',
+  },
+  ecoPick: {
+    local: '/video/eco-pick.mp4',
+    cdn: 'https://assets.mixkit.co/videos/22676/22676-720.mp4',
+    poster:
+      'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=70',
+  },
+  ecoMarket: {
+    local: '/video/eco-market.mp4',
+    cdn: 'https://assets.mixkit.co/videos/993/993-720.mp4',
+    poster:
+      'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=70',
   },
 }
 
@@ -38,22 +52,22 @@ const CHAPTERS = [
     id: 'scan',
     step: '01',
     title: 'See the signal',
-    body: 'Packaging marks, materials, and claims become readable data — not vibe.',
-    video: VIDEO.trees,
+    body: 'At the shelf, marks and claims become readable signals — not marketing fog.',
+    video: VIDEO.ecoScan,
   },
   {
     id: 'score',
     step: '02',
     title: 'Weigh the evidence',
     body: 'A trust score from 0–100. When claims outrun proof, the number falls.',
-    video: VIDEO.canopy,
+    video: VIDEO.ecoProof,
   },
   {
     id: 'pick',
     step: '03',
     title: 'Choose better',
     body: 'Higher-trust alternatives in the same aisle — so the next pick is clearer.',
-    video: VIDEO.leaves,
+    video: VIDEO.ecoPick,
   },
 ]
 
@@ -66,8 +80,8 @@ function AutoVideo({
   priority = false,
 }) {
   const ref = useRef(null)
-  const primary = src?.local || src?.cdn || ''
-  const fallback = src?.local && src?.cdn ? src.cdn : ''
+  const primary = src?.cdn || src?.local || ''
+  const fallback = src?.cdn && src?.local ? src.local : ''
 
   useEffect(() => {
     const el = ref.current
@@ -233,7 +247,21 @@ function PinStory() {
         <div className="av4-pin-media av4-pin-media--video" style={{ '--focus': p }}>
           {CHAPTERS.map((c, i) => (
             <div key={c.id} className={`av4-pin-layer ${i === active ? 'is-on' : ''}`}>
-              <AutoVideo src={c.video} poster={c.video.poster} />
+              {i === active ? (
+                <video
+                  key={c.video.cdn}
+                  className="av4-pin-live-video"
+                  src={c.video.cdn}
+                  poster={c.video.poster}
+                  muted
+                  autoPlay
+                  loop
+                  playsInline
+                  preload="auto"
+                />
+              ) : (
+                <img src={c.video.poster} alt="" className="av4-pin-poster" />
+              )}
             </div>
           ))}
           <div className="av4-pin-hud" aria-hidden>
@@ -241,12 +269,10 @@ function PinStory() {
             <i className="tr" />
             <i className="bl" />
             <i className="br" />
-            <span className="av4-pin-live">REC · LIVE FIELD</span>
           </div>
-          <div className="av4-pin-scan" style={{ transform: `translateY(${p * 100}%)` }} />
         </div>
         <div className="av4-pin-copy">
-          <p className="av4-eyebrow">The loop</p>
+          <p className="av4-eyebrow">How EcoVerify works</p>
           <div className="av4-pin-steps" aria-hidden>
             {CHAPTERS.map((c, i) => (
               <span key={c.id} className={i === active ? 'is-on' : ''}>
@@ -303,13 +329,23 @@ function TruthSwap() {
         </div>
 
         <div className="av4-filmstrip av4-reveal" aria-hidden>
-          <AutoVideo src={VIDEO.leaves} className="av4-filmstrip-video" />
+          {/* CDN-first Mixkit: woman choosing fruit at market — never forest */}
+          <video
+            className="av4-filmstrip-video"
+            src="https://assets.mixkit.co/videos/993/993-720.mp4"
+            poster="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=70"
+            muted
+            autoPlay
+            loop
+            playsInline
+            preload="metadata"
+          />
           <div className="av4-filmstrip-sprockets">
             {Array.from({ length: 10 }).map((_, i) => (
               <i key={i} />
             ))}
           </div>
-          <p className="av4-filmstrip-cap">field reel · auto</p>
+          <p className="av4-filmstrip-cap">sustainable products</p>
         </div>
       </div>
     </section>
@@ -336,8 +372,17 @@ function ScoreMoment() {
 
   return (
     <section className="av4-score" ref={ref}>
-      <div className="av4-score-stage">
-        <AutoVideo src={VIDEO.trees} className="av4-score-bg" />
+        <div className="av4-score-stage">
+        <video
+          className="av4-score-bg"
+          src="https://assets.mixkit.co/videos/10420/10420-720.mp4"
+          poster="https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=1200&q=70"
+          muted
+          autoPlay
+          loop
+          playsInline
+          preload="metadata"
+        />
         <div className="av4-score-veil" />
         <div className="av4-score-inner">
           <p className="av4-eyebrow av4-reveal">Under the hood</p>
@@ -393,7 +438,7 @@ export default function About() {
           <div className="av5-hero-grain" aria-hidden />
 
           <div className="av5-hero-brand">
-            <p className="av5-hero-kicker">Live field reel</p>
+            <p className="av5-hero-kicker">Trust for everyday products</p>
             <h1 className="av5-hero-title">EcoVerify</h1>
           </div>
 
@@ -402,15 +447,12 @@ export default function About() {
             <span className="av5-corner tr" />
             <span className="av5-corner bl" />
             <span className="av5-corner br" />
-            <span className="av5-rec">
-              <i /> AUTO · MUTED LOOP
-            </span>
           </div>
         </div>
 
         <div className="av5-hero-dock">
           <p className="av4-eyebrow av4-hero-in" style={{ '--d': '0.08s' }}>
-            Trust, on camera
+            Product trust, made clear
           </p>
           <p className="av5-hero-lede av4-hero-in" style={{ '--d': '0.22s' }}>
             The trust score for everyday products — so green claims meet real evidence.
@@ -452,7 +494,15 @@ export default function About() {
 
       <section className="av5-finale">
         <div className="av5-finale-video" aria-hidden>
-          <AutoVideo src={VIDEO.canopy} />
+          <video
+            src="https://assets.mixkit.co/videos/22676/22676-720.mp4"
+            poster="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=70"
+            muted
+            autoPlay
+            loop
+            playsInline
+            preload="metadata"
+          />
           <div className="av5-finale-veil" />
         </div>
         <div className="av5-finale-copy">
