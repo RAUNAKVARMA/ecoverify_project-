@@ -201,8 +201,8 @@ export default function QuickScan({ embedded = false }) {
               }}
               disabled={loading}
             >
-              <Icon className="h-4 w-4" />
-              <span>
+              <Icon className="qs-tab-icon" aria-hidden />
+              <span className="qs-tab-text">
                 <strong>{m.label}</strong>
                 <small>{m.hint}</small>
               </span>
@@ -224,28 +224,28 @@ export default function QuickScan({ embedded = false }) {
       {mode === 'photo' && (
         <div className="qs-panel">
           <label className={`qs-drop ${preview ? 'has-preview' : ''}`}>
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="qs-drop-input"
+              disabled={loading}
+              onChange={(e) => runPhotoScan(e.target.files?.[0])}
+            />
             {preview ? (
               <img src={preview} alt="" className="qs-drop-preview" />
             ) : (
-              <>
+              <span className="qs-drop-inner">
                 <span className="qs-drop-icon" aria-hidden>
                   <Camera className="h-7 w-7" />
                 </span>
                 <strong>Drop or tap to upload</strong>
                 <em>JPG or PNG · saved to History</em>
-              </>
+              </span>
             )}
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              className="sr-only"
-              disabled={loading}
-              onChange={(e) => runPhotoScan(e.target.files?.[0])}
-            />
           </label>
           <p className="qs-tip">
-            <Sparkles className="h-3.5 w-3.5" />
+            <Sparkles className="h-3.5 w-3.5 shrink-0" />
             Best results: clear pack front, good light, whole label in frame.
           </p>
         </div>
