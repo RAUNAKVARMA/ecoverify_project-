@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 @theme {
   --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
@@ -192,23 +192,61 @@
 @keyframes letter-in {
   0% {
     opacity: 0;
-    transform: translateY(0.4em);
+    transform: translateY(0.45em) scale(0.86);
+    filter: blur(2px);
+  }
+  62% {
+    opacity: 1;
+    transform: translateY(-0.04em) scale(1.04);
+    filter: blur(0);
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }
 
 @keyframes wm-morph {
   0% {
     opacity: 0;
-    transform: scale(0.92);
-    filter: blur(3px);
+    transform: rotateX(-82deg) scale(0.94);
+    filter: blur(5px);
   }
   100% {
     opacity: 1;
-    transform: scale(1);
+    transform: rotateX(0deg) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes wm-leave {
+  0% {
+    opacity: 1;
+    transform: rotateX(0deg) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: rotateX(78deg) scale(0.96);
+    filter: blur(4px);
+  }
+}
+
+@keyframes ink-write {
+  0% {
+    opacity: 0;
+    transform: translateY(0.55em) rotate(-6deg) scale(0.7);
+    filter: blur(3px);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-0.06em) rotate(1deg) scale(1.06);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg) scale(1);
     filter: blur(0);
   }
 }
@@ -928,17 +966,40 @@
 .amo-paper {
   position: absolute;
   inset: 0;
-  background: var(--color-paper);
   z-index: 0;
+  background:
+    radial-gradient(ellipse 58% 48% at 50% 46%, rgba(255, 255, 255, 0.92), transparent 72%),
+    radial-gradient(ellipse 90% 70% at 50% 100%, rgba(31, 107, 74, 0.04), transparent 55%),
+    var(--color-paper);
 }
 
 .amo-dotgrid {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background-image: radial-gradient(rgba(71, 58, 45, 0.13) 1px, transparent 1px);
-  background-size: 18px 18px;
   pointer-events: none;
+  opacity: 0.78;
+  background-image: radial-gradient(rgba(71, 58, 45, 0.11) 1px, transparent 1.1px);
+  background-size: 22px 22px;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(ellipse 78% 62% at 50% 46%, #000 18%, rgba(0, 0, 0, 0.55) 55%, transparent 82%);
+  mask-image: radial-gradient(ellipse 78% 62% at 50% 46%, #000 18%, rgba(0, 0, 0, 0.55) 55%, transparent 82%);
+}
+
+.is-wordmarks .amo-dotgrid {
+  opacity: 1;
+  animation: wm-grid-in 1.1s ease both;
+}
+
+@keyframes wm-grid-in {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Centered EcoVerify ? hero of the whole open */
@@ -973,6 +1034,8 @@
   height: clamp(5.5rem, 18vw, 9.5rem);
   display: grid;
   place-items: center;
+  perspective: 1100px;
+  transform-style: preserve-3d;
 }
 
 .wm-logo {
@@ -981,24 +1044,42 @@
   opacity: 0;
   text-align: center;
   line-height: 0.88;
+  transform-origin: 50% 55%;
+  backface-visibility: hidden;
+  will-change: transform, opacity, filter;
 }
 
 .wm-logo.is-active {
   opacity: 1;
-  animation: wm-morph 0.7s cubic-bezier(0.33, 1, 0.68, 1) both;
+  animation: wm-morph 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+  z-index: 2;
+}
+
+.wm-logo.is-leaving {
+  opacity: 0;
+  animation: wm-leave 0.55s cubic-bezier(0.4, 0, 0.2, 1) both;
+  z-index: 1;
+  pointer-events: none;
 }
 
 .wm-logo.is-active .wm-letter {
   display: inline-block;
-  animation: letter-in 0.5s cubic-bezier(0.33, 1, 0.68, 1) calc(var(--i) * 0.04s) both;
+  animation: letter-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 0.045s) both;
 }
 
 .wm-script {
   font-family: var(--font-hand);
-  font-size: clamp(4.2rem, 15vw, 8.5rem);
+  font-size: clamp(4.6rem, 17vw, 9.4rem);
   font-weight: 700;
-  letter-spacing: -0.04em;
-  color: #1a1919;
+  letter-spacing: -0.045em;
+  color: #121212;
+}
+
+.wm-script.is-active .wm-letter {
+  animation-name: ink-write;
+  animation-duration: 0.68s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-delay: calc(0.28s + var(--i) * 0.095s);
 }
 
 .wm-bold {
@@ -1006,7 +1087,7 @@
   font-size: clamp(3.2rem, 12vw, 7rem);
   font-weight: 800;
   letter-spacing: -0.055em;
-  color: #1a1919;
+  color: #121212;
 }
 
 .wm-outline {
@@ -1015,40 +1096,49 @@
   font-weight: 800;
   letter-spacing: -0.055em;
   color: transparent;
-  -webkit-text-stroke: 3px #1a1919;
+  -webkit-text-stroke: 3px #121212;
   text-shadow:
     4px 4px 0 #cfe8da,
-    8px 8px 0 rgba(31, 107, 74, 0.15);
+    8px 8px 0 rgba(31, 107, 74, 0.14);
 }
 
 .wm-outline .wm-letter {
-  -webkit-text-stroke: 3px #1a1919;
+  -webkit-text-stroke: 3px #121212;
 }
 
 .wm-hint {
-  position: absolute;
-  bottom: 16%;
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-size: 0.8rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.38);
-  opacity: 0;
-  animation: fade-up 0.7s ease 0.35s both;
+  display: none;
 }
 
 .amo-center-title {
   margin: 0;
-  font-size: clamp(3rem, 11vw, 6.5rem);
+  font-size: clamp(3.2rem, 12vw, 7.2rem);
   font-weight: 800;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.055em;
   line-height: 0.9;
-  color: #1a1919;
+  color: #121212;
   text-align: center;
-  animation: brand-settle 0.55s cubic-bezier(0.33, 1, 0.68, 1) both;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  animation: brand-settle 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* AMO open window: keep mark large and slightly high while cutouts rise */
+.is-amo-open .amo-center-brand {
+  transform: translateY(-7vh);
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.is-amo-open .amo-center-title {
+  font-size: clamp(3.5rem, 13vw, 7.6rem);
+}
+
+.is-amo-open .mc-open {
+  display: none;
+}
+
+.is-amo-open .note,
+.is-amo-open .sticker {
+  visibility: hidden;
 }
 
 /* Scrapbook scene */
@@ -1234,10 +1324,18 @@
 }
 
 .is-build .piece.is-in {
-  animation: cutout-in 1.35s cubic-bezier(0.12, 0.85, 0.18, 1) var(--delay, 0s) both;
+  animation: cutout-in 1.55s cubic-bezier(0.12, 0.85, 0.18, 1) var(--delay, 0s) both;
+}
+
+.is-amo-open.is-build .piece.is-in {
+  animation-duration: 1.75s;
 }
 
 .is-assemble .amo-center-brand.is-assembling .amo-center-title {
+  animation: brand-settle 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.is-assemble:not(.is-amo-open) .amo-center-brand.is-assembling .amo-center-title {
   animation:
     brand-settle 0.7s cubic-bezier(0.22, 1, 0.36, 1) both,
     assemble-pulse 2.4s ease-in-out 0.5s both;
@@ -6337,18 +6435,17 @@ a.amo-phone {
 
 /* ---------- Horizontal rail ---------- */
 .av4-rail {
-  height: 280vh;
+  height: auto;
   position: relative;
 }
 
 .av4-rail-sticky {
-  position: sticky;
-  top: 0;
-  height: 100svh;
+  position: relative;
+  height: auto;
   display: grid;
   align-content: center;
   gap: 1.5rem;
-  padding: 5.5rem 0 2rem;
+  padding: 3.5rem 0 2.5rem;
   overflow: hidden;
 }
 
@@ -6382,6 +6479,17 @@ a.amo-phone {
   padding: 0.5rem clamp(1.25rem, 4vw, 2.5rem) 1rem;
   width: max-content;
   will-change: transform;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.av4-claim.is-focus {
+  border-color: rgba(143, 214, 176, 0.35);
+  box-shadow: 0 18px 40px rgba(18, 38, 28, 0.12);
+}
+
+.about-page--video .av4-claim.is-focus {
+  border-color: rgba(143, 214, 176, 0.4);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
 
 .av4-claim {
@@ -7271,5 +7379,231 @@ a.amo-phone {
   .av5-finale-video video {
     /* Keep poster frame visible instead of nuking the media */
     animation: none !important;
+  }
+}
+
+/* ---- Phone / tablet: kill sticky traps, stack + swipe ---- */
+.av4-pin-mobile {
+  display: none;
+}
+
+.av4-pin-desktop {
+  display: grid;
+}
+
+@media (max-width: 860px) {
+  .about-page--v4,
+  .about-page--video {
+    overflow-x: clip;
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .about-page--video .av4-swap,
+  .about-page--video .av4-rail-head,
+  .about-page--video .av4-pin-mobile,
+  .about-page--video .av4-split,
+  .about-page--video .av5-hero-dock,
+  .about-page--video .av5-finale-copy {
+    padding-right: max(1.1rem, 5.5rem);
+  }
+
+  .about-page--video .av4-rail-track {
+    padding-right: 5.5rem;
+  }
+
+  .av5-hero {
+    min-height: auto;
+  }
+
+  .av5-hero-stage {
+    min-height: min(58svh, 480px);
+    max-height: 62svh;
+  }
+
+  .av5-hero-title {
+    font-size: clamp(2.8rem, 14vw, 4.4rem);
+    -webkit-text-stroke: 0;
+  }
+
+  .av5-hero-brand {
+    padding: 4.5rem 1rem 1rem;
+    align-content: end;
+    padding-bottom: 1.25rem;
+  }
+
+  .av5-hero-dock {
+    padding: 1.15rem 1.1rem calc(1.35rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .av5-hero-lede {
+    font-size: 1.02rem;
+    max-width: none;
+  }
+
+  .av4-cta-row {
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  .av4-cta {
+    flex: 1 1 auto;
+    min-height: 2.85rem;
+    justify-content: center;
+    padding-inline: 1rem;
+    font-size: 0.92rem;
+  }
+
+  /* Claims: native horizontal swipe + auto-advance */
+  .av4-rail {
+    height: auto !important;
+  }
+
+  .av4-rail-sticky {
+    position: relative !important;
+    height: auto !important;
+    padding: 2.5rem 0 1.5rem;
+    overflow: visible;
+  }
+
+  .av4-rail-viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+
+  .av4-rail-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .av4-rail-track {
+    transform: none !important;
+    will-change: auto;
+    padding-bottom: 0.35rem;
+  }
+
+  .av4-claim {
+    width: min(78vw, 260px);
+    min-height: 190px;
+    scroll-snap-align: start;
+    flex: 0 0 auto;
+  }
+
+  .av4-rail-meter--desktop {
+    display: none;
+  }
+
+  /* How-it-works: stacked cards, no sticky pin trap */
+  .av4-pin {
+    height: auto !important;
+  }
+
+  .av4-pin-desktop {
+    display: none !important;
+  }
+
+  .av4-pin-mobile {
+    display: grid;
+    gap: 1.25rem;
+    padding: 2rem 1.1rem 1rem;
+  }
+
+  .av4-pin-mobile-head .av4-display {
+    margin: 0.35rem 0 0;
+    font-size: clamp(1.85rem, 7vw, 2.4rem);
+  }
+
+  .av4-pin-mobile-list {
+    display: grid;
+    gap: 1.15rem;
+  }
+
+  .av4-pin-card {
+    display: grid;
+    gap: 0.85rem;
+    padding: 0.65rem;
+    border-radius: 1.25rem;
+    background: rgba(18, 36, 28, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .av4-pin-card-media {
+    position: relative;
+    aspect-ratio: 16 / 11;
+    border-radius: 0.95rem;
+    overflow: hidden;
+    background: #07110c;
+  }
+
+  .av4-pin-card-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .av4-pin-card-copy {
+    padding: 0 0.35rem 0.45rem;
+  }
+
+  .av4-pin-card .av4-pin-title {
+    font-size: 1.55rem;
+    animation: none;
+  }
+
+  .av4-pin-card .av4-pin-body {
+    margin-top: 0.45rem;
+    font-size: 0.98rem;
+    animation: none;
+  }
+
+  .av4-swap {
+    padding-inline: 1.1rem;
+  }
+
+  .av4-filmstrip {
+    aspect-ratio: 16 / 11;
+    max-height: none;
+    width: 100%;
+  }
+
+  .av4-score-stage {
+    min-height: min(58svh, 420px);
+    border-radius: 1.2rem;
+    margin-inline: 1.1rem;
+  }
+
+  .av4-score-stage .av4-score-inner {
+    padding: 1.75rem 1rem;
+  }
+
+  .av4-split {
+    padding-inline: 1.1rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .av5-finale-copy {
+    padding: 2.5rem 1.1rem calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .av5-finale-title {
+    font-size: clamp(2.6rem, 14vw, 3.8rem);
+  }
+
+  /* view() reveals often fail on mobile browsers — keep content visible */
+  .av4-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (min-width: 861px) {
+  .av4-pin-mobile {
+    display: none !important;
   }
 }

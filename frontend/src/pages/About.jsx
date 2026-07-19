@@ -193,30 +193,91 @@ function useScrollProgress(ref) {
 
 function HorizontalRail() {
   const sectionRef = useRef(null)
+  const viewportRef = useRef(null)
   const trackRef = useRef(null)
-  const p = useScrollProgress(sectionRef)
+  const [index, setIndex] = useState(0)
+  const pauseUntil = useRef(0)
+  const inView = useRef(true)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section || !('IntersectionObserver' in window)) return undefined
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView.current = entry.isIntersecting && entry.intersectionRatio > 0.25
+      },
+      { threshold: [0, 0.25, 0.5] },
+    )
+    io.observe(section)
+    return () => io.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduce) return undefined
+
+    const id = window.setInterval(() => {
+      if (!inView.current) return
+      if (Date.now() < pauseUntil.current) return
+      setIndex((i) => (i + 1) % CLAIMS.length)
+    }, 2800)
+
+    return () => window.clearInterval(id)
+  }, [])
 
   useEffect(() => {
     const track = trackRef.current
-    if (!track) return
+    const viewport = viewportRef.current
+    if (!track || !viewport) return
+
+    const mobile = window.matchMedia('(max-width: 860px)').matches
+    const card = track.querySelector('.av4-claim')
+    if (!card) return
+
+    const gap = 16
+    const step = card.getBoundingClientRect().width + gap
+
+    if (mobile) {
+      track.style.transform = ''
+      viewport.scrollTo({ left: index * step, behavior: 'smooth' })
+      return
+    }
+
     const max = Math.max(0, track.scrollWidth - window.innerWidth)
-    track.style.transform = `translate3d(${-p * max}px, 0, 0)`
-  }, [p])
+    const x = CLAIMS.length <= 1 ? 0 : (index / (CLAIMS.length - 1)) * max
+    track.style.transform = `translate3d(${-x}px, 0, 0)`
+  }, [index])
+
+  const bumpPause = () => {
+    pauseUntil.current = Date.now() + 5000
+  }
+
+  const meter = (index + 1) / CLAIMS.length
 
   return (
     <section className="av4-rail" ref={sectionRef} aria-label="Greenwash claims">
       <div className="av4-rail-sticky">
         <header className="av4-rail-head">
-          <p className="av4-eyebrow">Scroll through the fog</p>
+          <p className="av4-eyebrow">Claims in the fog</p>
           <h2>
             Pretty words.
             <em> Thin proof.</em>
           </h2>
         </header>
-        <div className="av4-rail-viewport">
+        <div
+          className="av4-rail-viewport"
+          ref={viewportRef}
+          onPointerDown={bumpPause}
+          onTouchStart={bumpPause}
+          onWheel={bumpPause}
+        >
           <div className="av4-rail-track" ref={trackRef}>
             {CLAIMS.map((c, i) => (
-              <article key={c.pretence} className={`av4-claim av4-claim--${c.tone}`} style={{ '--i': i }}>
+              <article
+                key={c.pretence}
+                className={`av4-claim av4-claim--${c.tone} ${i === index ? 'is-focus' : ''}`}
+                style={{ '--i': i }}
+              >
                 <span className="av4-claim-index">0{i + 1}</span>
                 <h3>{c.pretence}</h3>
                 <p>
@@ -228,10 +289,25 @@ function HorizontalRail() {
           </div>
         </div>
         <div className="av4-rail-meter" aria-hidden>
-          <span style={{ transform: `scaleX(${p})` }} />
+          <span style={{ transform: `scaleX(${meter})` }} />
         </div>
       </div>
     </section>
+  )
+}
+
+function PinChapterCard({ chapter }) {
+  return (
+    <article className="av4-pin-card">
+      <div className="av4-pin-card-media">
+        <AutoVideo src={chapter.video} className="av4-pin-card-video" poster={chapter.video.poster} />
+      </div>
+      <div className="av4-pin-card-copy">
+        <p className="av4-eyebrow">How EcoVerify works · {chapter.step}</p>
+        <h2 className="av4-pin-title">{chapter.title}</h2>
+        <p className="av4-pin-body">{chapter.body}</p>
+      </div>
+    </article>
   )
 }
 
@@ -243,21 +319,17 @@ function PinStory() {
 
   return (
     <section className="av4-pin" ref={sectionRef} id="how">
-      <div className="av4-pin-sticky">
+      {/* Desktop: sticky scrubbed chapters */}
+      <div className="av4-pin-sticky av4-pin-desktop">
         <div className="av4-pin-media av4-pin-media--video" style={{ '--focus': p }}>
           {CHAPTERS.map((c, i) => (
             <div key={c.id} className={`av4-pin-layer ${i === active ? 'is-on' : ''}`}>
               {i === active ? (
-                <video
-                  key={c.video.cdn}
+                <AutoVideo
+                  src={c.video}
                   className="av4-pin-live-video"
-                  src={c.video.cdn}
                   poster={c.video.poster}
-                  muted
-                  autoPlay
-                  loop
-                  playsInline
-                  preload="auto"
+                  priority
                 />
               ) : (
                 <img src={c.video.poster} alt="" className="av4-pin-poster" />
@@ -286,6 +358,19 @@ function PinStory() {
           <p key={`${chapter.id}-b`} className="av4-pin-body">
             {chapter.body}
           </p>
+        </div>
+      </div>
+
+      {/* Phones: normal stacked cards — no sticky trap */}
+      <div className="av4-pin-mobile">
+        <header className="av4-pin-mobile-head">
+          <p className="av4-eyebrow">How EcoVerify works</p>
+          <h2 className="av4-display">Three beats. Clearer picks.</h2>
+        </header>
+        <div className="av4-pin-mobile-list">
+          {CHAPTERS.map((c) => (
+            <PinChapterCard key={c.id} chapter={c} />
+          ))}
         </div>
       </div>
     </section>
@@ -329,16 +414,10 @@ function TruthSwap() {
         </div>
 
         <div className="av4-filmstrip av4-reveal" aria-hidden>
-          {/* CDN-first Mixkit: woman choosing fruit at market — never forest */}
-          <video
+          <AutoVideo
+            src={VIDEO.ecoMarket}
             className="av4-filmstrip-video"
-            src="https://assets.mixkit.co/videos/993/993-720.mp4"
-            poster="https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=1200&q=70"
-            muted
-            autoPlay
-            loop
-            playsInline
-            preload="metadata"
+            poster={VIDEO.ecoMarket.poster}
           />
           <div className="av4-filmstrip-sprockets">
             {Array.from({ length: 10 }).map((_, i) => (
