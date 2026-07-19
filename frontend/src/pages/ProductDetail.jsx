@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import {
   FileText,
@@ -7,9 +7,11 @@ import {
   Flag,
   Share2,
   ArrowRight,
+  Star,
 } from 'lucide-react'
 import PageHeader from '@/components/PageHeader'
 import SectionCard from '@/components/SectionCard'
+import Reveal from '@/components/Reveal'
 import TrustScoreCircle from '@/components/TrustScoreCircle'
 import ScoreBreakdown from '@/components/ScoreBreakdown'
 import { Button } from '@/components/ui/button'
@@ -17,8 +19,10 @@ import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { getProductById } from '@/components/data/productData'
+import { fetchProductById } from '@/lib/productsApi'
 import { generateEcoExplain } from '@/lib/ai'
 import { useAuth } from '@/context/AuthContext'
+import { isProductSaved, toggleSavedForProduct } from '@/lib/scanHistory'
 
 const PRIORITIES = ['Plastic Reduction', 'Climate', 'Fair Trade', 'Animal Welfare']
 
@@ -31,9 +35,29 @@ function adjustScore(base, sensitivity) {
 export default function ProductDetail() {
   const [params] = useSearchParams()
   const { prefs, updatePrefs } = useAuth()
-  const product = getProductById(params.get('id') || '1')
+  const productId = params.get('id') || '1'
+  const [product, setProduct] = useState(() => getProductById(productId))
+  const [loadingProduct, setLoadingProduct] = useState(true)
   const [showSettings, setShowSettings] = useState(false)
   const [explainKey, setExplainKey] = useState(0)
+  const [saved, setSaved] = useState(() => {
+    const initial = getProductById(productId)
+    return initial ? isProductSaved(initial.id) : false
+  })
+  const [toast, setToast] = useState('')
+
+  useEffect(() => {
+    let alive = true
+    setLoadingProduct(true)
+    fetchProductById(productId).then((p) => {
+      if (!alive) return
+      setProduct(p)
+      setLoadingProduct(false)
+    })
+    return () => {
+      alive = false
+    }
+  }, [productId])
 
   const adjusted = adjustScore(product?.trust_score || 0, prefs.sensitivity)
   const explanation = useMemo(
@@ -41,10 +65,28 @@ export default function ProductDetail() {
     [product, adjusted, prefs, explainKey]
   )
 
+  const flash = (msg) => {
+    setToast(msg)
+    window.setTimeout(() => setToast(''), 2200)
+  }
+
+  useEffect(() => {
+    if (product) setSaved(isProductSaved(product.id))
+  }, [product])
+
+  if (loadingProduct && !product) {
+    return (
+      <div className="space-y-4">
+        <PageHeader icon={FileText} title="Product detail" sticker="loading" />
+        <p className="text-sm text-gray-600">Loading product from database…</p>
+      </div>
+    )
+  }
+
   if (!product) {
     return (
       <div className="space-y-4">
-        <PageHeader icon={FileText} title="Product detail" gradient="from-amber-400 to-amber-500" />
+        <PageHeader icon={FileText} title="Product detail" sticker="hmm..." />
         <p className="text-sm text-gray-600">Product not found. Try scanning again from Home.</p>
       </div>
     )
@@ -55,10 +97,10 @@ export default function ProductDetail() {
 
   const riskBox =
     product.greenwashing_risk === 'high'
-      ? { cls: 'bg-red-50 border-red-200 text-red-800', text: '⚠️ High greenwashing risk detected — Some claims could not be verified' }
+      ? { cls: 'bg-red-50/90 border-red-200 text-red-800', text: 'High greenwashing risk — some claims could not be verified' }
       : product.greenwashing_risk === 'medium'
-        ? { cls: 'bg-yellow-50 border-yellow-200 text-yellow-800', text: '⚡ Medium greenwashing risk — Some certifications are pending verification' }
-        : { cls: 'bg-green-50 border-green-200 text-green-800', text: '✓ Low greenwashing risk — Claims are well-documented and verified' }
+        ? { cls: 'bg-amber-50/90 border-amber-200 text-amber-900', text: 'Medium greenwashing risk — some certifications are pending verification' }
+        : { cls: 'bg-emerald-50/90 border-emerald-200 text-emerald-900', text: 'Low greenwashing risk — claims are well-documented and verified' }
 
   const share = async () => {
     const text = `Check out ${product.name}'s sustainability score: ${Math.round(adjusted)}/100 on EcoVerify!`
@@ -71,7 +113,13 @@ export default function ProductDetail() {
       }
     }
     await navigator.clipboard.writeText(text)
-    alert('Share text copied to clipboard!')
+    flash('Share text copied')
+  }
+
+  const onToggleSave = () => {
+    const next = toggleSavedForProduct(product.id)
+    setSaved(Boolean(next?.saved))
+    flash(next?.saved ? 'Saved to History' : 'Removed from saved')
   }
 
   const togglePriority = (p) => {
@@ -83,114 +131,151 @@ export default function ProductDetail() {
 
   return (
     <div className="space-y-4">
+      {toast && (
+        <div
+          className="fixed bottom-24 left-1/2 z-50 -translate-x-1/2 rounded-full border border-[var(--color-border-warm)] bg-white/95 px-4 py-2 text-sm font-medium text-[var(--color-ink)] shadow-lg"
+          role="status"
+        >
+          {toast}
+        </div>
+      )}
       <PageHeader
         icon={FileText}
         title="Product detail"
+        sticker="trace it."
         badges={[sensitivityBadge]}
         description="Sustainability analysis with adjustable scoring sensitivity."
-        gradient="from-amber-400 to-amber-500"
         action={
-          <Button variant="outline" size="sm" onClick={() => setShowSettings((v) => !v)}>
-            <Settings className="h-4 w-4" />
-            Settings
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={onToggleSave}>
+              <Star className={`h-4 w-4 ${saved ? 'fill-amber-500 text-amber-500' : ''}`} />
+              {saved ? 'Saved' : 'Save'}
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShowSettings((v) => !v)}>
+              <Settings className="h-4 w-4" />
+              Settings
+            </Button>
+          </div>
         }
       />
 
       {showSettings && (
-        <SectionCard icon={Settings} title="Context-Sensitive Settings" accentColor="border-amber-400">
-          <div className="space-y-4">
-            <div>
-              <Label className="mb-2 block">Scoring Sensitivity</Label>
-              <Select value={prefs.sensitivity} onValueChange={(v) => updatePrefs({ sensitivity: v })}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="strict">Strict (−10 to scores)</SelectItem>
-                  <SelectItem value="balanced">Balanced (default)</SelectItem>
-                  <SelectItem value="lenient">Lenient (+10 to scores)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="mb-2 block">Priority Concerns</Label>
-              <div className="flex flex-wrap gap-2">
-                {PRIORITIES.map((p) => {
-                  const active = (prefs.priorities || []).includes(p)
-                  return (
-                    <button
-                      key={p}
-                      type="button"
-                      onClick={() => togglePriority(p)}
-                      className={`rounded-full px-3 py-1.5 text-xs font-medium border transition-colors ${
-                        active ? 'bg-amber-100 border-amber-300 text-amber-900' : 'bg-white border-gray-200 text-gray-600'
-                      }`}
-                    >
-                      {p}
-                    </button>
-                  )
-                })}
+        <Reveal>
+          <SectionCard icon={Settings} title="Context-Sensitive Settings" accentColor="border-amber-400">
+            <div className="space-y-4">
+              <div>
+                <Label className="mb-2 block">Scoring Sensitivity</Label>
+                <Select value={prefs.sensitivity} onValueChange={(v) => updatePrefs({ sensitivity: v })}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="strict">Strict (−10 to scores)</SelectItem>
+                    <SelectItem value="balanced">Balanced (default)</SelectItem>
+                    <SelectItem value="lenient">Lenient (+10 to scores)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="mb-2 block">Priority Concerns</Label>
+                <div className="flex flex-wrap gap-2">
+                  {PRIORITIES.map((p) => {
+                    const active = (prefs.priorities || []).includes(p)
+                    return (
+                      <button
+                        key={p}
+                        type="button"
+                        onClick={() => togglePriority(p)}
+                        className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+                          active
+                            ? 'border-amber-300 bg-amber-100 text-amber-900'
+                            : 'border-gray-200 bg-white text-gray-600'
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
             </div>
-            <p className="text-xs text-gray-500">Changes immediately update the Trust Score explanation</p>
-          </div>
-        </SectionCard>
+          </SectionCard>
+        </Reveal>
       )}
 
-      <SectionCard accentColor="border-amber-400">
-        <div className="flex flex-col sm:flex-row gap-4 items-start -ml-0">
-          <img src={product.image} alt={product.name} className="w-32 h-32 rounded-xl object-cover" />
-          <div className="flex-1">
-            <h2 className="text-2xl font-bold text-gray-900">{product.name}</h2>
-            <p className="text-sm text-gray-600">{product.brand}</p>
-            <Badge className="mt-2" variant="secondary">{product.category}</Badge>
-            <p className="mt-2 text-sm text-gray-700">₹{product.price}</p>
+      <Reveal delay={40}>
+        <SectionCard accentColor="border-emerald-500">
+          <div className="flex flex-col items-start gap-4 sm:flex-row">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="h-32 w-32 rounded-xl object-cover shadow-[0_12px_28px_rgba(71,58,45,0.12)]"
+            />
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold text-gray-900">{product.name}</h2>
+              <p className="text-sm text-gray-600">{product.brand}</p>
+              <Badge className="mt-2" variant="secondary">
+                {product.category}
+              </Badge>
+              <p className="mt-2 text-sm text-gray-700">₹{product.price}</p>
+            </div>
+            <TrustScoreCircle score={adjusted} size="large" />
           </div>
-          <TrustScoreCircle score={adjusted} size="large" />
-        </div>
-      </SectionCard>
+        </SectionCard>
+      </Reveal>
 
-      <SectionCard icon={FileText} title="Trust Score Overview" description="EcoExplain" accentColor="border-emerald-500">
-        <p className="text-sm text-gray-700 leading-relaxed">{explanation}</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={() => setExplainKey((k) => k + 1)}>
-            <RefreshCw className="h-4 w-4" />
-            Regenerate
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => setShowSettings(true)}>
-            <Settings className="h-4 w-4" />
-            Adjust Settings
-          </Button>
-        </div>
-      </SectionCard>
+      <Reveal delay={80}>
+        <SectionCard icon={FileText} title="Trust Score Overview" description="EcoExplain" accentColor="border-emerald-500">
+          <p className="text-sm leading-relaxed text-gray-700">{explanation}</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button variant="outline" size="sm" onClick={() => setExplainKey((k) => k + 1)}>
+              <RefreshCw className="h-4 w-4" />
+              Regenerate
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShowSettings(true)}>
+              <Settings className="h-4 w-4" />
+              Adjust Settings
+            </Button>
+          </div>
+        </SectionCard>
+      </Reveal>
 
-      <ScoreBreakdown breakdown={product.breakdown} />
+      <Reveal delay={120}>
+        <ScoreBreakdown breakdown={product.breakdown} />
+      </Reveal>
 
-      <SectionCard title="Claims Analysis" accentColor="border-indigo-400">
-        <div className={`rounded-lg border p-3 text-sm ${riskBox.cls}`}>{riskBox.text}</div>
-      </SectionCard>
+      <Reveal delay={140}>
+        <SectionCard title="Claims Analysis" accentColor="border-amber-400">
+          <div className={`rounded-lg border p-3 text-sm ${riskBox.cls}`}>{riskBox.text}</div>
+        </SectionCard>
+      </Reveal>
 
-      <SectionCard title="Similar Products Comparison" accentColor="border-sky-400">
-        <Button asChild>
-          <Link to={`/Alternatives?id=${product.id}`}>
-            View Better Alternatives <ArrowRight className="h-4 w-4" />
-          </Link>
-        </Button>
-      </SectionCard>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <SectionCard icon={Flag} title="Report Issue" accentColor="border-red-400">
-          <Button variant="destructive" onClick={() => alert('Report submitted. Thank you!')}>
-            Report Incorrect Data
+      <Reveal delay={160}>
+        <SectionCard title="Similar Products Comparison" accentColor="border-sky-400">
+          <Button asChild>
+            <Link to={`/Alternatives?id=${product.id}`}>
+              View Better Alternatives <ArrowRight className="h-4 w-4" />
+            </Link>
           </Button>
         </SectionCard>
-        <SectionCard icon={Share2} title="Share Result" accentColor="border-indigo-400">
-          <Button variant="secondary" onClick={share}>
-            <Share2 className="h-4 w-4" />
-            Share Result
-          </Button>
-        </SectionCard>
+      </Reveal>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <Reveal delay={180}>
+          <SectionCard icon={Flag} title="Report Issue" accentColor="border-red-400">
+            <Button variant="destructive" onClick={() => flash('Thanks — report received')}>
+              Report Incorrect Data
+            </Button>
+          </SectionCard>
+        </Reveal>
+        <Reveal delay={200}>
+          <SectionCard icon={Share2} title="Share Result" accentColor="border-emerald-500">
+            <Button variant="secondary" onClick={share}>
+              <Share2 className="h-4 w-4" />
+              Share Result
+            </Button>
+          </SectionCard>
+        </Reveal>
       </div>
     </div>
   )

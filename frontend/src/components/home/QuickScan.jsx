@@ -5,14 +5,25 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import SectionCard from '@/components/SectionCard'
 import { classifyProductImage, analyzeEcoRating, validateBarcode } from '@/lib/ai'
-import {
-  searchProducts,
-  getProductByBarcode,
-  getProductById,
-  matchProductFromAI,
-} from '@/components/data/productData'
+import { matchProductFromAI } from '@/components/data/productData'
 import { useAuth } from '@/context/AuthContext'
 import { createBarcodeHistory } from '@/lib/barcodeHistory'
+import { recordScan } from '@/lib/scanHistory'
+import {
+  resolveBarcode,
+  resolveSearch,
+  fetchProductById,
+  listKnownBarcodes,
+} from '@/lib/productsApi'
+
+function goToProduct(navigate, product, extra = {}) {
+  recordScan({
+    productId: product.id,
+    source: extra.source || 'manual',
+    trustScore: extra.trustScore ?? product.trust_score,
+  })
+  navigate(`/ProductDetail?id=${product.id}`)
+}
 
 export default function QuickScan({ embedded = false }) {
   const navigate = useNavigate()
@@ -32,8 +43,23 @@ export default function QuickScan({ embedded = false }) {
       const eco = await analyzeEcoRating(classification, setStage)
       setStage('Matching against EcoVerify product database…')
       await new Promise((r) => setTimeout(r, 400))
-      const match = matchProductFromAI(classification, eco)
-      navigate(`/ProductDetail?id=${match.id}`)
+      let match = null
+      const detectedId =
+        classification?.detected_product_id || classification?.candidates?.[0]?.product_id
+      if (detectedId) {
+        match = await fetchProductById(String(detectedId))
+      }
+      if (!match && classification?.product?.id) {
+        match = classification.product
+      }
+      if (!match) {
+        match = matchProductFromAI(classification, eco)
+      }
+      setStage('Saving to your scan history…')
+      goToProduct(navigate, match, {
+        source: 'photo',
+        trustScore: eco?.trust_score ?? match.trust_score,
+      })
     } catch (e) {
       setError(e.message || 'Photo scan failed. Try again.')
     } finally {
@@ -51,43 +77,43 @@ export default function QuickScan({ embedded = false }) {
     }
     setLoading(true)
     try {
-      // Fallback: numeric 1–12 treated as product ID
-      if (/^\d{1,2}$/.test(barcode.trim())) {
-        const n = Number(barcode.trim())
-        if (n >= 1 && n <= 12) {
-          const p = getProductById(String(n))
-          if (p) {
-            navigate(`/ProductDetail?id=${p.id}`)
-            return
-          }
+      setStage('Looking up barcode in EcoVerify database…')
+      const isShortId = /^\d{1,2}$/.test(barcode.trim())
+
+      if (!isShortId) {
+        const validation = await validateBarcode(barcode, setStage)
+        if (!validation.valid) {
+          setError(`Invalid barcode format (${validation.format}). Confidence: ${validation.confidence}%`)
+          return
         }
       }
 
-      const validation = await validateBarcode(barcode, setStage)
-      if (!validation.valid) {
-        setError(`Invalid barcode format (${validation.format}). Confidence: ${validation.confidence}%`)
-        return
-      }
-
-      const product = getProductByBarcode(validation.clean_barcode)
+      const { product, source, clean } = await resolveBarcode(barcode.trim())
       if (!product) {
-        setError(`No product found for barcode ${validation.clean_barcode}. Try IDs 1–12 or search by name.`)
+        const samples = listKnownBarcodes()
+          .slice(0, 3)
+          .map((p) => p.barcode)
+          .join(', ')
+        setError(
+          `No product found for barcode ${clean}. Try a catalog code (e.g. ${samples}) or IDs 1–12.`,
+        )
         return
       }
 
-      if (user) {
+      if (user && !isShortId) {
         createBarcodeHistory({
           user_email: user.email,
-          barcode: validation.clean_barcode,
-          barcode_format: validation.format,
+          barcode: clean,
+          barcode_format: 'EAN/UPC',
           product_id: product.id,
           product_name: product.name,
           trust_score: product.trust_score,
-          validation_confidence: validation.confidence,
+          validation_confidence: source === 'api' ? 100 : 80,
         })
       }
 
-      navigate(`/ProductDetail?id=${product.id}`)
+      setStage(source === 'api' ? 'Matched in live database…' : 'Matched locally…')
+      goToProduct(navigate, product, { source: 'barcode' })
     } catch (err) {
       setError(err.message || 'Barcode scan failed.')
     } finally {
@@ -96,82 +122,98 @@ export default function QuickScan({ embedded = false }) {
     }
   }
 
-  const runSearch = (e) => {
+  const runSearch = async (e) => {
     e.preventDefault()
     setError('')
-    const results = searchProducts(query)
-    if (!results.length) {
-      setError('No products matched your search.')
-      return
+    setLoading(true)
+    try {
+      setStage('Searching product catalog…')
+      const results = await resolveSearch(query)
+      if (!results.length) {
+        setError('No products matched your search. Try “bamboo”, “bottle”, a barcode, or an ID 1–12.')
+        return
+      }
+      goToProduct(navigate, results[0], { source: 'search' })
+    } catch (err) {
+      setError(err.message || 'Search failed.')
+    } finally {
+      setLoading(false)
+      setStage('')
     }
-    navigate(`/ProductDetail?id=${results[0].id}`)
   }
 
   const body = (
-      <div className="space-y-5">
-        {loading && (
-          <div className="flex items-start gap-2 rounded-xl border border-emerald-100 bg-emerald-50 p-3 text-sm text-emerald-800">
-            <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin" />
-            <div>
-              <p className="font-medium">Scanning…</p>
-              <p className="text-emerald-700">{stage || 'Working…'}</p>
-            </div>
+    <div className="space-y-5">
+      {loading && (
+        <div className="flex items-start gap-2 rounded-xl border border-emerald-100 bg-emerald-50 p-3 text-sm text-emerald-800">
+          <Loader2 className="mt-0.5 h-4 w-4 shrink-0 animate-spin" />
+          <div>
+            <p className="font-medium">Scanning…</p>
+            <p className="text-emerald-700">{stage || 'Working…'}</p>
           </div>
-        )}
-
-        <div>
-          <p className="mb-2 text-sm font-medium text-[#12261c]">Photo</p>
-          <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-emerald-300/80 bg-emerald-50/40 px-4 py-10 transition-colors hover:bg-emerald-50">
-            <Camera className="h-8 w-8 text-emerald-600" />
-            <span className="text-sm font-semibold text-emerald-900">Upload a product photo</span>
-            <span className="text-xs text-[#5a6f63]">JPG or PNG</span>
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              disabled={loading}
-              onChange={(e) => runPhotoScan(e.target.files?.[0])}
-            />
-          </label>
         </div>
+      )}
 
-        <form onSubmit={runBarcodeScan} className="space-y-2">
-          <p className="text-sm font-medium text-[#12261c]">Barcode</p>
-          <div className="flex gap-2">
-            <div className="relative flex-1">
-              <Barcode className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-              <Input
-                value={barcode}
-                onChange={(e) => setBarcode(e.target.value)}
-                placeholder="Enter barcode (or try ID 1–12)"
-                className="pl-9"
-                disabled={loading}
-              />
-            </div>
-            <Button type="submit" disabled={loading}>
-              Scan
-            </Button>
-          </div>
-        </form>
+      <div>
+        <p className="mb-2 text-sm font-medium text-[#12261c]">Photo</p>
+        <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-emerald-300/80 bg-emerald-50/40 px-4 py-10 transition-colors hover:bg-emerald-50">
+          <Camera className="h-8 w-8 text-emerald-600" />
+          <span className="text-sm font-semibold text-emerald-900">Upload a product photo</span>
+          <span className="text-xs text-[#5a6f63]">JPG or PNG — saved to History automatically</span>
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            disabled={loading}
+            onChange={(e) => runPhotoScan(e.target.files?.[0])}
+          />
+        </label>
+      </div>
 
-        <form onSubmit={runSearch} className="space-y-2">
-          <p className="text-sm font-medium text-[#12261c]">Search</p>
-          <div className="flex gap-2">
+      <form onSubmit={runBarcodeScan} className="space-y-2">
+        <p className="text-sm font-medium text-[#12261c]">Barcode</p>
+        <div className="flex gap-2">
+          <div className="relative flex-1">
+            <Barcode className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Name, brand, or category"
+              value={barcode}
+              onChange={(e) => setBarcode(e.target.value)}
+              placeholder="e.g. 8901234567895 or ID 1–12"
+              className="pl-9"
               disabled={loading}
             />
-            <Button type="submit" variant="secondary" disabled={loading}>
-              <Search className="h-4 w-4" />
-              Search
-            </Button>
           </div>
-        </form>
+          <Button type="submit" disabled={loading}>
+            Scan
+          </Button>
+        </div>
+        <p className="text-xs text-[#5a6f63]">
+          Looks up all catalog barcodes in the live database (Neon via Render API).
+        </p>
+      </form>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
-      </div>
+      <form onSubmit={runSearch} className="space-y-2">
+        <p className="text-sm font-medium text-[#12261c]">Search</p>
+        <div className="flex gap-2">
+          <Input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Name, brand, or category"
+            disabled={loading}
+          />
+          <Button type="submit" variant="secondary" disabled={loading}>
+            <Search className="h-4 w-4" />
+            Search
+          </Button>
+        </div>
+      </form>
+
+      {error && (
+        <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
   )
 
   if (embedded) return body
@@ -180,7 +222,7 @@ export default function QuickScan({ embedded = false }) {
     <SectionCard
       icon={Camera}
       title="Scan a product"
-      description="Photo, barcode, or search — get a Trust Score in seconds"
+      description="Photo, barcode, or search — Trust Score + History in one loop"
       accentColor="border-emerald-500"
     >
       {body}
