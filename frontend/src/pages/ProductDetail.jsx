@@ -15,11 +15,11 @@ import Reveal from '@/components/Reveal'
 import TrustScoreCircle from '@/components/TrustScoreCircle'
 import ScoreBreakdown from '@/components/ScoreBreakdown'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { getProductById } from '@/components/data/productData'
 import { fetchProductById } from '@/lib/productsApi'
+import { ProductSpotlight } from '@/components/ProductTile'
 import { generateEcoExplain } from '@/lib/ai'
 import { useAuth } from '@/context/AuthContext'
 import { isProductSaved, toggleSavedForProduct } from '@/lib/scanHistory'
@@ -204,24 +204,31 @@ export default function ProductDetail() {
       )}
 
       <Reveal delay={40}>
-        <SectionCard accentColor="border-emerald-500">
-          <div className="flex flex-col items-start gap-4 sm:flex-row">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="h-32 w-32 rounded-xl object-cover shadow-[0_12px_28px_rgba(71,58,45,0.12)]"
-            />
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-900">{product.name}</h2>
-              <p className="text-sm text-gray-600">{product.brand}</p>
-              <Badge className="mt-2" variant="secondary">
-                {product.category}
-              </Badge>
-              <p className="mt-2 text-sm text-gray-700">₹{product.price}</p>
-            </div>
-            <TrustScoreCircle score={adjusted} size="large" />
-          </div>
-        </SectionCard>
+        <ProductSpotlight
+          product={product}
+          adjustedScore={adjusted}
+          riskLabel={
+            product.greenwashing_risk === 'high'
+              ? 'High greenwash risk'
+              : product.greenwashing_risk === 'medium'
+                ? 'Medium greenwash risk'
+                : 'Low greenwash risk'
+          }
+          scoreNode={<TrustScoreCircle score={adjusted} size="large" />}
+          actions={
+            <>
+              <Button asChild className="spotlight-cta">
+                <Link to={`/Alternatives?id=${product.id}`}>
+                  Better picks <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button variant="outline" onClick={onToggleSave}>
+                <Star className={`h-4 w-4 ${saved ? 'fill-amber-500 text-amber-500' : ''}`} />
+                {saved ? 'Saved' : 'Save'}
+              </Button>
+            </>
+          }
+        />
       </Reveal>
 
       <Reveal delay={80}>

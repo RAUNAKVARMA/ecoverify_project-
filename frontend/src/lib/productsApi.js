@@ -15,6 +15,24 @@ function apiBase() {
   return String(import.meta.env.VITE_API_URL).replace(/\/$/, '')
 }
 
+/** Prefer freshest local image URLs when DB still has old/broken Unsplash links. */
+export function enrichProduct(p) {
+  if (!p) return null
+  const local = localById(p.id)
+  if (!local) return p
+  return {
+    ...p,
+    image: local.image || p.image,
+    name: p.name || local.name,
+    brand: p.brand || local.brand,
+    category: p.category || local.category,
+    price: p.price ?? local.price,
+    trust_score: p.trust_score ?? local.trust_score,
+    greenwashing_risk: p.greenwashing_risk || local.greenwashing_risk,
+    breakdown: p.breakdown || local.breakdown,
+  }
+}
+
 async function getJson(path) {
   const res = await fetch(`${apiBase()}${path}`)
   if (!res.ok) {
@@ -30,7 +48,7 @@ export async function fetchProductByBarcode(barcode) {
   const clean = String(barcode || '').replace(/\s/g, '')
   if (!clean) return null
   try {
-    return await getJson(`/api/products/barcode/${encodeURIComponent(clean)}`)
+    return enrichProduct(await getJson(`/api/products/barcode/${encodeURIComponent(clean)}`))
   } catch {
     return localByBarcode(clean)
   }
@@ -41,7 +59,7 @@ export async function fetchProductById(id) {
   const pid = String(id || '')
   if (!pid) return null
   try {
-    return await getJson(`/api/products/${encodeURIComponent(pid)}`)
+    return enrichProduct(await getJson(`/api/products/${encodeURIComponent(pid)}`))
   } catch {
     return localById(pid)
   }
@@ -51,7 +69,7 @@ export async function fetchProductById(id) {
 export async function fetchProducts() {
   try {
     const list = await getJson('/api/products')
-    if (Array.isArray(list) && list.length) return list
+    if (Array.isArray(list) && list.length) return list.map(enrichProduct)
   } catch {
     // offline
   }
@@ -77,7 +95,7 @@ export async function resolveBarcode(raw) {
 
   try {
     const product = await getJson(`/api/products/barcode/${encodeURIComponent(clean)}`)
-    return { product, source: 'api', clean }
+    return { product: enrichProduct(product), source: 'api', clean }
   } catch (err) {
     if (err?.status === 404) {
       const local = localByBarcode(clean)

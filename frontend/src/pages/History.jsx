@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { getProductById, getTrustLabel, getCategories } from '@/components/data/productData'
 import { listScans, loadScans, toggleSaved } from '@/lib/scanHistory'
+import ProductImage from '@/components/ProductImage'
 
 export default function History() {
   const [dateRange, setDateRange] = useState('all')
@@ -117,7 +118,12 @@ export default function History() {
                     to={`/ProductDetail?id=${s.product.id}`}
                     className="immersive-list-item flex items-center gap-3 rounded-lg p-2"
                   >
-                    <img src={s.product.image} alt="" className="h-12 w-12 rounded-lg object-cover" />
+                    <ProductImage
+                      src={s.product.image}
+                      alt={s.product.name}
+                      category={s.product.category}
+                      className="h-12 w-12 shrink-0 rounded-lg"
+                    />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium text-gray-900">{s.product.name}</p>
                       <p className="text-xs text-gray-500">
@@ -162,7 +168,13 @@ export default function History() {
                   to={`/ProductDetail?id=${p.id}`}
                   className="flex shrink-0 items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5"
                 >
-                  <img src={p.image} alt="" className="h-6 w-6 rounded-full object-cover" />
+                  <ProductImage
+                    src={p.image}
+                    alt={p.name}
+                    category={p.category}
+                    className="h-6 w-6 shrink-0 rounded-full"
+                    imgClassName="h-full w-full object-cover"
+                  />
                   <span className="whitespace-nowrap text-xs font-medium text-amber-900">{p.name}</span>
                 </Link>
               ))}

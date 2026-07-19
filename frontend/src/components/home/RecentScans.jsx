@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
 import { Clock } from 'lucide-react'
 import SectionCard from '@/components/SectionCard'
+import ProductImage from '@/components/ProductImage'
 import { getProductById, getTrustLabel } from '@/components/data/productData'
 import { listScans, loadScans } from '@/lib/scanHistory'
 
@@ -55,7 +56,12 @@ export default function RecentScans() {
                   to={`/ProductDetail?id=${s.product.id}`}
                   className="immersive-list-item flex items-center gap-3 rounded-lg p-2"
                 >
-                  <img src={s.product.image} alt="" className="h-12 w-12 rounded-lg object-cover" />
+                  <ProductImage
+                    src={s.product.image}
+                    alt={s.product.name}
+                    category={s.product.category}
+                    className="h-12 w-12 shrink-0 rounded-lg"
+                  />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-gray-900">{s.product.name}</p>
                     <p className="text-xs text-gray-500">

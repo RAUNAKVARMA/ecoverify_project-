@@ -188,7 +188,7 @@ export const products = [
     brand: 'PowerRush',
     category: 'Beverages',
     price: 99,
-    image: 'https://images.unsplash.com/photo-1622543925917-763c34f1f321?w=200',
+    image: 'https://images.unsplash.com/photo-1629203851122-3726ecdf080e?auto=format&fit=crop&w=800&q=80',
     trust_score: 28,
     breakdown: {
       certifications: ['Natural Energy (unverified)'],
@@ -206,7 +206,7 @@ export const products = [
     brand: 'WriteRight',
     category: 'Stationery',
     price: 150,
-    image: 'https://images.unsplash.com/photo-1531346878377-a5be20836c33?w=200',
+    image: 'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80',
     trust_score: 88,
     breakdown: {
       certifications: ['FSC Recycled (verified)', 'Cradle to Cradle (verified)'],

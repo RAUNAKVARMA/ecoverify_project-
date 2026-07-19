@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Star, ChevronRight, MapPin, HelpCircle } from 'lucide-react'
+import { Star, MapPin, HelpCircle } from 'lucide-react'
 import PageHeader from '@/components/PageHeader'
 import SectionCard from '@/components/SectionCard'
 import Reveal from '@/components/Reveal'
@@ -14,8 +14,9 @@ import {
   getAlternatives,
   products,
   getCategories,
-  getTrustLabel,
 } from '@/components/data/productData'
+import ProductTile from '@/components/ProductTile'
+import ProductImage from '@/components/ProductImage'
 
 const STORES = [
   { name: 'BigBasket', color: 'bg-green-100 text-green-800' },
@@ -70,7 +71,12 @@ export default function Alternatives() {
           <SectionCard title="Comparing Against" accentColor="border-sky-400">
             <div className="grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
               <div className="flex items-center gap-3 rounded-2xl bg-[var(--color-paper-deep)]/70 p-3">
-                <img src={original.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
+                <ProductImage
+                  src={original.image}
+                  alt={original.name}
+                  category={original.category}
+                  className="h-14 w-14 shrink-0 rounded-xl"
+                />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold text-gray-900">{original.name}</p>
                   <p className="text-sm text-gray-500">{original.brand}</p>
@@ -81,7 +87,12 @@ export default function Alternatives() {
               <div className="flex items-center gap-3 rounded-2xl border border-emerald-200/80 bg-emerald-50/50 p-3">
                 {topAlt ? (
                   <>
-                    <img src={topAlt.image} alt="" className="h-14 w-14 rounded-xl object-cover" />
+                    <ProductImage
+                      src={topAlt.image}
+                      alt={topAlt.name}
+                      category={topAlt.category}
+                      className="h-14 w-14 shrink-0 rounded-xl"
+                    />
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-semibold text-gray-900">{topAlt.name}</p>
                       <p className="text-xs font-medium text-emerald-700">
@@ -104,30 +115,18 @@ export default function Alternatives() {
         {list.length === 0 ? (
           <p className="text-sm text-gray-500">No alternatives match your filters.</p>
         ) : (
-          <ul className="space-y-2">
+          <div className="product-tile-grid product-tile-grid--rows">
             {list.map((p) => {
               const diff = original ? p.trust_score - original.trust_score : null
               return (
-                <li key={p.id}>
-                  <Link
-                    to={`/ProductDetail?id=${p.id}`}
-                    className="immersive-list-item flex items-center gap-3 rounded-lg p-2"
-                  >
-                    <img src={p.image} alt="" className="h-14 w-14 rounded-lg object-cover" />
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-gray-900 truncate">{p.name}</p>
-                      <p className="text-sm text-gray-500">
-                        {p.brand} · ₹{p.price}
-                      </p>
-                      {diff != null && <p className="text-xs font-medium text-green-600">+{diff} points better</p>}
-                    </div>
-                    <TrustScoreCircle score={p.trust_score} size="small" showLabel={false} />
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
-                  </Link>
-                </li>
+                <ProductTile
+                  key={p.id}
+                  product={p}
+                  badge={diff != null && diff > 0 ? `+${diff} pts` : undefined}
+                />
               )
             })}
-          </ul>
+          </div>
         )}
       </SectionCard>
       </Reveal>
