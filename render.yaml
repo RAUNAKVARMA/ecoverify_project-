@@ -9,8 +9,8 @@ services:
     region: oregon
     rootDir: backend
     buildCommand: npm install && npx prisma generate
-    preDeployCommand: npx prisma db push && node prisma/seed.js
-    startCommand: npm start
+    # Free tier does not support preDeployCommand — run migrate/seed on start.
+    startCommand: npx prisma db push && node prisma/seed.js && npm start
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
