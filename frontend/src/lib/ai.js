@@ -119,36 +119,50 @@ async function enrichWithOpenAIVision(file, localResult, onStage) {
 
 function mockFromFilename(file) {
   const nameHint = (file.name || '').toLowerCase()
+  const table = [
+    { test: /bottle|thermos|hydro/, id: '6', name: 'Reusable Water Bottle', brand: 'HydroEco', category: 'Accessories' },
+    { test: /shirt|tee|t-shirt|apparel|cotton/, id: '4', name: 'Organic Cotton T-Shirt', brand: 'FairWear', category: 'Fashion' },
+    { test: /milk|tetra/, id: '1', name: 'Organic Milk Tetra Pack', brand: "Nature's Promise", category: 'Dairy' },
+    { test: /honey/, id: '8', name: 'Organic Honey', brand: 'BeeNatural', category: 'Food' },
+    { test: /brush|tooth/, id: '2', name: 'Bamboo Toothbrush Set', brand: 'EcoSmile', category: 'Personal Care' },
+  ]
+  const hit = table.find((row) => row.test.test(nameHint))
+  if (!hit) {
+    return {
+      product_detected: false,
+      product_name: 'Unknown',
+      product_type: 'unknown',
+      brand: 'Unknown',
+      category: 'Unknown',
+      primary_materials: 'unknown',
+      secondary_materials: '',
+      certifications: [],
+      sustainability_claims: [],
+      reusability: 'unknown',
+      packaging_type: 'unknown',
+      confidence: 0,
+      detected_product_id: null,
+      candidates: [],
+      detections: [],
+      provider: 'mock-filename',
+      reason: 'Could not classify this image. Try a clearer product photo.',
+      _mock: true,
+    }
+  }
   return {
     product_detected: true,
-    product_name: nameHint.includes('bottle')
-      ? 'Reusable Water Bottle'
-      : nameHint.includes('milk')
-        ? 'Organic Milk Tetra Pack'
-        : nameHint.includes('honey')
-          ? 'Organic Honey'
-          : nameHint.includes('brush')
-            ? 'Bamboo Toothbrush Set'
-            : 'Eco Product',
+    product_name: hit.name,
     product_type: 'consumer_good',
-    brand: nameHint.includes('hydro') ? 'HydroEco' : "Nature's Promise",
-    category: nameHint.includes('bottle') ? 'Accessories' : 'Food',
+    brand: hit.brand,
+    category: hit.category,
     primary_materials: 'mixed materials',
     secondary_materials: 'packaging',
     certifications: ['Unverified visual claim'],
     sustainability_claims: ['Eco-friendly packaging'],
     reusability: 'unknown',
     packaging_type: 'retail packaging',
-    confidence: 62,
-    detected_product_id: nameHint.includes('bottle')
-      ? '6'
-      : nameHint.includes('milk')
-        ? '1'
-        : nameHint.includes('honey')
-          ? '8'
-          : nameHint.includes('brush')
-            ? '2'
-            : null,
+    confidence: 55,
+    detected_product_id: hit.id,
     candidates: [],
     detections: [],
     provider: 'mock-filename',

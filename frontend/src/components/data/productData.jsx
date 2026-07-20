@@ -286,18 +286,23 @@ export function getCategories() {
 }
 
 export function matchProductFromAI(classification, ecoRating) {
-  // Prefer explicit model pick when confidence is decent
-  if (classification?.detected_product_id) {
+  // Prefer explicit model pick when confidence is solid
+  if (classification?.detected_product_id && classification?.product_detected !== false) {
     const direct = products.find((p) => p.id === String(classification.detected_product_id))
-    if (direct && (classification.confidence ?? 0) >= 25) {
+    if (direct && (classification.confidence ?? 0) >= 45) {
       return direct
     }
   }
 
-  if (classification?.candidates?.length) {
+  if (classification?.candidates?.length && classification?.product_detected !== false) {
     const top = classification.candidates[0]
     const byId = products.find((p) => p.id === String(top.product_id))
-    if (byId && (top.confidence ?? 0) >= 25) return byId
+    if (byId && (top.confidence ?? 0) >= 45) return byId
+  }
+
+  // No confident catalog match — do not invent one
+  if (classification?.product_detected === false || (classification?.confidence ?? 0) < 45) {
+    return null
   }
 
   let best = null
@@ -308,15 +313,27 @@ export function matchProductFromAI(classification, ecoRating) {
     const name = (classification?.product_name || '').toLowerCase()
     const brand = (classification?.brand || '').toLowerCase()
     const category = (classification?.category || '').toLowerCase()
-    const materials = (classification?.materials || classification?.primary_materials || '').toString().toLowerCase()
+    const materials = (classification?.materials || classification?.primary_materials || '')
+      .toString()
+      .toLowerCase()
     const certs = (classification?.certifications || []).join(' ').toLowerCase()
 
     if (name && product.name.toLowerCase().includes(name.split(' ')[0])) score += 30
     if (name && product.name.toLowerCase().includes(name)) score += 20
     if (brand && product.brand.toLowerCase().includes(brand)) score += 25
     if (category && product.category.toLowerCase().includes(category)) score += 15
-    if (materials && product.breakdown.materials_analysis.toLowerCase().includes(materials.split(',')[0]?.trim())) score += 10
-    if (certs && product.breakdown.certifications.some((c) => certs.includes(c.split(' ')[0].toLowerCase()))) score += 10
+    if (
+      materials &&
+      product.breakdown.materials_analysis.toLowerCase().includes(materials.split(',')[0]?.trim())
+    ) {
+      score += 10
+    }
+    if (
+      certs &&
+      product.breakdown.certifications.some((c) => certs.includes(c.split(' ')[0].toLowerCase()))
+    ) {
+      score += 10
+    }
 
     const aiScore = ecoRating?.trust_score
     if (typeof aiScore === 'number') {
@@ -329,5 +346,5 @@ export function matchProductFromAI(classification, ecoRating) {
     }
   }
 
-  return best || products[0]
+  return bestScore >= 40 ? best : null
 }

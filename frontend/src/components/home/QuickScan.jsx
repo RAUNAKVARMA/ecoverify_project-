@@ -77,13 +77,27 @@ export default function QuickScan({ embedded = false }) {
       const url = URL.createObjectURL(file)
       setPreview(url)
       const classification = await classifyProductImage(file, setStage)
+
+      if (classification?.product_detected === false || !classification?.detected_product_id) {
+        const guess = classification?.candidates?.[0]
+        const hint = guess
+          ? ` Closest guess was “${guess.product_name}” (${guess.confidence}%) — not confident enough.`
+          : ''
+        setError(
+          (classification?.reason ||
+            'Could not confidently match this photo to an EcoVerify catalog product.') +
+            hint +
+            ' Try a clearer pack shot, or search / barcode instead.',
+        )
+        return
+      }
+
       const eco = await analyzeEcoRating(classification, setStage)
       setStage('Matching against EcoVerify product database…')
       await new Promise((r) => setTimeout(r, 400))
       let match = null
-      const detectedId =
-        classification?.detected_product_id || classification?.candidates?.[0]?.product_id
-      if (detectedId) {
+      const detectedId = classification.detected_product_id
+      if (detectedId && (classification.confidence ?? 0) >= 45) {
         match = await fetchProductById(String(detectedId))
       }
       if (!match && classification?.product?.id) {
@@ -91,6 +105,12 @@ export default function QuickScan({ embedded = false }) {
       }
       if (!match) {
         match = matchProductFromAI(classification, eco)
+      }
+      if (!match) {
+        setError(
+          `Detected “${classification.product_name}” but it is not in the live catalog. Try search or a catalog barcode.`,
+        )
+        return
       }
       setStage('Saving to your scan history…')
       goToProduct(navigate, match, {

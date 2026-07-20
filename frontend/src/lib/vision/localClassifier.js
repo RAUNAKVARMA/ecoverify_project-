@@ -10,6 +10,9 @@ import {
   ALL_PRODUCT_LABELS,
   CATALOG_CLASS_DEFS,
   resolveLabelToProduct,
+  isOutOfScopeLabel,
+  MIN_MATCH_SCORE,
+  MIN_MATCH_MARGIN,
 } from './labels'
 
 let classifierPromise = null
@@ -35,6 +38,39 @@ function fileToObjectUrl(file) {
   return URL.createObjectURL(file)
 }
 
+function unknownResult({ confidence, candidates, presenceRaw, classRaw, reason }) {
+  return {
+    product_detected: false,
+    product_name: 'Unknown',
+    product_type: 'unknown',
+    brand: 'Unknown',
+    category: 'Unknown',
+    primary_materials: 'unknown',
+    secondary_materials: '',
+    certifications: [],
+    sustainability_claims: [],
+    reusability: 'unknown',
+    packaging_type: 'unknown',
+    confidence: Math.round(confidence || 0),
+    detected_product_id: null,
+    candidates: candidates || [],
+    detections: (classRaw || []).slice(0, 5).map((r) => ({
+      label: r.label,
+      score: Math.round(r.score * 100),
+      product_id: resolveLabelToProduct(r.label)?.id || null,
+    })),
+    presence: presenceRaw?.[0]
+      ? {
+          top_label: presenceRaw[0].label,
+          score: Math.round(presenceRaw[0].score * 100),
+          product_detected: PRODUCT_PRESENCE_SET.has(presenceRaw[0].label),
+        }
+      : undefined,
+    provider: 'local-clip',
+    reason: reason || 'No confident catalog match for this image.',
+  }
+}
+
 /**
  * @param {File|Blob} file
  * @param {(msg: string) => void} [onStage]
@@ -52,24 +88,40 @@ export async function classifyWithLocalModel(file, onStage) {
     onStage?.('Classifying product type against EcoVerify catalog…')
     const classRaw = await classifier(url, ALL_PRODUCT_LABELS)
 
+    const topClass = classRaw[0]
+    if (topClass && isOutOfScopeLabel(topClass.label) && topClass.score >= MIN_MATCH_SCORE) {
+      return unknownResult({
+        confidence: topClass.score * 100,
+        candidates: [],
+        presenceRaw,
+        classRaw,
+        reason: `Image looks like “${topClass.label}”, not an EcoVerify catalog product.`,
+      })
+    }
+
     const byProduct = new Map()
     for (const row of classRaw) {
+      if (isOutOfScopeLabel(row.label)) continue
       const def = resolveLabelToProduct(row.label)
       if (!def) continue
-      const prev = byProduct.get(def.id) || { def, score: 0, hits: [] }
+      const prev = byProduct.get(def.id) || { def, score: 0, hits: 0, best: 0 }
+      // Prefer strongest label hit; don't dilute with weak sibling prompts
+      prev.best = Math.max(prev.best, row.score)
       prev.score += row.score
-      prev.hits.push({ label: row.label, score: row.score })
+      prev.hits += 1
       byProduct.set(def.id, prev)
     }
 
     const ranked = [...byProduct.values()]
       .map((entry) => ({
         ...entry,
-        score: entry.score / Math.max(1, entry.hits.length),
+        // Blend max hit + mean so one strong apparel label beats many weak bottle scores
+        score: entry.best * 0.7 + (entry.score / Math.max(1, entry.hits)) * 0.3,
       }))
       .sort((a, b) => b.score - a.score)
 
     const top = ranked[0]
+    const second = ranked[1]
     const confidence = Math.round((top?.score || 0) * 100)
     const candidates = ranked.slice(0, 5).map((r) => ({
       product_id: r.def.id,
@@ -79,32 +131,26 @@ export async function classifyWithLocalModel(file, onStage) {
       confidence: Math.round(r.score * 100),
     }))
 
-    if (!productDetected && confidence < 28) {
-      return {
-        product_detected: false,
-        product_name: 'Unknown',
-        product_type: 'unknown',
-        brand: 'Unknown',
-        category: 'Unknown',
-        primary_materials: 'unknown',
-        secondary_materials: '',
-        certifications: [],
-        sustainability_claims: [],
-        reusability: 'unknown',
-        packaging_type: 'unknown',
+    const margin = (top?.score || 0) - (second?.score || 0)
+    const strongEnough =
+      top &&
+      top.score >= MIN_MATCH_SCORE &&
+      margin >= MIN_MATCH_MARGIN &&
+      (productDetected || top.score >= MIN_MATCH_SCORE + 0.08)
+
+    if (!strongEnough) {
+      return unknownResult({
         confidence,
-        detected_product_id: null,
         candidates,
-        detections: presenceRaw.slice(0, 3).map((r) => ({
-          label: r.label,
-          score: Math.round(r.score * 100),
-        })),
-        provider: 'local-clip',
-        reason: 'No clear product detected in the image.',
-      }
+        presenceRaw,
+        classRaw,
+        reason: !productDetected
+          ? 'No clear retail product detected in the image.'
+          : `Closest catalog guess was “${top?.def?.name || 'unknown'}” at ${confidence}% — too uncertain to match.`,
+      })
     }
 
-    const def = top?.def || CATALOG_CLASS_DEFS[0]
+    const def = top.def
     return {
       product_detected: true,
       product_name: def.name,
@@ -115,9 +161,11 @@ export async function classifyWithLocalModel(file, onStage) {
       secondary_materials: '',
       certifications: [],
       sustainability_claims: [],
-      reusability: /bottle|reusable|bamboo|notebook/i.test(def.name) ? 'high' : 'single-use',
+      reusability: /bottle|reusable|bamboo|notebook|cotton|shirt/i.test(def.name)
+        ? 'high'
+        : 'single-use',
       packaging_type: def.packaging,
-      confidence: Math.max(confidence, productDetected ? 40 : confidence),
+      confidence,
       detected_product_id: def.id,
       candidates,
       detections: classRaw.slice(0, 5).map((r) => ({
